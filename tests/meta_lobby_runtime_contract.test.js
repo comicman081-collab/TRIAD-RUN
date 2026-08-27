@@ -82,7 +82,7 @@ test('profile progression is transaction-safe and connected to stage completion'
 test('active-run persistence failure cannot block the run screen transition', () => {
   assert.match(html, /function saveRun\(\)\{[\s\S]*?try\{[\s\S]*?localStorage\.setItem\('triad_active_run'/);
   assert.match(html, /catch\(error\)\{[\s\S]*?저장 공간 부족 · 현재 세션 진행 중[\s\S]*?return false/);
-  assert.match(html, /primeVisualUrls\(run\.party\.map\(p=>p\.visual\)\);saveRun\(\);showRoute\(\)/);
+  assert.match(html, /primeVisualUrls\(run\.party\.map\(p=>p\.visual\)\);saveRun\(\);showTutorialStage\(\)/);
 });
 
 test('quota recovery compacts only legacy embedded history images and retries profile and run writes', () => {

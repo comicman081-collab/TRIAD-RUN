@@ -62,7 +62,7 @@ for (const required of [
   'if(wasAlive&&p.hp<=0)retireKoOwnerCards(p.id)',
   'function playCardAuthoritative',
   'if(!owner||owner.hp<=0)',
-  "const ownerAlive=isPlayableOwner(card.owner),playable=inputOpen&&ownerAlive&&cost<=c.energy",
+  'ownerAlive=isPlayableOwner(card.owner),playable=inputOpen&&ownerAlive&&cost<=c.energy&&tutorialGate.allowed',
   'if(exhaust||!isPlayableOwner(card.owner))c.exhaust.push(state)',
   '전투불능 · 카드 비활성',
 ]) {

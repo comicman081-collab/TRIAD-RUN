@@ -1,22 +1,105 @@
 (function attachTriadCombatSfx(root) {
   'use strict';
 
-  const ROOT = 'sounds/triad_run_sfx/combat/';
+  const ROOT = 'assets/audio/sfx/combat/';
+  const frozenFiles = (...names) => Object.freeze(names);
   const CATALOG = Object.freeze({
-    playerSlash: ['player_slash_01.wav'],
-    playerMagic: ['player_magic_01.wav'],
-    enemyImpact: ['enemy_impact_01.wav', 'enemy_impact_02.wav'],
-    playerHit: ['player_hit_01.wav', 'player_hit_02.wav'],
-    shieldBlock: ['shield_block_01.wav'],
-    ultimateImpact: ['ultimate_impact_01.wav'],
-    healChime: ['heal_chime_01.wav'],
-    rewardClaim: ['reward_claim_01.wav'],
+    weaponWhoosh: frozenFiles('weapon_whoosh_01.wav', 'weapon_whoosh_02.wav', 'weapon_whoosh_03.wav'),
+    magicCast: frozenFiles('magic_cast_01.wav', 'magic_cast_02.wav', 'magic_cast_03.wav'),
+    impactLight: frozenFiles('impact_light_01.wav', 'impact_light_02.wav', 'impact_light_03.wav', 'impact_light_04.wav'),
+    impactHeavy: frozenFiles('impact_heavy_01.wav', 'impact_heavy_02.wav', 'impact_heavy_03.wav'),
+    playerHitLight: frozenFiles('player_hit_light_01.wav', 'player_hit_light_02.wav', 'player_hit_light_03.wav'),
+    playerHitHeavy: frozenFiles('player_hit_heavy_01.wav', 'player_hit_heavy_02.wav'),
+    shieldRise: frozenFiles('shield_rise_01.wav', 'shield_rise_02.wav'),
+    shieldBlock: frozenFiles('shield_block_01.wav', 'shield_block_02.wav', 'shield_block_03.wav'),
+    ultimateCharge: frozenFiles('ultimate_charge_01.wav', 'ultimate_charge_02.wav'),
+    ultimateImpact: frozenFiles('ultimate_impact_01.wav', 'ultimate_impact_02.wav'),
+    healWave: frozenFiles('heal_wave_01.wav', 'heal_wave_02.wav'),
+    utilityPulse: frozenFiles('utility_pulse_01.wav', 'utility_pulse_02.wav'),
+    rewardClaim: frozenFiles('reward_claim_01.wav', 'reward_claim_02.wav'),
   });
+
+  const RHYTHMS = Object.freeze({
+    single: frozenFiles(0),
+    double: frozenFiles(0, 148),
+    flurry: frozenFiles(0, 92, 205),
+    volley: frozenFiles(0, 96, 214),
+    burst: frozenFiles(0, 62, 126, 205, 290, 392),
+  });
+  const RATE_PATTERN = Object.freeze([0.97, 1.025, 0.985, 1.055, 0.95, 1.01, 0.975, 1.04]);
   const SUPPORT = new Set(['guard', 'counter', 'bastion']);
   const HEAL = new Set(['heal', 'renewal']);
-  const MAGIC_OWNERS = new Set(['VOLT', 'BLOOM', 'RIFT']);
+  const UTILITY = new Set(['focus', 'battery']);
+  const PHYSICAL = new Set(['strike', 'quick', 'heavy', 'burst', 'combo', 'counter', 'execute', 'volley', 'bastion', 'ambush']);
+  const MAGIC = new Set(['mark', 'dot', 'scale', 'inferno', 'overload']);
+  const HEAVY_CARDS = new Set(['heavy', 'execute', 'scale', 'inferno', 'overload']);
+  const PROJECTILE_CARDS = new Set(['quick', 'dot', 'burst', 'volley']);
+  const PHYSICAL_SIGNATURE_OWNERS = new Set(['VOLT', 'AEGIS', 'SHADE']);
+  const HEAVY_ARCHETYPES = new Set(['BRUTE', 'SENTINEL', 'COLOSSUS', 'SOVEREIGN']);
+  const MAGIC_ARCHETYPES = new Set(['CASTER', 'WEAVER', 'SENTINEL', 'APOSTLE', 'OVERMIND', 'SOVEREIGN']);
+  const FLURRY_SKILLS = new Set(['FLURRY', 'SURGE', 'REND', 'FRENZY', 'CROSS', 'SYNAPSE', 'END']);
+  const HEAVY_SKILLS = new Set(['BASH', 'CLUB', 'CRUSH', 'FIST', 'QUAKE', 'JUDGMENT', 'COLLAPSE']);
+  const MAGIC_SKILLS = new Set(['WAVE', 'BOLT', 'SURGE', 'WEB', 'PULSE', 'EDICT', 'JUDGMENT', 'SYNAPSE', 'DOMINION', 'COLLAPSE']);
+  const ARCHETYPE_BY_CATALOG = Object.freeze(['SCOUT', 'HOUND', 'WARDEN', 'CASTER', 'HUNTER', 'BRUTE', 'WEAVER', 'RAVAGER', 'SENTINEL', 'VANGUARD', 'REAPER', 'COLOSSUS', 'APOSTLE', 'OVERMIND', 'SOVEREIGN']);
+  const POOL_VOICES = Object.freeze({ impactLight: 8, playerHitLight: 8, shieldBlock: 6, impactHeavy: 5, playerHitHeavy: 5 });
   const STORAGE_KEY = 'triad_bgm_volume';
   const SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQQAAAAAgICA';
+
+  function normalizeCardKey(card) { return String(card?.pattern?.key || card?.key || '').toLowerCase(); }
+
+  function resolveDamageType(card, context = {}) {
+    const explicit = String(context.damageType || '').toLowerCase();
+    if (explicit === 'physical' || explicit === 'magic' || explicit === 'utility') return explicit;
+    const key = normalizeCardKey(card);
+    if (PHYSICAL.has(key)) return 'physical';
+    if (MAGIC.has(key)) return 'magic';
+    if (key === 'signature') return PHYSICAL_SIGNATURE_OWNERS.has(String(card?.owner || '').toUpperCase()) ? 'physical' : 'magic';
+    return 'utility';
+  }
+
+  function resolveEnemyArchetype(enemy = {}) {
+    const direct = String(enemy.archetypeKey || enemy.data?.archetypeKey || '').toUpperCase();
+    if (direct) return direct;
+    const id = String(enemy.id || enemy.data?.id || '').toUpperCase();
+    const match = id.match(/_(SCOUT|HOUND|WARDEN|CASTER|HUNTER|BRUTE|WEAVER|RAVAGER|SENTINEL|VANGUARD|REAPER|COLOSSUS|APOSTLE|OVERMIND|SOVEREIGN)_/);
+    if (match) return match[1];
+    const catalogNo = Number(enemy.catalogNo || enemy.data?.catalogNo);
+    return ARCHETYPE_BY_CATALOG[Math.max(0, Math.min(ARCHETYPE_BY_CATALOG.length - 1, (catalogNo || 1) - 1))] || 'SCOUT';
+  }
+
+  function skillToken(skillId) {
+    const parts = String(skillId || '').toUpperCase().split('_').filter(Boolean);
+    return parts.at(-1) || '';
+  }
+
+  function resolveEnemyStyle(context = {}) {
+    const enemy = context.enemy || {};
+    const archetype = resolveEnemyArchetype(enemy);
+    const skill = skillToken(context.skillId);
+    const rank = String(enemy.rank || enemy.data?.rank || '').toLowerCase();
+    const flurry = FLURRY_SKILLS.has(skill);
+    const heavy = rank === 'boss' || HEAVY_ARCHETYPES.has(archetype) || HEAVY_SKILLS.has(skill);
+    const magic = MAGIC_ARCHETYPES.has(archetype) || MAGIC_SKILLS.has(skill);
+    return Object.freeze({ archetype, skill, rank, flurry, heavy, magic });
+  }
+
+  function hitOffsets(patternKey, hits) {
+    const count = Math.max(1, Math.min(8, Math.floor(Number(hits) || 1)));
+    const key = String(patternKey || '').toLowerCase();
+    let source = key === 'burst' ? RHYTHMS.burst : key === 'volley' ? RHYTHMS.volley : key === 'flurry' ? RHYTHMS.flurry : count === 2 ? RHYTHMS.double : count > 2 ? RHYTHMS.flurry : RHYTHMS.single;
+    const result = [...source];
+    while (result.length < count) result.push((result.at(-1) || 0) + (key === 'burst' ? 96 : 112));
+    return result.slice(0, count);
+  }
+
+  function cardImpactDelay(key, context = {}) {
+    if (Number.isFinite(Number(context.impactDelay))) return Math.max(0, Number(context.impactDelay));
+    if (key === 'signature') return 420;
+    if (PROJECTILE_CARDS.has(key)) return 520;
+    if (HEAVY_CARDS.has(key)) return 250;
+    if (key === 'inferno' || key === 'ambush') return 280;
+    return 160;
+  }
 
   class CombatSfxDirector {
     constructor(options = {}) {
@@ -25,6 +108,7 @@
       this.document = options.document || root.document;
       this.setTimeout = options.setTimeout || root.setTimeout?.bind(root);
       this.masterVolume = this.readVolume();
+      this.variantCursor = Object.create(null);
       this.voiceCursor = Object.create(null);
       this.pools = new Map();
       this.debugLog = [];
@@ -88,37 +172,51 @@
 
     preload(key) {
       if (!this.AudioCtor || this.pools.has(key)) return;
-      const files = CATALOG[key] || [];
-      const voices = files.flatMap(file => Array.from({ length: 3 }, () => {
-        const audio = new this.AudioCtor(ROOT + file);
-        audio.preload = 'auto'; audio.playsInline = true;
-        if (typeof audio.load === 'function') audio.load();
-        return { audio, file };
+      const count = POOL_VOICES[key] || 4;
+      const variants = (CATALOG[key] || []).map(file => ({
+        file,
+        voices: Array.from({ length: count }, () => {
+          const audio = new this.AudioCtor(ROOT + file);
+          audio.preload = 'auto'; audio.playsInline = true;
+          if (typeof audio.load === 'function') audio.load();
+          return audio;
+        }),
       }));
-      this.pools.set(key, voices);
+      this.pools.set(key, variants);
     }
 
-    play(key, options = {}) {
-      const delay = Math.max(0, Number(options.delay) || 0);
-      if (delay && this.setTimeout) {
-        this.setTimeout(() => this.play(key, { ...options, delay: 0 }), delay);
-        return true;
-      }
+    remember(event) {
+      this.debugLog.push(event);
+      this.debugLog = this.debugLog.slice(-120);
+      return event;
+    }
+
+    playNow(key, options = {}, scheduledEvent = null) {
       this.preload(key);
-      const voices = this.pools.get(key) || [];
-      if (!voices.length) return false;
-      const cursor = this.voiceCursor[key] = ((this.voiceCursor[key] || 0) + 1) % voices.length;
-      const voice = voices[cursor], audio = voice.audio;
+      const variants = this.pools.get(key) || [];
+      if (!variants.length) return false;
+      const requestedVariant = Number(options.variant);
+      let variantIndex;
+      if (Number.isInteger(requestedVariant)) variantIndex = ((requestedVariant % variants.length) + variants.length) % variants.length;
+      else {
+        variantIndex = (this.variantCursor[key] || 0) % variants.length;
+        this.variantCursor[key] = variantIndex + 1;
+      }
+      const variant = variants[variantIndex];
+      const voiceKey = `${key}:${variantIndex}`;
+      const voiceIndex = (this.voiceCursor[voiceKey] || 0) % variant.voices.length;
+      this.voiceCursor[voiceKey] = voiceIndex + 1;
+      const audio = variant.voices[voiceIndex];
       audio.pause(); audio.currentTime = 0;
       audio.playbackRate = Math.max(0.84, Math.min(1.18, Number(options.rate) || 1));
       const requestedVolume = Number.isFinite(Number(options.volume)) ? Number(options.volume) : 1;
       audio.volume = Math.max(0, Math.min(1, requestedVolume * this.masterVolume));
-      const event = { key, file: voice.file, delay, rate: audio.playbackRate, volume: audio.volume, status: 'requested', at: Date.now() };
-      this.debugLog.push(event); this.debugLog = this.debugLog.slice(-60);
-      const rootNode = root.document?.documentElement;
+      const event = scheduledEvent || this.remember({ key, delay: Number(options.scheduledDelay) || 0, status: 'requested', at: Date.now() });
+      Object.assign(event, { key, file: variant.file, variant: variantIndex, voice: voiceIndex, rate: audio.playbackRate, volume: audio.volume, status: 'requested', playedAt: Date.now() });
+      const rootNode = this.document?.documentElement;
       if (rootNode) {
         rootNode.dataset.lastCombatSfx = key;
-        rootNode.dataset.lastCombatSfxFile = voice.file;
+        rootNode.dataset.lastCombatSfxFile = variant.file;
         rootNode.dataset.combatSfxCount = String((Number(rootNode.dataset.combatSfxCount) || 0) + 1);
       }
       try {
@@ -135,38 +233,89 @@
       return true;
     }
 
-    playCard(card, context = {}) {
-      const key = card?.pattern?.key || '';
-      if (HEAL.has(key)) return this.play('healChime', { volume: 0.68 });
-      if (SUPPORT.has(key)) return this.play('shieldBlock', { volume: 0.72, rate: 1.06 });
-      const hits = Math.max(1, Math.min(5, Number(context.hits) || 1));
-      const signature = key === 'signature';
-      const attackKey = signature ? 'ultimateImpact' : MAGIC_OWNERS.has(card?.owner) ? 'playerMagic' : 'playerSlash';
-      this.play(attackKey, { volume: signature ? 0.92 : 0.72, rate: 0.98 });
-      if (Number(context.damage) > 0) {
-        const firstDelay = signature ? 330 : key === 'quick' || key === 'dot' || key === 'volley' ? 430 : 145;
-        for (let i = 0; i < hits; i += 1) this.play('enemyImpact', { delay: firstDelay + i * 118, volume: signature ? 0.92 : 0.76, rate: 0.96 + i * 0.025 });
+    play(key, options = {}) {
+      const delay = Math.max(0, Number(options.delay) || 0);
+      if (delay && this.setTimeout) {
+        this.preload(key);
+        if (!(this.pools.get(key) || []).length) return false;
+        const event = this.remember({ key, file: '', delay, rate: Number(options.rate) || 1, volume: Number(options.volume) || 1, status: 'scheduled', at: Date.now() });
+        this.setTimeout(() => this.playNow(key, { ...options, delay: 0, scheduledDelay: delay }, event), delay);
+        return true;
       }
+      return this.playNow(key, options);
+    }
+
+    playCard(card, context = {}) {
+      const key = normalizeCardKey(card);
+      if (HEAL.has(key)) {
+        this.play('healWave', { volume: 0.72 });
+        if (key === 'renewal') this.play('shieldRise', { delay: 180, volume: 0.56, rate: 1.02 });
+        return true;
+      }
+      if (SUPPORT.has(key)) return this.play('shieldRise', { volume: 0.75, rate: 0.98 });
+      if (UTILITY.has(key)) return this.play('utilityPulse', { volume: 0.64, rate: key === 'battery' ? 1.04 : 0.97 });
+
+      const hits = Math.max(1, Math.min(8, Math.floor(Number(context.hits) || 1)));
+      const delay = cardImpactDelay(key, context);
+      const signature = key === 'signature';
+      const damageType = resolveDamageType(card, context);
+      if (signature) {
+        this.play('ultimateCharge', { volume: 0.78, rate: 0.96 });
+        if (Number(context.damage) > 0) this.play('ultimateImpact', { delay, volume: 0.96, rate: 0.98 });
+        const owner = String(card?.owner || '').toUpperCase();
+        if (owner === 'BLOOM') this.play('healWave', { delay: delay + 130, volume: 0.48, rate: 0.94 });
+        if (owner === 'AEGIS') this.play('shieldRise', { delay: delay + 105, volume: 0.55, rate: 0.91 });
+        return true;
+      }
+
+      this.play(damageType === 'magic' ? 'magicCast' : 'weaponWhoosh', { volume: damageType === 'magic' ? 0.65 : 0.69, rate: damageType === 'magic' ? 0.98 : 1.01 });
+      if (Number(context.damage) <= 0) return true;
+      const impactKey = HEAVY_CARDS.has(key) ? 'impactHeavy' : 'impactLight';
+      const offsets = hitOffsets(key, hits);
+      const baseVolume = impactKey === 'impactHeavy' ? 0.86 : hits >= 4 ? 0.48 : hits >= 2 ? 0.58 : 0.74;
+      offsets.forEach((offset, index) => this.play(impactKey, {
+        delay: delay + offset,
+        volume: Math.min(0.94, baseVolume + (index === offsets.length - 1 && offsets.length > 1 ? 0.09 : 0)),
+        rate: RATE_PATTERN[index % RATE_PATTERN.length],
+      }));
       return true;
     }
 
     playEnemy(context = {}) {
-      const hits = Math.max(1, Math.min(4, Number(context.hits) || 1));
-      this.play('playerMagic', { volume: 0.58, rate: 0.82 });
-      for (let i = 0; i < hits; i += 1) {
-        const blocked = Boolean(context.results?.[i]?.blocked);
-        this.play(blocked ? 'shieldBlock' : 'playerHit', { delay: 420 + i * 145, volume: blocked ? 0.78 : 0.82, rate: 0.94 + i * 0.035 });
-      }
+      const style = resolveEnemyStyle(context);
+      const hits = Math.max(1, Math.min(8, Math.floor(Number(context.hits) || 1)));
+      const impactDelay = Number.isFinite(Number(context.impactDelay)) ? Math.max(0, Number(context.impactDelay)) : style.heavy ? 360 : style.magic ? 520 : 420;
+      const attackKey = style.rank === 'boss' ? 'ultimateCharge' : style.magic ? 'magicCast' : 'weaponWhoosh';
+      this.play(attackKey, { volume: style.rank === 'boss' ? 0.72 : style.heavy ? 0.64 : 0.58, rate: style.heavy ? 0.87 : style.magic ? 0.93 : 1.0 });
+      const offsets = hitOffsets(style.flurry ? 'flurry' : '', hits);
+      offsets.forEach((offset, index) => {
+        const blocked = Number(context.results?.[index]?.blocked) > 0;
+        const hitKey = blocked ? 'shieldBlock' : style.heavy ? 'playerHitHeavy' : 'playerHitLight';
+        const baseVolume = blocked ? 0.80 : style.heavy ? 0.86 : hits > 1 ? 0.62 : 0.78;
+        this.play(hitKey, { delay: impactDelay + offset, volume: baseVolume, rate: RATE_PATTERN[index % RATE_PATTERN.length] });
+      });
       return true;
     }
 
     reward() { return this.play('rewardClaim', { volume: 0.72 }); }
-    debugState() { return { root: ROOT, masterVolume: this.masterVolume, unlocked: this.unlocked, playSuccessCount: this.playSuccessCount, playErrorCount: this.playErrorCount, catalog: CATALOG, log: [...this.debugLog] }; }
+
+    debugState() {
+      return {
+        root: ROOT,
+        masterVolume: this.masterVolume,
+        unlocked: this.unlocked,
+        playSuccessCount: this.playSuccessCount,
+        playErrorCount: this.playErrorCount,
+        catalog: CATALOG,
+        rhythms: RHYTHMS,
+        log: [...this.debugLog],
+      };
+    }
   }
 
   const director = new CombatSfxDirector();
   const api = Object.freeze({
-    ROOT, CATALOG, CombatSfxDirector,
+    ROOT, CATALOG, RHYTHMS, CombatSfxDirector, resolveDamageType, resolveEnemyArchetype, resolveEnemyStyle, hitOffsets,
     initialize: elements => director.initialize(elements),
     setVolume: value => director.setVolume(value),
     play: (key, options) => director.play(key, options),

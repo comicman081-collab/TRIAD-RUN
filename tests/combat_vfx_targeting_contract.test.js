@@ -53,3 +53,11 @@ test('thrown player and enemy skills travel actor-to-actor and finish on the bod
   assert.match(html, /asset\.motion==='TRAVEL'&&event\.impactAsset/);
   assert.match(html, /appendCombatVfxParticle\(\{\.\.\.event,scope:'SINGLE'/);
 });
+
+test('travel impact VFX, cinematic SFX, and battle shake share one collision delay', () => {
+  assert.match(html, /function combatVfxTravelImpactMs\(event\)\{[^}]*asset\?\.motion!==['"]TRAVEL['"][^}]*\.72/s);
+  assert.match(html, /SFX\.playCard\(card,\{damage:damageDealt,hits,damageType,impactDelay:cardImpactDelay\}\)/);
+  assert.match(html, /SFX\.playEnemy\(\{hits:enemyResults\.length,results:enemyResults,enemy:c\.enemy\.data,skillId:enemyActionSkillId,impactDelay:enemyImpactDelay\}\)/);
+  assert.match(html, /pulseBattleImpact\('enemy',cardImpactDelay\?\?/);
+  assert.match(html, /pulseBattleImpact\('player',enemyImpactDelay\?\?420\)/);
+});

@@ -56,8 +56,10 @@ test('thrown player and enemy skills travel actor-to-actor and finish on the bod
 
 test('travel impact VFX, cinematic SFX, and battle shake share one collision delay', () => {
   assert.match(html, /function combatVfxTravelImpactMs\(event\)\{[^}]*asset\?\.motion!==['"]TRAVEL['"][^}]*\.72/s);
+  assert.match(html, /function presentCombatVfxSequence\(event,offsets,generation\)[\s\S]*?scheduleCombatPresentation\(\(\)=>presentCombatVfx\(event\),offset,generation\)/);
   assert.match(html, /SFX\.playCard\(card,\{damage:damageDealt,hits,damageType,impactDelay:cardImpactDelay\}\)/);
   assert.match(html, /SFX\.playEnemy\(\{hits:enemyResults\.length,results:enemyResults,enemy:c\.enemy\.data,skillId:enemyActionSkillId,impactDelay:enemyImpactDelay\}\)/);
-  assert.match(html, /pulseBattleImpact\('enemy',cardImpactDelay\?\?/);
-  assert.match(html, /pulseBattleImpact\('player',enemyImpactDelay\?\?420\)/);
+  assert.match(html, /renderEnemyHpPresentation\(result\.hpAfter,c\.enemy\.maxHp\);pulseBattleImpact\('enemy'\).*?cardImpactDelay\+\(hitOffsets\[index\]\|\|0\)/s);
+  assert.match(html, /combatEnemyVfxEvent\(c\.enemy,result\.targetId\).*?presentPartyImpact\(result\);pulseBattleImpact\('player'\).*?enemyImpactDelay\+offset/s);
+  assert.match(html, /const presentationEnd=Math\.max\(360,hitResults\.length\?cardImpactDelay\+\(hitOffsets\[hitResults\.length-1\]\|\|0\)\+90:220\)/);
 });

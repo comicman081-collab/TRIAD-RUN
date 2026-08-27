@@ -36,8 +36,14 @@ test('only runtime-referenced selections live in the dedicated music folder', ()
   assert.equal(actual, referenced.length);
   assert.equal(audio.TRACKS.title.name, 'Below the Broken Moon');
   assert.equal(audio.TRACKS.title.file, 'title/roguelike_title_07_below_the_broken_moon.mp3');
-  assert.equal(fs.existsSync(path.join(root, 'sounds', 'roguelike_rpg_audio_pack', '01_title_songs', 'roguelike_title_07_below_the_broken_moon.wav')), false, 'new title must be removed from the source pack');
-  assert.equal(fs.existsSync(path.join(root, 'sounds', 'roguelike_rpg_audio_pack', '01_title_songs', 'roguelike_title_08_echoes_of_the_run.wav')), true, 'old title must be restored to the source pack');
+  // The source library is deliberately gitignored: it is a local authoring
+  // archive, not a public runtime dependency. Verify its move state whenever
+  // that archive is available, while keeping clean Git checkouts testable.
+  const sourceTitleRoot = path.join(root, 'sounds', 'roguelike_rpg_audio_pack', '01_title_songs');
+  if (fs.existsSync(sourceTitleRoot)) {
+    assert.equal(fs.existsSync(path.join(sourceTitleRoot, 'roguelike_title_07_below_the_broken_moon.wav')), false, 'new title must be removed from the source pack');
+    assert.equal(fs.existsSync(path.join(sourceTitleRoot, 'roguelike_title_08_echoes_of_the_run.wav')), true, 'old title must be restored to the source pack');
+  }
 });
 
 test('screen, meta-tab, ending and mute controls are wired into the canonical runtime', () => {

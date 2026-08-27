@@ -14,7 +14,7 @@ test('AUTO toggle is premium, persistent, token-safe and strategy scored', () =>
   assert.match(html, /function autoCardScore\(card,state,index\)/);
   assert.match(html, /damage>=c\.enemy\.hp&&damage>0\)score\+=10000/);
   assert.match(html, /key==='heal'\|\|key==='renewal'/);
-  assert.match(html, /shield<threat\*alive\.length/);
+  assert.match(html, /shield<threat\?Math\.max\(0,shieldValue\*alive\.length-shield\)/);
   assert.match(html, /function chooseAutoBattleCard\(\)/);
   assert.match(html, /playCardAuthoritative\(choice\.index,choice\.state\.id,c\.actionToken\)/);
   assert.match(html, /endTurnAuthoritative\(c\.actionToken\)/);
@@ -30,4 +30,3 @@ test('idle reward claim opens a central animated resource receipt instead of a s
   const claimBody = html.match(/function claimIdleRewards\(\)\{([^\n]+)\}/)?.[1] || '';
   assert.ok(!claimBody.includes('방치 보상:'), 'successful idle claim must not collapse into the legacy toast');
 });
-

@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TRIAD // RUN V0.8 - Image First</title>
+<title>TRIAD // RUN V0.8 — Deck Building RPG</title>
+<link rel="preload" href="assets/fonts/NotoSansKR-VF.ttf?v=2.04" as="font" type="font/ttf" crossorigin>
 <script src="combat_data.js"></script>
 <script src="card_character_data.js"></script>
 <script src="enemy_animation_data.js?v=1.0.0-active-frame-mvp"></script>
@@ -32,13 +33,22 @@
 <script src="assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.js?v=2-sena-true-alpha"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sd_manifest.js?v=1-vela-true-alpha"></script>
 <style>
+@font-face{
+  font-family:"TRIAD Sans";
+  src:url("assets/fonts/NotoSansKR-VF.ttf?v=2.04") format("truetype");
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+}
 :root{
   --bg:#0b0d13; --panel:#141824; --panel2:#1b2030; --line:#2b344b;
-  --text:#f4f7ff; --muted:#9aa6bd; --accent:#7ee7ff; --good:#8bf0ad;
+  --text:#f8faff; --muted:#aebbd1; --accent:#7ee7ff; --good:#8bf0ad;
   --warn:#ffd37a; --bad:#ff8b9a; --card:#20273a; --shadow:0 14px 35px rgba(0,0,0,.28);
+  --font-ui:"TRIAD Sans","Noto Sans KR","Malgun Gothic",system-ui,-apple-system,sans-serif;
+  --font-display:"TRIAD Sans","Noto Sans KR",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:radial-gradient(circle at 20% -20%,#1b2a45 0,#0b0d13 38%,#07090d 100%);color:var(--text);font-family:"Noto Sans KR","Pretendard","Malgun Gothic",system-ui,-apple-system,sans-serif;min-height:100%}
+html,body{margin:0;background:radial-gradient(circle at 20% -20%,#1b2a45 0,#0b0d13 38%,#07090d 100%);color:var(--text);font-family:var(--font-ui);min-height:100%}
 button,input,select{font:inherit}
 button{border:1px solid var(--line);background:linear-gradient(180deg,#222a3e,#171c2a);color:var(--text);border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
 button:hover{filter:brightness(1.12)}
@@ -309,6 +319,90 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 .meta-tab-pane{display:none}.meta-tab-pane.active{display:block}
 @media(max-width:850px){.lobby-layout{grid-template-columns:1fr}.lobby-command{order:2;padding:20px}.lobby-character-stage{min-height:500px}.lobby-shell:before{background:linear-gradient(0deg,rgba(6,10,18,.98) 0 46%,rgba(6,10,18,.25))}.lobby-character-art{top:10px;bottom:auto;width:min(96%,340px);height:calc(100% - 104px);object-fit:cover;object-position:center top}.lobby-character-nav{bottom:10px}.meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.profile-wallet{grid-template-columns:repeat(2,minmax(0,1fr))}.lobby-actions,.meta-grid{grid-template-columns:1fr}.lobby-character-stage{min-height:500px}.lobby-character-art{top:10px;bottom:auto;width:min(96%,340px);height:calc(100% - 104px);object-fit:cover;object-position:center top}.lobby-character-nav{left:3%;right:3%;bottom:10px}.lobby-character-name{min-width:0;flex:1}.owned-card-row{grid-template-columns:1fr auto}.owned-card-row button{grid-column:1/-1}}
+
+/* V0.9 typography pass: deterministic Korean rendering, clearer hierarchy and legible microcopy. */
+html{font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  font-family:var(--font-ui);
+  font-weight:470;
+  line-height:1.55;
+  letter-spacing:-.012em;
+  font-optical-sizing:auto;
+  font-synthesis:none;
+  font-kerning:normal;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+button,input,select,textarea{font-family:var(--font-ui);font-optical-sizing:auto}
+button{min-height:44px;font-weight:720;line-height:1.25;letter-spacing:-.012em}
+h1,h2,h3,h4,.brand,.section-title,.lobby-character-name b,.idle-reward-title{
+  font-family:var(--font-display);
+  font-weight:820;
+  font-optical-sizing:auto;
+  word-break:keep-all;
+  text-wrap:balance;
+}
+h1,h2,h3,h4{line-height:1.18;letter-spacing:-.032em}
+p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-break:keep-all;overflow-wrap:break-word}
+.brand{font-weight:860;letter-spacing:.09em}
+.lobby-command h1{line-height:.94;letter-spacing:-.045em}
+.jrpg-topbar h2{line-height:1.12;letter-spacing:-.025em}
+.card-heading h3{font-family:var(--font-display);font-weight:860;line-height:1.12;letter-spacing:-.03em}
+.cost,.cost small,.card-heading .card-eyebrow,.card-type-pill,.tactical-card .card-desc,.tactical-card .tag,
+.auto-battle-toggle b,.auto-battle-toggle small,.tutorial-kicker,.tutorial-ap-core strong,.tutorial-lesson-index,
+.tutorial-card-chip .ap,.tutorial-check,.idle-reward-card{font-family:var(--font-ui)}
+.small,.controls label,.draft-actions .draft-help,.card-owner{font-size:12.5px;line-height:1.5}
+.node,.sd-card .sd-name,.battle-art.empty{font-size:11.5px;line-height:1.35}
+.hand-jrpg .card-desc{font-size:12.5px;line-height:1.48}
+.card-heading .card-eyebrow{font-size:9.5px;line-height:1.15}
+.card-type-pill{font-size:10px;line-height:1.1}
+.cost small,.tactical-card .tag{font-size:9px;line-height:1.1}
+.tutorial-lesson p,.tutorial-ap-core span,.tutorial-combat-copy span{font-size:12.5px;line-height:1.62}
+.tutorial-party-chip small,.tutorial-card-chip small{font-size:10.5px;line-height:1.4}
+.tutorial-check{font-size:11px;line-height:1.2}
+.wallet-chip small{font-size:11.5px;line-height:1.45}
+.wallet-label{white-space:nowrap}
+.idle-reward-card{font-weight:500}
+.idle-reward-subtitle{color:#b6c4d8;font-size:14px;line-height:1.55}
+.idle-reward-item small{color:#acbbcf;font-size:11px;line-height:1.35}
+.enemy-panel #enemyStatus{font-size:11.5px;line-height:1.42}
+.enemy-panel .intent{font-size:12px;line-height:1.35}
+.toast{font-weight:700;line-height:1.4;box-shadow:0 14px 36px rgba(0,0,0,.46)}
+.section-title{flex-wrap:wrap}
+@media(min-width:851px){.lobby-actions{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:851px) and (max-height:900px){.lobby-command{padding-block:40px}}
+.combat-panel-v05{position:relative}
+.hand-jrpg{justify-content:safe center;overscroll-behavior-inline:contain;scrollbar-gutter:stable both-edges}
+.hand-jrpg .hand-card{scroll-snap-align:center}
+:where(button,input,select,textarea,[tabindex]):focus-visible{
+  outline:3px solid #a7efff;
+  outline-offset:3px;
+  box-shadow:0 0 0 5px rgba(85,215,243,.18),0 8px 24px rgba(0,0,0,.32);
+}
+.sd-qa-trigger{min-height:0}
+::selection{background:#5eddf0;color:#071019}
+@media(max-width:560px){
+  .topbar{flex-wrap:wrap;gap:8px}
+  .topbar>.row{width:100%;justify-content:flex-end}
+  #saveState{display:none}
+  .section-title{align-items:stretch;flex-direction:column}
+  .section-title>.row{width:100%}
+  .section-title button{flex:1}
+  .hand-jrpg .card-desc{font-size:12px}
+}
+@media(max-width:720px){
+  .battle-info-grid{position:static;display:block;margin:10px 0 0;pointer-events:auto}
+  .enemy-panel{position:static;width:100%}
+  .enemy-panel .section-title{display:flex}
+  .ally-side .sd-card{width:calc((100% - 4px)/3);flex-basis:calc((100% - 4px)/3)}
+  .enemy-side .sd-card{width:100%!important;flex-basis:100%}
+  .enemy-side .sd-name,.enemy-side .sd-mini-bar{display:none}
+  .hand-jrpg{justify-content:flex-start;padding-inline:12px;scroll-snap-type:x proximity}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
 </style>
 </head>
 <body>
@@ -316,9 +410,9 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
   <div class="topbar">
     <div class="brand">TRIAD <span>// RUN</span></div>
     <div class="row">
-      <span id="saveState" class="muted small">V0.8 · IMAGE-FIRST CHARACTER FLOW</span>
+      <span id="saveState" class="muted small">V0.8 · 자동 저장 준비</span>
       <button id="bgmToggle" class="ghost audio-toggle" type="button" aria-pressed="true" onclick="toggleBgm()">♫ BGM ON</button>
-      <label class="bgm-volume" for="bgmVolume"><span aria-hidden="true">🔊</span><input id="bgmVolume" type="range" min="0" max="100" step="1" value="100" aria-label="BGM 볼륨"><output id="bgmVolumeValue" for="bgmVolume">100%</output></label>
+      <label class="bgm-volume" for="bgmVolume"><span aria-hidden="true">🔊</span><input id="bgmVolume" type="range" min="0" max="100" step="1" value="100" aria-label="전체 음량"><output id="bgmVolumeValue" for="bgmVolume">100%</output></label>
       <button class="ghost" onclick="goHome()">홈</button>
     </div>
   </div>
@@ -327,9 +421,9 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
     <div id="lobbyShell" class="lobby-shell">
       <div class="lobby-layout">
         <div class="lobby-command">
-          <div class="muted">CANONICAL META LOBBY · FEMALE ROSTER</div>
+          <div class="muted">TACTICAL DECK RPG · CHARACTER COMMAND</div>
           <h1>TRIAD<br><span>// RUN</span></h1>
-          <p>완성 캐릭터 3명을 선택하면 CORE·역할·시그니처가 함께 결정되고, 전투에서는 동결된 전용 SD 번들이 행동합니다.</p>
+          <p>캐릭터 3명을 선택하면 역할과 전용 카드가 함께 결정됩니다. 서로 다른 특성을 조합해 자신만의 전투 편성을 완성하세요.</p>
           <div id="profileWallet" class="profile-wallet"></div>
           <div id="idlePanel" class="idle-panel"></div>
           <div class="lobby-actions">
@@ -777,7 +871,7 @@ function renderLobby(){
   const claim=$('#idleClaimBtn');if(claim)claim.disabled=!preview.claimable;
   const progress=$('#lobbyProgress');if(progress)progress.innerHTML=`<span class="tag">최고 STAGE ${profile.maxStageCleared}</span><span class="tag">누적 클리어 ${profile.totalStagesCleared}</span><span class="tag">기본 에너지 ${3+profile.baseEnergyBonus}</span><span class="tag">배경 ${profile.unlockedLobbyBackgroundIds.length}/${META.LOBBY_BACKGROUNDS.length}</span>`;
   const record=lobbyCharacterRecord(),visual=$('#lobbyCharacterVisual'),name=$('#lobbyCharacterName'),asset=lobbyCharacterAsset(record);
-  if(visual){visual.className=asset?'':'lobby-character-missing';visual.innerHTML=asset?`<img class="lobby-character-art" src="${asset.path}" alt="${esc(record.name)} 로비 캐릭터">`:`<b>${esc(record?.name||'캐릭터')} 로비 RGBA 검증 대기</b><span>배경이 포함된 시그니처 원화는 로비에 사용하지 않습니다.<br>독립 투명 반신/전신 자산만 PASS_ACTIVE로 연결됩니다.</span>`}
+  if(visual){visual.className=asset?'':'lobby-character-missing';visual.innerHTML=asset?`<img class="lobby-character-art" src="${asset.path}" alt="${esc(record.name)} 로비 캐릭터">`:`<b>${esc(record?.name||'캐릭터')} 로비 일러스트 준비 중</b><span>현재 전투 참여는 가능하며, 로비 전용 일러스트는 다음 업데이트에서 제공됩니다.</span>`}
   if(name)name.innerHTML=`<b>${esc(record?.name||'미선택')}</b><small>${esc(record?.coreId||'')} · ${esc(record?.role||'')}</small>`;
   persistProfile(profile)
 }
@@ -817,8 +911,8 @@ function renderCharacterRecruitment(){
   const summary=$('#gachaSummary'),grid=$('#gachaCandidateGrid'),button=$('#gachaDrawBtn');if(!summary||!grid||!button)return;
   const candidates=META.gachaCandidates(ROSTER.records,profile),cost=META.GACHA_SINGLE_COST;
   if(!candidates.length){
-    summary.textContent='현재는 GPU 자산 제작 대기 중인 추가 캐릭터가 없습니다. PASS_ACTIVE_FINAL SD와 투명 로비 RGBA가 모두 등록된 캐릭터만 이 모집 풀에 자동으로 들어옵니다.';
-    grid.innerHTML='<div class="muted small">기본 캐릭터 6명은 이미 보유 상태입니다. 새 캐릭터 자산이 정본 로스터에 등록되면 이곳에서 모집할 수 있습니다.</div>';
+    summary.textContent='현재 모집 가능한 신규 캐릭터를 모두 보유했습니다. 새로운 캐릭터가 추가되면 이곳에서 바로 확인할 수 있습니다.';
+    grid.innerHTML='<div class="muted small">기본 캐릭터 6명을 모두 보유하고 있습니다. 신규 캐릭터 업데이트를 기다려 주세요.</div>';
     button.disabled=true;return;
   }
   summary.textContent=`모집 가능 ${candidates.length}명 · 1회 비용 ✦ ${cost}`;
@@ -901,7 +995,7 @@ function renderTutorialCombatCoach(){
 }
 
 function rngSeed(){return TRIAD_ARCH.seedFromEntropy()}
-function showScreen(id){if(id!=='combat'&&typeof cancelAutoBattleStep==='function')cancelAutoBattleStep();$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo(0,0);AUDIO.playScreen(id,{stage:run?.stage||1,metaTab:metaShopTabId})}
+function showScreen(id){if(id!=='combat'){if(typeof cancelCombatPresentation==='function')cancelCombatPresentation();if(typeof cancelAutoBattleStep==='function')cancelAutoBattleStep()}$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo(0,0);AUDIO.playScreen(id,{stage:run?.stage||1,metaTab:metaShopTabId})}
 function toggleBgm(){const before=AUDIO.debugState(),enabled=AUDIO.toggle();toast(!enabled?'BGM을 껐습니다':before.enabled?'BGM 재생을 다시 시도합니다':'BGM을 켰습니다');return enabled}
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
 function goHome(){showScreen('home');refreshHome()}
@@ -1026,7 +1120,7 @@ function setCharacterName(value){const c=activeCharacter();if(!c||c.confirmed)re
 function renderEditor(){
   const c=activeCharacter(),v=activeVisual(),a=activeAppearance(); if(!c||!v)return;
   $('#editorCharacterName').value=c.name; $('#editorCharacterName').disabled=c.confirmed;
-  $('#editorStatus').textContent=c.confirmed?'이 캐릭터의 원본 일러가 확정되어 있습니다.':'선택한 외형은 저장·빌드·히스토리에 동일 ID로 유지됩니다. 전투에서는 동결된 해당 캐릭터 SD가 사용됩니다.';
+  $('#editorStatus').textContent=c.confirmed?'이 캐릭터의 원본 일러가 확정되어 있습니다.':'선택한 외형은 저장·빌드·히스토리에 동일하게 유지되며, 전투에서는 해당 캐릭터의 전용 SD가 사용됩니다.';
   const parts=v.sourceType==='parts';
   $('#partsRatioControls').style.display='none';
   $('#assembledPreview').innerHTML=visualImageHtml(v);
@@ -1240,6 +1334,7 @@ function tutorialDrawPile(){
   return[...remainder,...nextTurnIds.map(stateFor),...initialIds.map(stateFor).reverse()]
 }
 function startCombat(type){
+  cancelCombatPresentation();
   const tutorial=type==='tutorial',e=tutorial?tutorialEnemyForBattle():enemyFor(run.stage,type);
   const combatLog=$('#combatLog');if(combatLog)combatLog.innerHTML='';
   run.battleSpriteState=Object.fromEntries(run.party.map(character=>[character.id,'enter']));
@@ -1320,10 +1415,23 @@ function dealDamage(amount,label){
   run.stats.damage+=amount;run.combat.turnDamage+=amount;run.stats.maxTurnDamage=Math.max(run.stats.maxTurnDamage,run.combat.turnDamage);
   logCombat(`${label}: ${amount} 피해`)
 }
-function addShield(amount){run.party.filter(p=>p.hp>0).forEach(p=>p.shield+=amount);logCombat(`아군 전체 보호막 +${amount}`)}
+function addShieldToMember(member,amount){
+  if(!member||member.hp<=0)return 0;
+  const applied=Math.max(0,Math.round(Number(amount)||0));member.shield+=applied;return applied
+}
+function addShield(amount){
+  const applied=Math.max(0,Math.round(Number(amount)||0));
+  run.party.filter(p=>p.hp>0).forEach(p=>addShieldToMember(p,applied));
+  if(applied)logCombat(`아군 전체 보호막 +${applied}`);return applied
+}
 function healLowest(amount){
-  const alive=run.party.filter(p=>p.hp>0&&p.hp<p.maxHp).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp);if(!alive.length)return;
-  const p=alive[0], before=p.hp;p.hp=Math.min(p.maxHp,p.hp+amount);run.stats.healing+=p.hp-before;logCombat(`${p.name} HP +${p.hp-before}`)
+  const alive=run.party.filter(p=>p.hp>0&&p.hp<p.maxHp).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp);if(!alive.length)return null;
+  const p=alive[0],before=p.hp;p.hp=Math.min(p.maxHp,p.hp+Math.max(0,Math.round(Number(amount)||0)));const healed=p.hp-before;run.stats.healing+=healed;if(healed)logCombat(`${p.name} HP +${healed}`);return p
+}
+function healAllies(amount){
+  const value=Math.max(0,Math.round(Number(amount)||0));let total=0;
+  run.party.filter(p=>p.hp>0&&p.hp<p.maxHp).forEach(p=>{const before=p.hp;p.hp=Math.min(p.maxHp,p.hp+value);const healed=p.hp-before;total+=healed;if(healed)logCombat(`${p.name} HP +${healed}`)});
+  run.stats.healing+=total;return total
 }
 function endTurn(){
   const c=run.combat;if(!c)return;
@@ -1375,20 +1483,28 @@ function drawOne(){
   return null
 }
 function newTurn(initial=false){const c=run.combat;c.energy=3+runBaseEnergyBonus()+(hasArtifact('energyPlus')?1:0);c.turnDamage=0;c.firstCard=true;if(!initial)c.turn++;applyEnemyDots();if(c.enemy.hp<=0)return winCombat();drawCards(4+(initial&&hasArtifact('drawPlus')?1:0));c.intent=COMBAT_DATA.buildIntent(c.enemy.data,c.turn)}
-function dealDamage(amount,label,ownerId=null,cardKey=''){const c=run.combat,e=c.enemy,active=c.activeCard||{},actorId=ownerId||active.ownerId||run.party.find(p=>p.hp>0)?.id||'EMBER',actor=run.party.find(p=>p.id===actorId),stats=actor?.stats||CARD_DATA.characterStats(actorId,actor?.breakthrough||0),type=CARD_DATA.damageType(cardKey||active.cardKey,actorId),hit=COMBAT_DATA.resolveHit({medianDamage:amount,attackElementId:actorId,targetElementId:e.elementId,critChance:stats?.critChance,critMultiplier:stats?.critMultiplier,modifier:CARD_DATA.damageMultiplier(stats,type),rng:()=>TRIAD_ARCH.random(run),canCrit:Boolean(ownerId||active.ownerId)}),marked=Math.max(0,Math.round(hit.amount*(1+(e.mark||0)*.07)));e.hp=Math.max(0,e.hp-marked);run.stats.damage+=marked;c.turnDamage+=marked;run.stats.maxTurnDamage=Math.max(run.stats.maxTurnDamage,c.turnDamage);logCombat(`${label}: ${marked} damage${hit.weakness?' · weakness':''}${hit.critical?' · critical':''}`)}
+function dealDamage(amount,label,ownerId=null,cardKey='',options={}){
+  const c=run.combat,e=c.enemy,active=c.activeCard||{},actorId=ownerId||active.ownerId||run.party.find(p=>p.hp>0)?.id||'EMBER',actor=run.party.find(p=>p.id===actorId),stats=actor?.stats||CARD_DATA.characterStats(actorId,actor?.breakthrough||0),type=CARD_DATA.damageType(cardKey||active.cardKey,actorId),hpBefore=e.hp;
+  const critChance=Math.max(0,Math.min(1,Number(stats?.critChance||0)+Math.max(0,Number(options.critChanceBonus)||0)));
+  const weaknessMultiplier=Math.max(1,Number(COMBAT_DATA.RULES?.weaknessMultiplier)||1)+Math.max(0,Number(options.weaknessBonus)||0);
+  const hit=COMBAT_DATA.resolveHit({medianDamage:amount,attackElementId:actorId,targetElementId:e.elementId,critChance,critMultiplier:stats?.critMultiplier,weaknessMultiplier,modifier:CARD_DATA.damageMultiplier(stats,type),rng:()=>TRIAD_ARCH.random(run),canCrit:Boolean(ownerId||active.ownerId)}),marked=Math.max(0,Math.round(hit.amount*(1+(e.mark||0)*.07)));
+  e.hp=Math.max(0,e.hp-marked);run.stats.damage+=marked;c.turnDamage+=marked;run.stats.maxTurnDamage=Math.max(run.stats.maxTurnDamage,c.turnDamage);logCombat(`${label}: ${marked} damage${hit.weakness?' · weakness':''}${hit.critical?' · critical':''}`);
+  return{amount:marked,hpBefore,hpAfter:e.hp,weakness:hit.weakness,critical:hit.critical}
+}
 function enemyTurn(){
   const c=run.combat,e=c.enemy,results=[];
-  for(let hitIndex=0;hitIndex<c.intent.hits&&e.hp>0;hitIndex++){
-    const targets=run.party.filter(p=>p.hp>0);if(!targets.length)break;
-    const p=choice(targets),wasAlive=p.hp>0,stats=p.stats||CARD_DATA.characterStats(p.id,p.breakthrough||0);
+  const allTargets=c.intent.target==='all'?run.party.filter(p=>p.hp>0):null,attackCount=allTargets?.length||Math.max(1,Number(c.intent.hits)||1);
+  for(let hitIndex=0;hitIndex<attackCount&&e.hp>0;hitIndex++){
+    const targets=run.party.filter(p=>p.hp>0);if(!targets.length)break;const p=allTargets?allTargets[hitIndex]:choice(targets);if(!p||p.hp<=0)continue;
+    const wasAlive=p.hp>0,stats=p.stats||CARD_DATA.characterStats(p.id,p.breakthrough||0),hpBefore=p.hp,shieldBefore=p.shield;
     const hit=COMBAT_DATA.resolveHit({medianDamage:c.intent.damage,attackElementId:e.elementId,targetElementId:p.id,critChance:e.data?.critChance,critMultiplier:e.data?.critMultiplier,rng:()=>TRIAD_ARCH.random(run)});
     const incoming=Math.max(0,Math.round(hit.amount*CARD_DATA.incomingDamageMultiplier(stats))),blocked=Math.min(p.shield,incoming),damage=incoming-blocked;
-    p.shield-=blocked;p.hp=Math.max(0,p.hp-damage);run.battleSpriteState=run.battleSpriteState||{};
-    run.battleSpriteState[p.id]=p.hp<=0?'ko':blocked>0?'guard':'hit';
+    p.shield-=blocked;p.hp=Math.max(0,p.hp-damage);
     if(wasAlive&&p.hp<=0)retireKoOwnerCards(p.id);
     logCombat(`${e.name} → ${p.name}: ${damage} damage${blocked?` (${blocked} blocked)`:''}`);
-    results.push({targetId:p.id,damage,blocked,incoming});
-    if(c.counter&&blocked>0)dealDamage(c.counter,'Counter',p.id,'counter');
+    const result={targetId:p.id,damage,blocked,incoming,hpBefore,shieldBefore,hpAfter:p.hp,shieldAfter:p.shield,counterHit:null};
+    if(c.counter&&blocked>0)result.counterHit=dealDamage(c.counter,'Counter',p.id,'counter');
+    results.push(result);
   }
   return results
 }
@@ -1427,32 +1543,32 @@ function toggleAutoBattle(){
 }
 function autoCardDamageEstimate(card,state){
   const c=run?.combat;if(!c||!card)return 0;
-  const level=effectiveCardLevel(card,state?.level),v=cardValue(card,state?.level),secondary=CARD_DATA.secondary(card.pattern.key,level),combo=hasArtifact('triadChain')&&run.lastOwner&&run.lastOwner!==card.owner?4:0,key=card.pattern.key;
+  const level=effectiveCardLevel(card,state?.level),v=cardValue(card,state?.level),secondary=CARD_DATA.secondary(card.pattern.key,level),combo=hasArtifact('triadChain')&&run.lastOwner&&run.lastOwner!==card.owner?4:0,key=card.pattern.key,perk=CARD_DATA.star5Perk(key,level),ownerChanged=Boolean(run.lastOwner&&run.lastOwner!==card.owner);
   if(['strike','heavy','quick'].includes(key))return v+combo;
-  if(key==='mark')return 4+combo;
-  if(key==='dot')return 5+combo;
-  if(key==='burst')return v*Math.max(1,secondary||3)+combo;
-  if(key==='combo')return v+(run.lastOwner&&run.lastOwner!==card.owner?7:0)+combo;
-  if(key==='scale')return v+(c.enemy.burn+c.enemy.shock+c.enemy.mark)*Math.max(1,secondary||2)+combo;
-  if(key==='execute')return v*(c.enemy.hp/c.enemy.maxHp<=.35?2:1)+combo;
-  if(key==='signature')return Math.round(v*CARD_DATA.signatureProfile(card.owner).damageMultiplier)+combo;
-  if(key==='inferno'||key==='ambush')return v+combo+(key==='ambush'&&c.firstCard?secondary:0);
-  if(key==='volley')return v*3+combo;
-  if(key==='overload')return v+secondary+combo;
+  if(key==='mark'||key==='dot')return secondary+combo;
+  if(key==='burst'||key==='volley')return v*secondary+combo;
+  if(key==='combo')return v+(ownerChanged?7+(perk?.chainDamage||0):0)+combo;
+  if(key==='scale')return v+(c.enemy.burn+c.enemy.shock+c.enemy.mark)*Math.max(1,secondary+(perk?.statusScaleBonus||0))+combo;
+  if(key==='execute')return v*(c.enemy.hp/c.enemy.maxHp<=(perk?.executeThreshold||.35)?2:1)+combo;
+  if(key==='signature'){const profile=CARD_DATA.signatureProfile(card.owner);return Math.round(v*profile.damageMultiplier)+(ownerChanged?(profile.chainBonus||0):0)+combo}
+  if(key==='inferno')return v+combo;
+  if(key==='ambush')return v+c.enemy.mark*(secondary+(perk?.markScaleBonus||0))+combo;
+  if(key==='overload')return v+combo;
   return 0
 }
 function autoCardScore(card,state,index){
-  const c=run.combat,key=card.pattern.key,level=effectiveCardLevel(card,state.level),v=cardValue(card,state.level),secondary=CARD_DATA.secondary(key,level),cost=c.firstCard&&hasArtifact('firstZero')?0:card.cost,alive=run.party.filter(p=>p.hp>0),lowest=Math.min(...alive.map(p=>p.hp/p.maxHp)),missing=alive.reduce((sum,p)=>sum+(p.maxHp-p.hp),0),shield=alive.reduce((sum,p)=>sum+p.shield,0),threat=Math.max(1,(c.intent?.damage||0)*(c.intent?.hits||1)),damage=autoCardDamageEstimate(card,state);
+  const c=run.combat,key=card.pattern.key,level=effectiveCardLevel(card,state.level),v=cardValue(card,state.level),secondary=CARD_DATA.secondary(key,level),perk=CARD_DATA.star5Perk(key,level),cost=c.firstCard&&hasArtifact('firstZero')?0:card.cost,alive=run.party.filter(p=>p.hp>0),lowest=Math.min(...alive.map(p=>p.hp/p.maxHp)),missing=alive.reduce((sum,p)=>sum+(p.maxHp-p.hp),0),shield=alive.reduce((sum,p)=>sum+p.shield,0),threat=Math.max(1,(c.intent?.damage||0)*(c.intent?.target==='all'?alive.length:(c.intent?.hits||1))),damage=autoCardDamageEstimate(card,state),shieldValue=['focus','battery'].includes(key)?secondary:key==='renewal'?secondary:v;
   let score=damage>0?damage*1.55+(damage/Math.max(1,cost))*7:0;
   if(damage>=c.enemy.hp&&damage>0)score+=10000;
-  if(key==='execute'&&c.enemy.hp/c.enemy.maxHp<=.35)score+=92;
+  if(key==='execute'&&c.enemy.hp/c.enemy.maxHp<=(perk?.executeThreshold||.35))score+=92;
   if(['mark','dot','inferno'].includes(key))score+=c.enemy.hp/c.enemy.maxHp>.32?28:5;
   if(key==='scale')score+=(c.enemy.burn+c.enemy.shock+c.enemy.mark)*9;
   if(key==='heal'||key==='renewal')score+=missing?missing*1.7+(1-lowest)*145:-900;
-  if(['guard','counter','bastion','renewal'].includes(key))score+=shield<threat*alive.length?Math.max(0,v*alive.length-shield)*1.2+threat*2:-140;
+  if(['guard','counter','bastion','renewal','focus','battery'].includes(key)&&shieldValue>0)score+=shield<threat?Math.max(0,shieldValue*alive.length-shield)*1.2+threat*2:-140;
   if(key==='counter')score+=threat>7?secondary*1.4:4;
   if(key==='focus')score+=(c.hand.length<=2?58:24)+v*8;
   if(key==='battery')score+=c.energy<=1?78+v*12:18;
+  if(key==='overload'&&alive.find(member=>member.id===card.owner)?.hp<=(perk?.selfDamage??secondary)+8)score-=45;
   if(key==='quick')score+=32;
   if(key==='signature')score+=(c.type==='boss'||c.type==='elite'?96:42)+v;
   if(cost===0)score+=22;
@@ -1477,8 +1593,22 @@ function autoBattleStep(){
   if(choice){c.autoActionsThisTurn++;const ok=playCardAuthoritative(choice.index,choice.state.id,c.actionToken);if(!ok)scheduleAutoBattle(380);return ok}
   return endTurnAuthoritative(c.actionToken)
 }
-function cardHitCount(card,state){const key=card?.pattern?.key;if(key==='volley')return 3;if(key==='burst')return Math.max(1,CARD_DATA.secondary(key,effectiveCardLevel(card,state?.level))||3);return 1}
+function cardHitCount(card,state){const key=card?.pattern?.key;if(key==='volley'||key==='burst')return Math.max(1,CARD_DATA.value(key,effectiveCardLevel(card,state?.level))||1);return 1}
 function pulseBattleImpact(side,delay=0){setTimeout(()=>{const stage=$('.battle-stage');if(!stage)return;const className=side==='player'?'impact-player':'impact-enemy';stage.classList.remove(className);void stage.offsetWidth;stage.classList.add(className);setTimeout(()=>stage.classList.remove(className),320)},Math.max(0,delay))}
+let combatPresentationGeneration=0;
+let combatPresentationFinalizer=null;
+function cancelCombatPresentation(){const pending=combatPresentationFinalizer;combatPresentationFinalizer=null;combatPresentationGeneration++;if(pending&&!pending.settled){pending.settled=true;pending.callback()}return Boolean(pending)}
+function beginCombatPresentation(){cancelCombatPresentation();return combatPresentationGeneration}
+function registerCombatPresentationFinalizer(generation,callback){if(generation!==combatPresentationGeneration||typeof callback!=='function')return false;combatPresentationFinalizer={generation,callback,settled:false};return true}
+function runCombatPresentationFinalizer(generation){const pending=combatPresentationFinalizer;if(!pending||pending.generation!==generation||pending.settled)return false;combatPresentationFinalizer=null;pending.settled=true;pending.callback();return true}
+function scheduleCombatPresentation(callback,delay,generation){return setTimeout(()=>{if(generation===combatPresentationGeneration)callback()},Math.max(0,Number(delay)||0))}
+function combatCardImpactDelay(event,key){const travel=combatVfxTravelImpactMs(event);if(Number.isFinite(travel))return travel;if(key==='signature')return 420;if(['quick','dot','burst','volley'].includes(key))return 520;if(['heavy','execute','scale','inferno','overload'].includes(key))return 250;if(key==='ambush')return 280;return 160}
+function combatEnemyImpactDelay(event,enemy,skillId){const travel=combatVfxTravelImpactMs(event);if(Number.isFinite(travel))return travel;const style=SFX.resolveEnemyStyle?.({enemy,skillId})||{};return style.heavy?360:style.magic?520:420}
+function combatHitOffsets(key,hits){return SFX.hitOffsets?.(key,hits)||Array.from({length:Math.max(1,hits)},(_,index)=>index*112)}
+function presentCombatVfxSequence(event,offsets,generation){if(!event)return false;(offsets?.length?offsets:[0]).forEach(offset=>scheduleCombatPresentation(()=>presentCombatVfx(event),offset,generation));return true}
+function renderEnemyHpPresentation(hp,maxHp=run?.combat?.enemy?.maxHp||1){const value=Math.max(0,Number(hp)||0),maximum=Math.max(1,Number(maxHp)||1),ratio=100*value/maximum,text=$('#enemyHpText'),bar=$('#enemyHpBar'),mini=document.querySelector('#enemySpriteWrap .sd-mini-bar i');if(text)text.textContent=`HP ${value} / ${maximum}`;if(bar)bar.style.width=`${ratio}%`;if(mini)mini.style.width=`${ratio}%`}
+function renderPartyMemberPresentation(snapshot){const member=run?.party?.find(p=>p.id===snapshot?.targetId);if(!member)return false;const hp=Math.max(0,Number(snapshot.hpAfter??member.hp)||0),shield=Math.max(0,Number(snapshot.shieldAfter??member.shield)||0),sprite=document.querySelector(`#partySprites [data-core-id="${member.id}"]`),status=document.querySelector(`#partyCombat [data-core-id="${member.id}"]`),spriteBars=sprite?.querySelectorAll('.sd-mini-bar i'),statusLabels=status?.querySelectorAll('.small.muted'),statusBars=status?.querySelectorAll('.bar i'),statusTag=status?.querySelector('.tag');sprite?.classList.toggle('dead',hp<=0);status?.classList.toggle('dead',hp<=0);if(statusTag)statusTag.textContent=hp>0?'생존':'전투불능';if(spriteBars?.[0])spriteBars[0].style.width=`${100*hp/member.maxHp}%`;if(spriteBars?.[1])spriteBars[1].style.width=`${Math.min(100,shield*3)}%`;if(statusLabels?.[0])statusLabels[0].textContent=`HP ${hp}/${member.maxHp}`;if(statusLabels?.[1])statusLabels[1].textContent=`보호막 ${shield}`;if(statusBars?.[0])statusBars[0].style.width=`${100*hp/member.maxHp}%`;if(statusBars?.[1])statusBars[1].style.width=`${Math.min(100,shield*3)}%`;return true}
+function presentPartyImpact(result){const member=run?.party?.find(p=>p.id===result?.targetId);if(!member)return false;renderPartyMemberPresentation(result);const state=result.hpAfter<=0?'ko':result.blocked>0?'guard':'hit';run.battleSpriteState=run.battleSpriteState||{};run.battleSpriteState[member.id]=state;const actor=sdBattleActors.get(member.characterId);if(actor)actor.play(state);return true}
 function settleResolvedCard(c,state,card,exhaust){
   c.exhaust=Array.isArray(c.exhaust)?c.exhaust:[];c.discard=Array.isArray(c.discard)?c.discard:[];
   if(exhaust||!isPlayableOwner(card.owner))c.exhaust.push(state);else c.discard.push(state)
@@ -1488,6 +1618,7 @@ function newTurnAuthoritative(initial=false){
   c.inputLocked=true;c.energy=3+runBaseEnergyBonus()+(hasArtifact('energyPlus')?1:0);c.turnDamage=0;c.firstCard=true;c.autoActionsThisTurn=0;if(!initial)c.turn++;
   applyEnemyDots();if(c.enemy.hp<=0){setEnemyVisualState('DEFEAT');winCombat();return false}
   drawCards(4+(initial&&hasArtifact('drawPlus')?1:0));c.intent=COMBAT_DATA.buildIntent(c.enemy.data,c.turn);enforceKoCardInvariant();
+  run.battleSpriteState=run.battleSpriteState||{};if(!initial)run.party.forEach(member=>{run.battleSpriteState[member.id]=member.hp>0?'idle':'ko'});
   c.phase='PLAYER';c.inputLocked=false;return true
 }
 function playCardAuthoritative(idx,expectedCardId,expectedToken){
@@ -1503,39 +1634,40 @@ function playCardAuthoritative(idx,expectedCardId,expectedToken){
   c.inputLocked=true;c.actionToken++;c.energy-=cost;c.hand.splice(idx,1);run.stats.cardsPlayed++;
   cancelAutoBattleStep();
   const previousOwner=run.lastOwner;run.lastOwner=card.owner;c.activeCard={ownerId:card.owner,cardKey:card.pattern.key};
-  run.battleSpriteState=run.battleSpriteState||{};run.battleSpriteState[card.owner]=card.pattern.key==='signature'?'ultimate':['guard','bastion','counter'].includes(card.pattern.key)?'guard':['focus','battery','mark','dot','heal','renewal','overload'].includes(card.pattern.key)?'skill':'attack';
-  const level=effectiveCardLevel(card,state.level),v=cardValue(card,state.level),secondary=CARD_DATA.secondary(card.pattern.key,level),statusBonus=hasArtifact('statusAmp')?1:0,comboBonus=hasArtifact('triadChain')&&previousOwner&&previousOwner!==card.owner?4:0,profile=CARD_DATA.signatureProfile(card.owner);let exhaust=false;
+  run.battleSpriteState=run.battleSpriteState||{};run.party.forEach(member=>{run.battleSpriteState[member.id]=member.hp>0?'idle':'ko'});run.battleSpriteState[card.owner]=card.pattern.key==='signature'?'ultimate':['guard','bastion','counter'].includes(card.pattern.key)?'guard':['focus','battery','mark','dot','heal','renewal','overload'].includes(card.pattern.key)?'skill':'attack';
+  const level=effectiveCardLevel(card,state.level),v=cardValue(card,state.level),secondary=CARD_DATA.secondary(card.pattern.key,level),statusBonus=hasArtifact('statusAmp')?1:0,comboBonus=hasArtifact('triadChain')&&previousOwner&&previousOwner!==card.owner?4:0,profile=CARD_DATA.signatureProfile(card.owner),perk=CARD_DATA.star5Perk(card.pattern.key,level),ownerChanged=Boolean(previousOwner&&previousOwner!==card.owner),damageOptions={critChanceBonus:(card.pattern.key==='quick'?secondary:0)+(perk?.critChanceBonus||0),weaknessBonus:perk?.weaknessBonus||0},hitResults=[];let exhaust=false;
+  const hit=(amount,label=card.name)=>{const result=dealDamage(amount,label,card.owner,card.pattern.key,damageOptions);hitResults.push(result);return result};
   switch(card.pattern.key){
-    case 'strike':case 'heavy':dealDamage(v+comboBonus,card.name);break;
+    case 'strike':case 'heavy':hit(v+comboBonus);break;
     case 'guard':addShield(v);break;
-    case 'quick':dealDamage(v+comboBonus,card.name);drawCards(1);break;
-    case 'focus':drawCards(v);break;
-    case 'battery':c.energy+=v;exhaust=true;break;
-    case 'mark':dealDamage(4+comboBonus,card.name);c.enemy.mark+=v+statusBonus;break;
-    case 'dot':dealDamage(5+comboBonus,card.name);if(card.owner==='EMBER'||card.owner==='RIFT')c.enemy.burn+=v+statusBonus;else c.enemy.shock+=v+statusBonus;break;
-    case 'burst':for(let i=0;i<Math.max(1,secondary||3)&&c.enemy.hp>0;i++)dealDamage(v+comboBonus,card.name);break;
-    case 'heal':healLowest(v);break;
-    case 'combo':dealDamage(v+(previousOwner&&previousOwner!==card.owner?7:0)+comboBonus,card.name);break;
-    case 'scale':dealDamage(v+(c.enemy.burn+c.enemy.shock+c.enemy.mark)*Math.max(1,secondary||2)+comboBonus,card.name);break;
-    case 'counter':addShield(v);c.counter+=secondary||v;break;
-    case 'execute':dealDamage(v*(c.enemy.hp/c.enemy.maxHp<=.35?2:1)+comboBonus,card.name);break;
-    case 'signature':dealDamage(Math.round(v*profile.damageMultiplier)+comboBonus,card.name);addShield(Math.round(v*profile.shieldRatio));if(profile.healRatio)healLowest(Math.round(v*profile.healRatio));c.enemy.burn+=profile.burn||0;c.enemy.shock+=profile.shock||0;c.enemy.mark+=profile.mark||0;if(profile.draw)drawCards(profile.draw);if(profile.counterRatio)c.counter+=Math.round(v*profile.counterRatio);break;
-    case 'inferno':dealDamage(v+comboBonus,card.name);c.enemy.burn+=secondary+statusBonus;break;
-    case 'volley':for(let i=0;i<3&&c.enemy.hp>0;i++)dealDamage(v+comboBonus,card.name);break;
+    case 'quick':hit(v+comboBonus);drawCards(1);break;
+    case 'focus':drawCards(v);if(secondary)addShield(secondary);break;
+    case 'battery':c.energy+=v;if(secondary)addShield(secondary);exhaust=true;break;
+    case 'mark':hit(secondary+comboBonus);c.enemy.mark+=v+statusBonus+(perk?.statusBonus||0);break;
+    case 'dot':hit(secondary+comboBonus);if(card.owner==='EMBER'||card.owner==='RIFT')c.enemy.burn+=v+statusBonus+(perk?.statusBonus||0);else c.enemy.shock+=v+statusBonus+(perk?.statusBonus||0);break;
+    case 'burst':for(let i=0;i<Math.max(1,v)&&c.enemy.hp>0;i++)hit(secondary+(i===0?comboBonus:0));break;
+    case 'heal':{const target=healLowest(v);if(target&&perk?.targetShield){addShieldToMember(target,perk.targetShield);logCombat(`${target.name} shield +${perk.targetShield}`)}break}
+    case 'combo':hit(v+(ownerChanged?7+(perk?.chainDamage||0):0)+comboBonus);break;
+    case 'scale':hit(v+(c.enemy.burn+c.enemy.shock+c.enemy.mark)*Math.max(1,secondary+(perk?.statusScaleBonus||0))+comboBonus);break;
+    case 'counter':addShield(v);c.counter+=secondary+(perk?.counterDamage||0);break;
+    case 'execute':hit(v*(c.enemy.hp/c.enemy.maxHp<=(perk?.executeThreshold||.35)?2:1)+comboBonus);break;
+    case 'signature':hit(Math.round(v*profile.damageMultiplier)+(ownerChanged?(profile.chainBonus||0):0)+comboBonus);addShield(Math.round(v*profile.shieldRatio));if(profile.healRatio)healAllies(Math.round(v*profile.healRatio));c.enemy.burn+=profile.burn||0;c.enemy.shock+=profile.shock||0;c.enemy.mark+=profile.mark||0;if(profile.draw)drawCards(profile.draw);if(profile.counterRatio)c.counter+=Math.round(v*profile.counterRatio);break;
+    case 'inferno':hit(v+comboBonus);c.enemy.burn+=secondary+statusBonus+(perk?.statusBonus||0);break;
+    case 'volley':for(let i=0;i<Math.max(1,v)&&c.enemy.hp>0;i++)hit(secondary+(i===0?comboBonus:0));break;
     case 'bastion':addShield(v);c.counter+=secondary;break;
-    case 'ambush':dealDamage(v+(c.firstCard?secondary:0)+comboBonus,card.name);break;
-    case 'renewal':healLowest(v);addShield(secondary);break;
-    case 'overload':dealDamage(v+secondary+comboBonus,card.name);break;
-    default:dealDamage(v+comboBonus,card.name)
+    case 'ambush':hit(v+c.enemy.mark*(secondary+(perk?.markScaleBonus||0))+comboBonus);break;
+    case 'renewal':healAllies(v);if(secondary)addShield(secondary);break;
+    case 'overload':{hit(v+comboBonus);const selfDamage=Math.max(0,perk?.selfDamage??secondary),hpBefore=owner.hp;owner.hp=Math.max(1,owner.hp-selfDamage);if(owner.hp<hpBefore)logCombat(`${owner.name}: HP ${hpBefore-owner.hp} consumed`);exhaust=true;break}
+    default:hit(v+comboBonus)
   }
-  const perk=CARD_DATA.star5Perk(card.pattern.key,level);if(perk?.shieldBonus)addShield(perk.shieldBonus);if(perk?.healBonus)healLowest(perk.healBonus);if(perk?.statusBonus)c.enemy.burn+=perk.statusBonus;
+  if(perk?.shieldBonus)addShield(perk.shieldBonus);if(perk?.healBonus)healLowest(perk.healBonus);
   settleResolvedCard(c,state,card,exhaust);c.activeCard=null;c.firstCard=false;enforceKoCardInvariant();if(c.type==='tutorial')run.tutorial=TUTORIAL.recordCard(run.tutorial,card);
-  const damageDealt=Math.max(0,enemyHpBefore-c.enemy.hp),defeated=c.enemy.hp<=0,hits=cardHitCount(card,state);
-  const damageType=CARD_DATA.damageType(card.pattern.key,card.owner),cardVfxEvent=combatCardVfxEvent(card),cardImpactDelay=combatVfxTravelImpactMs(cardVfxEvent);
-  c.inputLocked=false;renderCombat();presentCombatVfx(cardVfxEvent);SFX.playCard(card,{damage:damageDealt,hits,damageType,impactDelay:cardImpactDelay});
-  if(damageDealt>0){pulseBattleImpact('enemy',cardImpactDelay??(['quick','dot','volley'].includes(card.pattern.key)?430:card.pattern.key==='signature'?330:145));if(defeated)setEnemyVisualState('DEFEAT');else queueEnemyVisualState('HIT')}
-  if(defeated)return winCombat();
-  saveRun();scheduleAutoBattle(760);return true
+  const damageDealt=Math.max(0,enemyHpBefore-c.enemy.hp),defeated=c.enemy.hp<=0,hits=hitResults.length||cardHitCount(card,state);
+  const damageType=CARD_DATA.damageType(card.pattern.key,card.owner),cardVfxEvent=combatCardVfxEvent(card),cardImpactDelay=combatCardImpactDelay(cardVfxEvent,card.pattern.key),hitOffsets=combatHitOffsets(card.pattern.key,hits),presentationGeneration=beginCombatPresentation();
+  renderCombat();if(hitResults.length)renderEnemyHpPresentation(hitResults[0].hpBefore,c.enemy.maxHp);presentCombatVfxSequence(cardVfxEvent,hitResults.length?hitOffsets:[0],presentationGeneration);SFX.playCard(card,{damage:damageDealt,hits,damageType,impactDelay:cardImpactDelay});
+  hitResults.forEach((result,index)=>scheduleCombatPresentation(()=>{renderEnemyHpPresentation(result.hpAfter,c.enemy.maxHp);pulseBattleImpact('enemy');setEnemyVisualState(defeated&&index===hitResults.length-1?'DEFEAT':'HIT')},cardImpactDelay+(hitOffsets[index]||0),presentationGeneration));
+  const presentationEnd=Math.max(360,hitResults.length?cardImpactDelay+(hitOffsets[hitResults.length-1]||0)+90:220);
+  const finalizeCardPresentation=()=>{if(defeated){winCombat();return}c.inputLocked=false;renderCombat();saveRun();scheduleAutoBattle(760)};registerCombatPresentationFinalizer(presentationGeneration,finalizeCardPresentation);scheduleCombatPresentation(()=>runCombatPresentationFinalizer(presentationGeneration),presentationEnd,presentationGeneration);return true
 }
 function endTurnAuthoritative(expectedToken){
   const c=run?.combat;if(!c||c.phase!=='PLAYER'||c.inputLocked||c.actionToken!==expectedToken)return false;
@@ -1544,11 +1676,11 @@ function endTurnAuthoritative(expectedToken){
   cancelAutoBattleStep();c.inputLocked=true;c.phase='ENEMY';c.actionToken++;
   const enemyActionSkillId=c.intent?.skillId;
   for(const state of c.hand.splice(0)){const card=ALL_CARDS[state.id];if(card)settleResolvedCard(c,state,card,false)}
-  const enemyResults=enemyTurn(),enemyVfxTarget=enemyResults[0]?.targetId||run.party.find(p=>p.hp>0)?.id||'',enemyVfxEvent=combatEnemyVfxEvent(c.enemy,enemyVfxTarget),enemyImpactDelay=combatVfxTravelImpactMs(enemyVfxEvent);enforceKoCardInvariant();if(c.type==='tutorial')run.tutorial=TUTORIAL.recordEndTurn(run.tutorial);SFX.playEnemy({hits:enemyResults.length,results:enemyResults,enemy:c.enemy.data,skillId:enemyActionSkillId,impactDelay:enemyImpactDelay});pulseBattleImpact('player',enemyImpactDelay??420);
-  if(c.enemy.hp<=0){setEnemyVisualState('DEFEAT');return winCombat()}
-  if(run.party.every(p=>p.hp<=0)){if(c.type==='tutorial')return retryTutorialCombat();finishRun('DEFEAT');return true}
-  if(!newTurnAuthoritative(false))return true;
-  renderCombat();presentCombatVfx(enemyVfxEvent);queueEnemyVisualState(enemyActionPresentationState(enemyActionSkillId));saveRun();scheduleAutoBattle(980);return true
+  const enemyResults=enemyTurn(),enemyVfxTarget=enemyResults[0]?.targetId||run.party.find(p=>p.hp>0)?.id||'',enemyVfxEvent=combatEnemyVfxEvent(c.enemy,enemyVfxTarget),enemyImpactDelay=combatEnemyImpactDelay(enemyVfxEvent,c.enemy.data,enemyActionSkillId),enemyStyle=SFX.resolveEnemyStyle?.({enemy:c.enemy.data,skillId:enemyActionSkillId})||{},enemyOffsets=combatHitOffsets(enemyStyle.flurry?'flurry':'',enemyResults.length),presentationGeneration=beginCombatPresentation();enforceKoCardInvariant();if(c.type==='tutorial')run.tutorial=TUTORIAL.recordEndTurn(run.tutorial);SFX.playEnemy({hits:enemyResults.length,results:enemyResults,enemy:c.enemy.data,skillId:enemyActionSkillId,impactDelay:enemyImpactDelay});
+  renderCombat();const initialPartySnapshots=new Map();for(const result of enemyResults)if(!initialPartySnapshots.has(result.targetId))initialPartySnapshots.set(result.targetId,{targetId:result.targetId,hpAfter:result.hpBefore,shieldAfter:result.shieldBefore});for(const snapshot of initialPartySnapshots.values())renderPartyMemberPresentation(snapshot);const firstCounter=enemyResults.find(result=>result.counterHit)?.counterHit;if(firstCounter)renderEnemyHpPresentation(firstCounter.hpBefore,c.enemy.maxHp);queueEnemyVisualState(enemyActionPresentationState(enemyActionSkillId));
+  enemyResults.forEach((result,index)=>{const offset=enemyOffsets[index]||0,event=combatEnemyVfxEvent(c.enemy,result.targetId);scheduleCombatPresentation(()=>presentCombatVfx(event),offset,presentationGeneration);scheduleCombatPresentation(()=>{presentPartyImpact(result);pulseBattleImpact('player');if(result.counterHit){renderEnemyHpPresentation(result.counterHit.hpAfter,c.enemy.maxHp);pulseBattleImpact('enemy');setEnemyVisualState(result.counterHit.hpAfter<=0?'DEFEAT':'HIT')}},enemyImpactDelay+offset,presentationGeneration);if(result.counterHit)SFX.play('impactLight',{delay:enemyImpactDelay+offset,volume:.66,rate:1.01})});
+  const presentationEnd=enemyImpactDelay+(enemyOffsets[Math.max(0,enemyResults.length-1)]||0)+110;
+  const finalizeEnemyPresentation=()=>{if(c.enemy.hp<=0){setEnemyVisualState('DEFEAT');winCombat();return}if(run.party.every(p=>p.hp<=0)){if(c.type==='tutorial')retryTutorialCombat();else finishRun('DEFEAT');return}if(!newTurnAuthoritative(false))return;renderCombat();saveRun();scheduleAutoBattle(980)};registerCombatPresentationFinalizer(presentationGeneration,finalizeEnemyPresentation);scheduleCombatPresentation(()=>runCombatPresentationFinalizer(presentationGeneration),presentationEnd,presentationGeneration);return true
 }
 
 function svgDataUri(s){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)}
@@ -1766,7 +1898,7 @@ function partySpriteCard(p){
 }
 function partyStatusCard(p){
   const core=coreBy(p.id);
-  return `<div class="party-status-item ${p.hp<=0?'dead':''}">
+  return `<div class="party-status-item ${p.hp<=0?'dead':''}" data-core-id="${esc(p.id||core?.id||'')}">
     <div class="party-status-head">
       <strong>${core.emoji} ${p.name}</strong>
       <span class="tag">${p.hp>0?'생존':'전투불능'}</span>
@@ -1853,16 +1985,16 @@ function renderMap(sel){
   el.innerHTML=PROGRESSION.mapStages(run.stage).map(n=>`<div class="node ${n<run.stage?'done':''} ${n===run.stage?'current':''} ${PROGRESSION.stageInfo(n).isBoss?'boss':''}">${n}<br>${PROGRESSION.stageInfo(n).isBoss?'BOSS':'·'}</div>`).join('')
 }
 function retryTutorialCombat(){
-  if(!run)return false;cancelAutoBattleStep();restoreTutorialBaseline();run.tutorial={...TUTORIAL.defaultState(),status:'BRIEFING'};saveRun();showTutorialStage();toast('훈련 데이터를 복구했습니다. 다시 시작해 주세요');return true
+  if(!run)return false;cancelAutoBattleStep();cancelCombatPresentation();restoreTutorialBaseline();run.tutorial={...TUTORIAL.defaultState(),status:'BRIEFING'};saveRun();showTutorialStage();toast('훈련 데이터를 복구했습니다. 다시 시작해 주세요');return true
 }
 function winTutorialCombat(){
-  cancelAutoBattleStep();const combat=run?.combat;if(!combat||combat.type!=='tutorial'||combat.phase==='TERMINAL')return false;
+  cancelAutoBattleStep();cancelCombatPresentation();const combat=run?.combat;if(!combat||combat.type!=='tutorial'||combat.phase==='TERMINAL')return false;
   combat.phase='TERMINAL';combat.inputLocked=true;run.party.filter(member=>member.hp>0).forEach(member=>{run.battleSpriteState[member.id]='victory';sdBattleActors.get(member.characterId)?.play('victory')});
   const runId=run.id,state={...TUTORIAL.normalize(run.tutorial),status:'DEBRIEF',completed:false};run.tutorial=state;saveRun();
   setTimeout(()=>{if(run?.id!==runId)return;restoreTutorialBaseline();run.tutorial={...state,status:'DEBRIEF',completed:false};saveRun();showTutorialStage()},1350);return true
 }
 function winCombat(){
-  cancelAutoBattleStep();
+  cancelAutoBattleStep();cancelCombatPresentation();
   const combat=run?.combat;if(!combat||combat.phase==='TERMINAL'||run.pendingTransition)return false;
   if(combat.type==='tutorial')return winTutorialCombat();
   combat.phase='TERMINAL';combat.inputLocked=true;
@@ -1959,7 +2091,7 @@ function completeStage(fromReward,transactionId,payload={}){
   saveRun();showRoute();return true
 }
 function finishRun(result){
-  cancelAutoBattleStep();
+  cancelAutoBattleStep();cancelCombatPresentation();
   if(!run)return;
   const h=loadHistory();
   const snap={

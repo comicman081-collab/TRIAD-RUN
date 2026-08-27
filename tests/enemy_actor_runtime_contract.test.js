@@ -28,6 +28,7 @@ assert.equal(new Set(animations.records.map(row => row.id)).size, 90, "duplicate
 assert.equal(new Set(animations.records.map(row => row.preview)).size, 90, "preview fallback/duplication detected");
 assert.equal(new Set(animations.records.map(row => row.atlas)).size, 90, "atlas fallback/duplication detected");
 
+const authoringPreviewRootAvailable = fs.existsSync(path.join(root, "assets/enemies/monsters_rgba_p1"));
 for (const monster of combat.MONSTERS) {
   const animation = animations.byId[monster.id];
   const resolved = visuals.resolveEnemy(monster);
@@ -36,7 +37,10 @@ for (const monster of combat.MONSTERS) {
   assert.deepEqual(Object.keys(animation.clips), ["IDLE", "ATTACK", "HIT", "DEFEAT"]);
   assert.equal(animation.clips.DEFEAT.holdLastFrame, true);
   assert.equal(resolved.animation.id, monster.id, `visual resolver fallback: ${monster.id}`);
-  assert.ok(fs.existsSync(path.join(root, animation.preview)), `missing preview: ${monster.id}`);
+  // Authoring previews are intentionally gitignored; active production uses
+  // the committed atlas. Validate previews as an additional local QA gate
+  // whenever the authoring archive is present.
+  if (authoringPreviewRootAvailable) assert.ok(fs.existsSync(path.join(root, animation.preview)), `missing preview: ${monster.id}`);
   assert.ok(fs.existsSync(path.join(root, animation.atlas)), `missing atlas: ${monster.id}`);
 }
 
@@ -51,7 +55,7 @@ for (const required of [
   'data-facing="LEFT"',
   "mountEnemyBattleActor(enemyVisual.animation)",
   "enemyActionPresentationState(",
-  "queueEnemyVisualState('HIT')",
+  "setEnemyVisualState(defeated&&index===hitResults.length-1?'DEFEAT':'HIT')",
   "setEnemyVisualState('DEFEAT')",
 ]) assert.ok(html.includes(required), `runtime binding missing: ${required}`);
 

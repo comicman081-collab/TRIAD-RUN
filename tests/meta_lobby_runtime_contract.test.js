@@ -27,7 +27,8 @@ test('lobby foreground contract rejects background-baked signature art', () => {
   assert.match(html, /visual-slot-stage[^`]+metaCharacterThumbnail\(record\)/);
   assert.match(html, /\.visual-slot-stage img\{[^}]*object-fit:cover[^}]*object-position:center 10%/);
   assert.doesNotMatch(html, /lobbyCharacterVisual[^\n]+record\.fullArt/);
-  assert.match(html, /배경이 포함된 시그니처 원화는 로비에 사용하지 않습니다/);
+  assert.match(html, /로비 일러스트 준비 중/);
+  assert.match(html, /현재 전투 참여는 가능하며, 로비 전용 일러스트는 다음 업데이트에서 제공됩니다/);
 });
 
 test('all twelve visual-gated lobby RGBA characters are active and background-free', () => {

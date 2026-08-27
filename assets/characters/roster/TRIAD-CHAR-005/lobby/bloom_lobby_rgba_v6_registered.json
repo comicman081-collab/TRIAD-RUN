@@ -1,0 +1,38 @@
+{
+  "status": "REGISTERED_CANDIDATE_VISUAL_QA_REQUIRED",
+  "runtimeEligible": false,
+  "assetType": "NON_SD_CHARACTER_RGBA",
+  "backgroundPolicy": "TRANSPARENT_ONLY",
+  "source": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-005\\lobby\\bloom_lobby_rgba_v5_checker_alpha.png",
+  "sourceSha256": "2F57186621572D51E477C8BC22E64240CEFD94973C3F25E7D2800B09C0BCA626",
+  "output": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-005\\lobby\\bloom_lobby_rgba_v6_registered.png",
+  "outputSha256": "E4DAD0F9F89983C2BCB1663D326338A2A40E5F6713C94B1C29143DCB74C8F067",
+  "sourceCanvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "sourceAlphaBbox": {
+    "minX": 140,
+    "minY": 191,
+    "maxX": 889,
+    "maxY": 1455
+  },
+  "canonicalCanvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "registeredSize": {
+    "width": 863,
+    "height": 1456
+  },
+  "registeredOffset": {
+    "x": 80,
+    "y": 40
+  },
+  "scale": 1.1509881422924901,
+  "padding": 40,
+  "rgbRegenerated": false,
+  "geometricRegistrationOnly": true,
+  "modelFilesModified": false,
+  "createdAt": "2026-08-23T17:02:42.656845+00:00"
+}

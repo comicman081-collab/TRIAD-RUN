@@ -1,0 +1,37 @@
+{
+  "characterId": "TRIAD-CHAR-007",
+  "characterName": "세라프",
+  "costumeId": "SERAPH_AEGIS_SANCTUM_KNIGHT_V4",
+  "authoritySource": "assets/characters/roster/TRIAD-CHAR-007/lobby/seraph_lobby_rgba_v4_gpt_web.png",
+  "authoritySha256": "3908A9EECC776F4E82A812314BE8EE9E821B6CC18CC3B720389C23B145FC0497",
+  "source": {
+    "provider": "GPT_WEB",
+    "dimensions": [1024, 1536],
+    "createdFor": "TRIAD // RUN gacha recruit source art"
+  },
+  "fingerprint": {
+    "hair": "white-blonde short bob with a star-like left hair ornament",
+    "upperGarment": "black-navy high-collar armored bodice with white-gold plated pauldrons",
+    "lowerGarment": "navy split tabard and white front drape over black armored leggings",
+    "hipPanels": "long navy-and-gold asymmetric mantle panels",
+    "sleevesGloves": "black fitted gloves with white-gold armored bracers",
+    "boots": "black knee-high armored boots with white-gold shin plates",
+    "armorModules": "white-gold geometric plate segments over a navy base",
+    "palette": "navy, black, white, platinum gold, and cyan energy only",
+    "weapon": "slender cyan energy lance in the right hand",
+    "focus": "floating cyan hexagonal ward core above the left hand",
+    "coverage": "adult non-explicit commercial RPG armor coverage"
+  },
+  "status": "COSTUME_CONTINUITY_PASS",
+  "review": {
+    "provider": "GPT_WEB",
+    "verdict": "COSTUME_CONTINUITY_PASS",
+    "scope": "V4 authority cutout only; all future lobby and combat poses must retain this costume fingerprint."
+  },
+  "history": [{
+    "costumeId": "SERAPH_AEGIS_SANCTUM_KNIGHT_V1",
+    "verdict": "COSTUME_DRIFT_FAIL",
+    "reason": "coverage did not meet the original non-exposure brief",
+    "source": "assets/characters/roster/TRIAD-CHAR-007/source/seraph_authority_gpt_web_v1.png"
+  }]
+}

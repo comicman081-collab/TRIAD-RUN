@@ -1,0 +1,31 @@
+{
+  "characterId": "TRIAD-CHAR-011",
+  "characterName": "세나",
+  "costumeId": "SENA_BLOOM_LOTUS_V1",
+  "authoritySource": "assets/characters/roster/TRIAD-CHAR-011/source/sena_authority_gpt_web_v1.png",
+  "authoritySha256": "0621368A4A1210FD718CD54FACC1243F5C3F696E2E8E2F03BD77698E7CE9006A",
+  "fingerprint": {
+    "hair": "long soft mint-green waved hair with floral ornaments",
+    "upperGarment": "ivory jade champagne-gold structured floral battle bodice",
+    "lowerGarment": "asymmetric mint ivory petal robe panels with thigh harness",
+    "sleevesGloves": "long ivory gloves with gold-green petal armor",
+    "boots": "ivory gold armored knee-high high-heel boots",
+    "palette": "jade, ivory, champagne gold, mint biolight",
+    "weapon": "lotus-topped life staff with floating golden blossom orb",
+    "coverage": "adult non-explicit commercial mobile RPG maximum exposure"
+  },
+  "review": {
+    "authoringRoute": "GPT_WEB",
+    "acceptanceRoute": "LOCAL_DETERMINISTIC_VISUAL",
+    "adultProportionRead": "PASS",
+    "identityAndHair": "PASS",
+    "costumeFingerprint": "PASS",
+    "weaponReadability": "PASS",
+    "lobbyAlpha": "GPT_WEB_NATIVE_RGBA_LOCAL_VISUAL_PASS",
+    "lobbyAlphaSha256": "46CE6F110D0CDE3B2F7E170B3812A33F179D99C8AFDD7F35F909C61D2DAF895B",
+    "alphaZeroPixelCount": 547915,
+    "silhouetteCompleteness": "PASS_HAIR_ROBE_STAFF_ORBS_RIBBONS",
+    "atlasReview": "LOCAL_DETERMINISTIC_VISUAL_PASS_R002"
+  },
+  "status": "COSTUME_CONTINUITY_PASS"
+}

@@ -1,0 +1,71 @@
+# Local runtime state
+.triad_runtime_profile/
+.tmp/
+
+# Historical imports, backups, audits, and production source archives
+_migration_backup/
+audit/
+backups/
+legacy_imports/
+reports/
+source_assets/
+assets/assets/
+
+# Retain the canonical roster, but omit retired modular-character trials.
+assets/characters/*
+!assets/characters/roster/
+
+# The production flow no longer depends on the historical 2.5D assembly set.
+assets/2_5d/**
+!assets/2_5d/characters/
+assets/2_5d/characters/**
+!assets/2_5d/characters/body_base_01_fitted_mvp.png
+
+# Keep only active enemy runtime atlases, not pilot work products and contacts.
+assets/enemies/*
+!assets/enemies/monster_animation_p1/
+assets/enemies/monster_animation_p1/**
+!assets/enemies/monster_animation_p1/*.webp
+!assets/enemies/production_pilot_v4/
+assets/enemies/production_pilot_v4/**
+!assets/enemies/production_pilot_v4/*/
+!assets/enemies/production_pilot_v4/*/*_PRODUCTION_PILOT_V4.webp
+!assets/enemies/production_pilot_v6/
+assets/enemies/production_pilot_v6/**
+!assets/enemies/production_pilot_v6/*/
+!assets/enemies/production_pilot_v6/*/*_PRODUCTION_PILOT_V6_GPU_FINAL.webp
+!assets/enemies/production_pilot_v7/
+assets/enemies/production_pilot_v7/**
+!assets/enemies/production_pilot_v7/*/
+!assets/enemies/production_pilot_v7/*/*_PRODUCTION_PILOT_V7_GPU_FINAL.webp
+!assets/enemies/production_pilot_v8/
+assets/enemies/production_pilot_v8/**
+!assets/enemies/production_pilot_v8/*/
+!assets/enemies/production_pilot_v8/*/*_PRODUCTION_PILOT_V8_GPU_FINAL.webp
+
+# Runtime cards use the optimized WebP set; PNG files are authoring masters.
+card_art/**/*.png
+
+# Unselected source music library; only sounds/triad_run_music and
+# sounds/triad_run_sfx are runtime dependencies.
+sounds/roguelike_rpg_audio_pack/
+
+# Large authoring/archive formats are not runtime assets.
+*.zip
+*.7z
+*.rar
+*.blend
+*.blend1
+*.psd
+*.kra
+*.xcf
+
+# Tool and OS caches
+node_modules/
+**/__pycache__/
+*.py[cod]
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

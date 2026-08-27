@@ -1,0 +1,38 @@
+{
+  "status": "REGISTERED_CANDIDATE_VISUAL_QA_REQUIRED",
+  "runtimeEligible": false,
+  "assetType": "NON_SD_CHARACTER_RGBA",
+  "backgroundPolicy": "TRANSPARENT_ONLY",
+  "source": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v5_clean.png",
+  "sourceSha256": "5A6ED1D9180D578B5D420FBFE5D61810B15EE85B435F07D5673948EBF09F94C7",
+  "output": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v6_registered.png",
+  "outputSha256": "FA17E9A69303EF651E6622F63E2A6958DE458B9CEFEFC787CD57A2BED33A7191",
+  "sourceCanvas": {
+    "width": 768,
+    "height": 1152
+  },
+  "sourceAlphaBbox": {
+    "minX": 0,
+    "minY": 201,
+    "maxX": 727,
+    "maxY": 1096
+  },
+  "canonicalCanvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "registeredSize": {
+    "width": 944,
+    "height": 1162
+  },
+  "registeredOffset": {
+    "x": 40,
+    "y": 187
+  },
+  "scale": 1.2967032967032968,
+  "padding": 40,
+  "rgbRegenerated": false,
+  "geometricRegistrationOnly": true,
+  "modelFilesModified": false,
+  "createdAt": "2026-08-23T16:43:09.598609+00:00"
+}

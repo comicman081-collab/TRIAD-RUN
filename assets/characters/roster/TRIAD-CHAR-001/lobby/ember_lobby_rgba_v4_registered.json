@@ -1,0 +1,38 @@
+{
+  "status": "REGISTERED_CANDIDATE_VISUAL_QA_REQUIRED",
+  "runtimeEligible": false,
+  "assetType": "NON_SD_CHARACTER_RGBA",
+  "backgroundPolicy": "TRANSPARENT_ONLY",
+  "source": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v3_clean.png",
+  "sourceSha256": "8E1EBF6B335C200D226E3D6A1315F246147F8508A146408D348805303434C019",
+  "output": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v4_registered.png",
+  "outputSha256": "43943433C27AA6B291E79E16F7110AE35B556615DC3739B4C2F7570499D6CC75",
+  "sourceCanvas": {
+    "width": 768,
+    "height": 1152
+  },
+  "sourceAlphaBbox": {
+    "minX": 215,
+    "minY": 71,
+    "maxX": 539,
+    "maxY": 1072
+  },
+  "canonicalCanvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "registeredSize": {
+    "width": 472,
+    "height": 1456
+  },
+  "registeredOffset": {
+    "x": 276,
+    "y": 40
+  },
+  "scale": 1.4530938123752495,
+  "padding": 40,
+  "rgbRegenerated": false,
+  "geometricRegistrationOnly": true,
+  "modelFilesModified": false,
+  "createdAt": "2026-08-23T16:42:57.858590+00:00"
+}

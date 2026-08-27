@@ -1,0 +1,28 @@
+{
+  "characterId": "TRIAD-CHAR-008",
+  "characterName": "리라",
+  "costumeId": "LYRA_EMBER_LANCE_V1",
+  "authoritySource": "assets/characters/roster/TRIAD-CHAR-008/source/lyra_authority_gpt_web_v1.png",
+  "authoritySha256": "7D0E3EF406ABDFDBDAB5B2A9A135AB685AE9086068A4F42B4F4F3F8447135A7B",
+  "fingerprint": {
+    "hair": "long auburn high ponytail with red-gold crown ornaments",
+    "upperGarment": "black-and-crimson structured bodice with red-gold armored accents",
+    "lowerGarment": "asymmetric crimson-and-black layered battle skirt panels with exposed upper thigh",
+    "sleevesGloves": "long black gloves with red-gold armored bracers",
+    "boots": "black high-heel armored thigh boots with red crystal accents",
+    "palette": "crimson, black, dark bronze gold, and fire orange",
+    "weapon": "long red crystal flame lance",
+    "coverage": "adult non-explicit commercial mobile RPG maximum exposure"
+  },
+  "review": {
+    "authoringRoute": "GPT_WEB",
+    "acceptanceRoute": "LOCAL_DETERMINISTIC_VISUAL",
+    "adultProportionRead": "PASS",
+    "identityAndHair": "PASS",
+    "costumeFingerprint": "PASS",
+    "weaponReadability": "PASS",
+    "ninePoseCoverage": "PASS",
+    "lobbyAlphaValidated": true
+  },
+  "status": "COSTUME_CONTINUITY_PASS"
+}

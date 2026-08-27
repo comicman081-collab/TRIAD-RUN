@@ -1,0 +1,31 @@
+{
+  "characterId": "TRIAD-CHAR-010",
+  "characterName": "녹스",
+  "costumeId": "NOX_SHADE_CHAINBLADE_V1",
+  "authoritySource": "assets/characters/roster/TRIAD-CHAR-010/source/nox_authority_gpt_web_v1.png",
+  "authoritySha256": "AF45BE163666903EB78CCA4BD35045982E727DFF04F7C2162C25C95A2E916D3F",
+  "fingerprint": {
+    "hair": "long glossy black-violet waved hair",
+    "upperGarment": "black-violet structured bodysuit with silver-purple chest armor",
+    "lowerGarment": "asymmetric violet-black coat panels and crossed thigh harness",
+    "sleevesGloves": "long black armored gloves with violet-silver modules",
+    "boots": "black violet armored knee-high high-heel boots",
+    "palette": "black, violet, silver, spectral purple",
+    "weapon": "paired short chainblades joined by purple soul chains",
+    "coverage": "adult non-explicit commercial mobile RPG maximum exposure"
+  },
+  "review": {
+    "authoringRoute": "GPT_WEB",
+    "acceptanceRoute": "LOCAL_DETERMINISTIC_VISUAL",
+    "adultProportionRead": "PASS",
+    "identityAndHair": "PASS",
+    "costumeFingerprint": "PASS",
+    "weaponReadability": "PASS",
+    "lobbyAlpha": "GPT_WEB_NATIVE_RGBA_LOCAL_VISUAL_PASS",
+    "lobbyAlphaSha256": "424421C07BCAC96F1AF8A1BA066A392A0BAAD8B960DD8537793EA373E485BE84",
+    "alphaZeroPixelCount": 756909,
+    "silhouetteCompleteness": "PASS_HAIR_COAT_CHAINS_BOTH_BLADES",
+    "atlasReview": "LOCAL_DETERMINISTIC_VISUAL_PASS_R002"
+  },
+  "status": "COSTUME_CONTINUITY_PASS"
+}

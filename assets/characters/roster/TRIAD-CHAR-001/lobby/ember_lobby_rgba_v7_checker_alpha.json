@@ -1,0 +1,24 @@
+{
+  "schema": "triad.lobby.checkerboard-removal.v1",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "runtimeEligible": false,
+  "source": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v5_imagegen.png",
+  "sourceSha256": "CF1E6C1FC3320F3383895F3B826F1BB3AD59D34402190C46E7A96243857DC6DB",
+  "output": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v7_checker_alpha.png",
+  "outputSha256": "BAECB5B1133C510018A93E20810B14DFF0756E13608051F06C0FE8906A4AB9B2",
+  "canvas": {
+    "width": 1023,
+    "height": 1537
+  },
+  "foregroundPixels": 541450,
+  "foregroundFraction": 0.34435695337745836,
+  "parameters": {
+    "neutralDelta": 0.065,
+    "minimumChannel": 0.82,
+    "edgeFeather": 1,
+    "borderConnectedOnly": true
+  },
+  "rgbRegenerated": false,
+  "modelFilesModified": false,
+  "createdAt": "2026-08-23T16:50:39.517674+00:00"
+}

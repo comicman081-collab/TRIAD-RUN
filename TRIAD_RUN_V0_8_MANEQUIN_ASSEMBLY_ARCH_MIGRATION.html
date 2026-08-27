@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TRIAD // RUN V0.8 - Image First</title>
+<script src="combat_data.js"></script>
+<script src="card_character_data.js"></script>
+<script src="assets/characters/character_assets.js"></script>
+<script src="assets/characters/triad_asset_manifest.js"></script>
+<script src="src/triad_architecture.js"></script>
+<style>
+:root{
+  --bg:#0b0d13; --panel:#141824; --panel2:#1b2030; --line:#2b344b;
+  --text:#f4f7ff; --muted:#9aa6bd; --accent:#7ee7ff; --good:#8bf0ad;
+  --warn:#ffd37a; --bad:#ff8b9a; --card:#20273a; --shadow:0 14px 35px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(circle at 20% -20%,#1b2a45 0,#0b0d13 38%,#07090d 100%);color:var(--text);font-family:"Noto Sans KR","Pretendard","Malgun Gothic",system-ui,-apple-system,sans-serif;min-height:100%}
+button,input,select{font:inherit}
+button{border:1px solid var(--line);background:linear-gradient(180deg,#222a3e,#171c2a);color:var(--text);border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+button:hover{filter:brightness(1.12)}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.primary{background:linear-gradient(180deg,#2d7f94,#1f5566);border-color:#56c7e2}
+button.good{background:linear-gradient(180deg,#286f46,#1e4e35);border-color:#61d38a}
+button.bad{background:linear-gradient(180deg,#79394b,#542635);border-color:#d96d83}
+button.ghost{background:transparent}
+#app{max-width:1280px;margin:0 auto;padding:18px}
+.topbar{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:14px}
+.brand{font-weight:900;letter-spacing:.12em}
+.brand span{color:var(--accent)}
+.muted{color:var(--muted)}
+.screen{display:none}
+.screen.active{display:block}
+.panel{background:linear-gradient(180deg,rgba(26,32,48,.96),rgba(16,20,30,.96));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.hero{padding:34px;min-height:66vh;display:grid;place-items:center;text-align:center}
+.hero h1{font-size:clamp(38px,7vw,88px);margin:0;line-height:.92;letter-spacing:-.05em}
+.hero p{max-width:700px;color:var(--muted);font-size:17px;line-height:1.6}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stack{display:grid;gap:12px}
+.grid{display:grid;gap:14px}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid6{grid-template-columns:repeat(6,minmax(0,1fr))}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:10px 0 12px}
+.section-title h2,.section-title h3{margin:0}
+.core-card,.reward-card,.hand-card,.history-card,.route-card{border:1px solid var(--line);background:linear-gradient(180deg,#20273a,#171c2a);border-radius:18px;padding:14px;position:relative}
+.core-card.selected{outline:2px solid var(--accent);box-shadow:0 0 0 5px rgba(126,231,255,.08)}
+.core-card h3,.reward-card h3,.hand-card h3{margin:8px 0 4px}
+.tag{display:inline-flex;padding:4px 8px;border-radius:999px;border:1px solid #39445f;background:#20283b;font-size:12px;color:#cdd7ea;margin:2px}
+.badge{display:inline-flex;min-width:28px;height:28px;border-radius:10px;align-items:center;justify-content:center;background:#111725;border:1px solid #42506e;font-weight:800}
+.cost{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#0f1725;border:1px solid #66d2eb;font-weight:900}
+.avatar{height:220px;border-radius:16px;background:linear-gradient(180deg,#11192b,#0b0f18);overflow:hidden;display:grid;place-items:center;border:1px solid #27324a}
+.avatar svg{width:100%;height:100%}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}
+.controls label{font-size:12px;color:var(--muted);display:grid;gap:4px}
+.controls input,.controls select{width:100%;background:#0e1421;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px}
+.small{font-size:12px}
+.card-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.reward-card,.hand-card{min-height:178px}
+.reward-card.selected{outline:2px solid var(--good)}
+.card-owner{font-size:12px;color:var(--accent);font-weight:700}
+.card-desc{color:#c4cede;font-size:13px;line-height:1.45;min-height:60px}
+.mapline{display:flex;align-items:center;gap:8px;overflow:auto;padding:6px 0 12px}
+.node{min-width:56px;text-align:center;border:1px solid var(--line);background:#111724;border-radius:14px;padding:7px 8px;font-size:11px}
+.node.done{border-color:#4f9367;color:#9ae4b2}
+.node.current{border-color:#66d8ef;box-shadow:0 0 0 3px rgba(102,216,239,.12)}
+.node.boss{border-color:#9a5b71}
+.combat-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:14px}
+.party{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.unit{border:1px solid var(--line);background:#131927;border-radius:16px;padding:12px}
+.unit.dead{opacity:.36;filter:grayscale(1)}
+.unit-name{font-weight:800}
+.bar{height:10px;border-radius:999px;background:#090d14;border:1px solid #28324a;overflow:hidden;margin-top:7px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#5fcb87,#9ce7ad)}
+.bar.shield>i{background:linear-gradient(90deg,#4e9ec2,#80e4ff)}
+.enemy{min-height:220px;display:grid;place-items:center;text-align:center;background:radial-gradient(circle,#273048 0,#111623 52%,#0b0f18 100%);border:1px solid var(--line);border-radius:20px}
+.enemy-icon{font-size:76px}
+.intent{padding:8px 10px;border-radius:12px;border:1px solid #574251;background:#241721;color:#ffc4ce;display:inline-block}
+.resourcebar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.resource{padding:8px 12px;border-radius:12px;background:#111724;border:1px solid var(--line)}
+.hand{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px}
+.hand-card.playable:hover{transform:translateY(-3px);transition:.12s}
+.hand-card.unplayable{opacity:.48}
+.log{height:160px;overflow:auto;background:#0d111b;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:12px;color:#aebbd1}
+.route-card{text-align:left;min-height:130px}
+.route-card strong{display:block;font-size:18px;margin-bottom:6px}
+.history-card{display:grid;grid-template-columns:1fr auto;gap:12px}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+.modal{position:fixed;inset:0;background:rgba(3,5,9,.78);display:none;place-items:center;padding:18px;z-index:50}
+.modal.open{display:grid}
+.modal>.panel{max-width:900px;width:min(900px,100%);max-height:88vh;overflow:auto}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#111827;border:1px solid #3a475f;padding:11px 16px;border-radius:999px;display:none;z-index:70}
+.toast.show{display:block}
+
+.character-tabs{display:flex;gap:8px;overflow:auto;padding:4px 0 12px}.character-tab{min-width:160px;text-align:left;display:flex;gap:9px;align-items:center}.character-tab.active{outline:2px solid var(--accent)}.character-tab.confirmed{border-color:#63d28d;background:linear-gradient(180deg,#1e4935,#172c24)}.tab-state{margin-left:auto;font-size:11px}.customizer-layout{display:grid;grid-template-columns:minmax(310px,.72fr) minmax(0,1.55fr);gap:14px}.customizer-preview-panel,.parts-panel{border:1px solid var(--line);border-radius:18px;background:#101521;padding:14px}.preview-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.gender-switch{display:flex;gap:6px}.gender-switch button.active{outline:2px solid var(--accent);background:#203a4b}.assembled-preview{position:relative;aspect-ratio:2/3;max-height:610px;margin:auto;background:radial-gradient(circle at 50% 35%,#293650 0,#121827 48%,#090d15 100%);border:1px solid #303b54;border-radius:18px;overflow:hidden}.assembled-preview .asset-stack{position:absolute;inset:0;transform-origin:50% 96%}.assembled-preview img.layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}.assembled-preview img.external-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.preview-lock{position:absolute;inset:0;background:rgba(8,12,19,.68);display:grid;place-items:center;z-index:30;backdrop-filter:blur(1px)}.preview-lock>div{text-align:center;border:1px solid #4f9269;background:#13271d;padding:14px 18px;border-radius:15px}.preview-lock strong{color:#8cf1ae;font-size:18px}.ratio-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}.ratio-controls label{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;color:var(--muted);font-size:12px}.ratio-controls input{width:100%}.selection-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.summary-chip{padding:7px 8px;border:1px solid var(--line);border-radius:10px;background:#0d121d;font-size:11px;color:#b9c4d8}.summary-chip b{color:#fff}.custom-confirm{flex:1;font-weight:900}.custom-confirm.cancel-confirm{background:linear-gradient(180deg,#6e4f24,#493719);border-color:#d6a652}.external-image-box{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.external-image-box input{max-width:210px;color:var(--muted);font-size:11px}.part-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:10px}.part-tab{padding:9px 12px;white-space:nowrap}.part-tab.active{outline:2px solid var(--accent);background:#203344}.parts-help{display:flex;align-items:end;justify-content:space-between;gap:10px;padding:4px 2px 9px}.part-grid{display:grid;grid-template-columns:repeat(5,minmax(82px,1fr));gap:8px;max-height:655px;overflow:auto;padding:2px}.part-option{position:relative;border:1px solid var(--line);background:#0d121c;border-radius:13px;padding:5px;min-height:136px;overflow:hidden;cursor:pointer}.part-option:hover{border-color:#59708f}.part-option.selected{outline:2px solid var(--accent);box-shadow:0 0 0 4px rgba(126,231,255,.08)}.part-option img{width:100%;height:108px;object-fit:contain;display:block;background:radial-gradient(circle,#1e2939,#0b1018)}.part-option span{position:absolute;left:7px;bottom:6px;padding:3px 6px;border-radius:7px;background:rgba(5,8,13,.82);font-size:11px;font-weight:900}.parts-panel.locked{opacity:.45;pointer-events:none;filter:saturate(.55)}
+@media(max-width:1000px){.customizer-layout{grid-template-columns:1fr}.assembled-preview{max-height:520px}.part-grid{grid-template-columns:repeat(4,minmax(74px,1fr));max-height:none}}@media(max-width:560px){.part-grid{grid-template-columns:repeat(3,minmax(70px,1fr))}.character-tab{min-width:135px}.ratio-controls{grid-template-columns:1fr}.selection-summary{grid-template-columns:repeat(2,1fr)}}
+
+@media(max-width:900px){
+  .grid6{grid-template-columns:repeat(2,1fr)}
+  .grid3,.grid2,.combat-grid{grid-template-columns:1fr}
+  .party{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  #app{padding:10px}
+  .hero{padding:18px;min-height:78vh}
+  .controls{grid-template-columns:repeat(2,1fr)}
+  .card-list,.hand{grid-template-columns:1fr 1fr}
+  .reward-card,.hand-card{min-height:200px;padding:11px}
+  .card-desc{font-size:12px}
+}
+
+.polished-core{padding:8px;overflow:hidden}
+.core-art-wrap{height:260px;border-radius:14px;overflow:hidden;background:#080c13;border:1px solid #2d3952}
+.core-art-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 24%;display:block}
+.core-art-meta{display:flex;justify-content:space-between;align-items:center;padding:4px 4px 0}
+.core-art-meta h3{font-size:22px;margin:5px 0 2px}
+.polished-main-preview{position:absolute;inset:0;display:grid;place-items:center;background:#090d15}
+.polished-main-preview img{width:100%;height:100%;object-fit:contain;display:block}
+.art-badge{position:absolute;left:12px;bottom:12px;padding:6px 9px;border-radius:9px;background:rgba(5,8,14,.78);border:1px solid #475670;color:#d6e3f8;font-size:10px;letter-spacing:.12em}
+.selected-part-preview{display:grid;grid-template-columns:190px 1fr;gap:12px;align-items:center;border:1px solid #34425d;background:#0c121e;border-radius:16px;padding:10px;margin:0 0 12px}
+.part-large-preview{height:220px;border-radius:13px;overflow:hidden;background:radial-gradient(circle,#263650,#0a0f18 73%);border:1px solid #35435d}
+.part-large-preview img{display:block;width:100%;height:100%;object-fit:contain}
+.part-grid{grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px}
+.part-option{min-height:215px;padding:7px}
+.part-option img{height:178px;border-radius:10px}
+@media(max-width:760px){
+  .grid6{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .core-art-wrap{height:300px}
+  .part-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .part-option{min-height:250px}
+  .part-option img{height:212px}
+  .selected-part-preview{grid-template-columns:150px 1fr}
+  .part-large-preview{height:190px}
+}
+@media(max-width:420px){
+  .core-art-wrap{height:260px}
+  .part-option{min-height:228px}
+  .part-option img{height:190px}
+  .selected-part-preview{grid-template-columns:128px 1fr}
+  .part-large-preview{height:160px}
+}
+
+
+/* V0.5 TURN RPG SD BATTLE */
+.combat-panel-v05{padding-bottom:20px}
+.jrpg-topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.jrpg-topbar h2{margin:2px 0 0}
+.jrpg-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.jrpg-meta .resource{padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:#0d1220;font-size:12px}
+.battle-stage{
+  display:grid;grid-template-columns:1fr 90px 1fr;gap:12px;align-items:center;
+  min-height:360px;padding:18px;border:1px solid #2d3850;border-radius:22px;
+  background:
+    radial-gradient(circle at 50% 15%,rgba(95,134,206,.22),transparent 28%),
+    linear-gradient(180deg,#15203a 0,#0c111d 60%,#0a0f18 100%);
+}
+.battle-lane{min-height:300px;border:1px solid #2d3850;border-radius:18px;padding:12px;background:rgba(8,12,19,.42)}
+.sd-party,.sd-enemy-wrap{display:flex;gap:14px;align-items:flex-end;justify-content:center;flex-wrap:wrap;min-height:250px}
+.sd-card{
+  width:120px;border-radius:18px;padding:6px;background:linear-gradient(180deg,#1b2437,#0d121d);border:1px solid #34405b;
+  box-shadow:0 10px 30px rgba(0,0,0,.25)
+}
+.sd-card.dead{opacity:.4;filter:grayscale(1)}
+.sd-card img{width:100%;height:138px;object-fit:contain;display:block}
+.sd-name{font-size:12px;font-weight:800;text-align:center;margin-top:4px}
+.sd-mini-bar{height:8px;background:#111827;border-radius:999px;overflow:hidden;border:1px solid #2f3c59;margin-top:6px}
+.sd-mini-bar i{display:block;height:100%;background:linear-gradient(90deg,#67f0aa,#2fa2ff)}
+.sd-mini-bar.shield i{background:linear-gradient(90deg,#9be8ff,#4e7dff)}
+.battle-vs{display:grid;place-items:center;gap:8px}
+.vs-badge{width:64px;height:64px;border-radius:999px;display:grid;place-items:center;background:radial-gradient(circle,#33486a,#141c2c);border:2px solid #4b678f;font-weight:900;color:#fff}
+.battle-info-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-top:12px}
+.status-panel{border:1px solid #2d3850;border-radius:18px;padding:12px;background:#0d1220}
+.enemy-card-v05{padding:4px}
+.enemy-card-row{display:flex;gap:12px;align-items:center}
+.enemy-card-row h2{margin:0 0 4px}
+.party-status-list{display:grid;gap:10px}
+.party-status-item{border:1px solid #303c57;border-radius:14px;padding:10px;background:#101827}
+.party-status-head{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.party-status-item.dead{opacity:.45;filter:grayscale(1)}
+.battle-log{max-height:204px}
+.hand-jrpg{gap:10px}
+.hand-jrpg .hand-card{min-width:205px;max-width:228px;border-radius:18px;border:1px solid #39527c;box-shadow:0 14px 26px rgba(0,0,0,.25)}
+.hand-jrpg .hand-card.playable{background:linear-gradient(180deg,#f9fbff,#dfe8ff)}
+.hand-jrpg .hand-card.unplayable{background:linear-gradient(180deg,#d1d6e2,#b6bcc8);opacity:.72}
+.hand-jrpg .card{min-height:232px}
+@media(max-width:980px){
+  .battle-stage{grid-template-columns:1fr;min-height:auto}
+  .battle-vs{order:2}
+  .enemy-side{order:3}
+  .battle-info-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .jrpg-meta{gap:6px}
+  .jrpg-meta .resource{font-size:11px;padding:8px 10px}
+  .sd-card{width:96px}
+  .sd-card img{height:116px}
+  .hand-jrpg .hand-card{min-width:180px;max-width:190px}
+}
+
+
+.customizer-preview-panel{min-width:0;overflow:hidden}.assembled-preview{width:100%;max-width:100%;min-width:0;min-height:0;height:auto;aspect-ratio:2/3;background:radial-gradient(circle at 50% 25%,rgba(72,115,183,.25),transparent 34%),linear-gradient(180deg,#172139,#090e18 80%)}.assembled-preview>img,.assembled-preview .external-preview{width:100%;height:100%;max-width:100%;object-fit:cover;object-position:center}.real-shell{position:absolute;inset:0;overflow:hidden}.real-stack{position:absolute;inset:0;transform-origin:50% 82%}.real-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}.real-badge{position:absolute;left:12px;bottom:12px;padding:6px 9px;border-radius:9px;background:rgba(5,8,14,.78);border:1px solid #4d5d79;color:#d8e6fb;font-size:10px;letter-spacing:.12em}.refmini{position:absolute;right:10px;top:10px;width:92px;border:1px solid #52617d;border-radius:12px;overflow:hidden;background:#0b1019}.refmini img{width:100%;height:128px;object-fit:cover;object-position:center 24%;display:block}.refmini span{display:block;font-size:9px;text-align:center;padding:4px;color:#b8c6dc}.part-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:8px;overflow:visible;padding:0 0 10px}.part-tab{min-width:0;padding:9px 7px;font-size:12px}.selbig{display:grid;grid-template-columns:230px 1fr;gap:13px;align-items:center;border:1px solid #35435e;background:#0c121e;border-radius:16px;padding:10px;margin-bottom:12px}.selbigimg{height:280px;border:1px solid #35435d;border-radius:13px;background:radial-gradient(circle,#263650,#0a0f18 74%);overflow:hidden}.selbigimg img{width:100%;height:100%;object-fit:contain}.part-grid{grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px}.part-option{min-height:276px;padding:8px}.part-option img{height:236px;width:100%;object-fit:contain;display:block;background:radial-gradient(circle,#273650,#0a0f18 74%);border-radius:10px}.part-option span{font-size:13px;padding:4px 8px}@media(max-width:760px){.assembled-preview{min-height:0;height:auto}.part-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.part-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.part-option{min-height:320px}.part-option img{height:280px}.selbig{grid-template-columns:180px 1fr}.selbigimg{height:250px}}@media(max-width:420px){.part-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.part-option{min-height:300px}.part-option img{height:260px}.selbig{grid-template-columns:155px 1fr}.selbigimg{height:225px}}
+
+/* V0.8 IMAGE-FIRST CHARACTER FLOW */
+.real-layer.faceless-surface{display:none}.real-layer.face-component{z-index:auto}
+/* Facial selection UI must display the selected independent layer, never a
+   precomposed face thumbnail.  Each source PNG uses the canonical full canvas,
+   so the feature sprite is magnified and registered around its true anchor. */
+.part-large-preview.face-preview{position:relative}.part-large-preview.face-preview img.face-sprite,.part-option.face-option img.face-sprite{position:absolute;width:400%;height:auto;max-width:none;object-fit:initial;left:-150%;transform:none}
+.part-large-preview.face-preview img.face-eyes,.part-option.face-option img.face-eyes{top:8px}.part-large-preview.face-preview img.face-eyebrows,.part-option.face-option img.face-eyebrows{top:26px}.part-large-preview.face-preview img.face-nose,.part-option.face-option img.face-nose{top:-24px}.part-large-preview.face-preview img.face-mouth,.part-option.face-option img.face-mouth{top:-55px}.part-large-preview.face-preview img.face-expression,.part-option.face-option img.face-expression{top:-24px}
+/* Hair PNGs keep the full mannequin canvas for pixel-locked assembly. In the
+   selector alone, crop to the upper half so the actual hairstyle is readable. */
+.part-large-preview.hair-preview,.part-option.hair-option{position:relative}.part-large-preview.hair-preview img.hair-sprite,.part-option.hair-option img.hair-sprite{position:absolute;width:auto;height:200%;max-width:none;object-fit:initial;left:50%;top:0;transform:translateX(-50%)}
+/* Full-canvas assembly assets stay pixel locked in the character preview. Only
+   their selector rendering is cropped and magnified around the owning slot. */
+.part-large-preview.slot-preview,.part-option.slot-option{position:relative}.part-large-preview.slot-preview img.slot-sprite,.part-option.slot-option img.slot-sprite{position:absolute;width:100%;height:100%;max-width:none;object-fit:contain;transform:none}
+.part-large-preview.slot-top img.slot-sprite,.part-option.slot-top img.slot-sprite{width:255%;height:255%;left:-77.5%;top:-31%}
+.part-large-preview.slot-bottom img.slot-sprite,.part-option.slot-bottom img.slot-sprite{width:245%;height:245%;left:-72.5%;top:-63%}
+.part-large-preview.slot-outerwear img.slot-sprite,.part-option.slot-outerwear img.slot-sprite{width:190%;height:190%;left:-45%;top:-20%}
+.part-large-preview.slot-shoes img.slot-sprite,.part-option.slot-shoes img.slot-sprite{width:220%;height:220%;left:-60%;top:-112%}
+.visual-slot{overflow:hidden}.visual-slot-stage,.visual-frame{height:300px;border:1px solid #31425f;border-radius:15px;overflow:hidden;position:relative;background:radial-gradient(circle at 50% 30%,#2a3a59,#0a0f18 72%)}.visual-slot-stage img,.visual-frame img{width:100%;height:100%;object-fit:contain;display:block}.visual-slot-stage .source-badge,.visual-frame .source-badge{position:absolute;left:9px;bottom:9px;padding:4px 7px;border-radius:8px;background:rgba(6,10,17,.8);font-size:10px;border:1px solid #475a79}.visual-slot-actions{display:flex;gap:8px;margin-top:10px}.visual-slot-actions button{flex:1;padding:9px}.source-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:12px}.source-tab{white-space:nowrap}.source-tab.active{outline:2px solid var(--accent);background:#203a4b}.source-workspace{min-height:560px}.source-intro{padding:12px;border:1px solid #33455f;background:#0d1421;border-radius:14px;margin-bottom:12px}.preset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.preset-option{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0b1018;padding:6px;cursor:pointer}.preset-option.selected{outline:2px solid var(--accent)}.preset-option img{width:100%;height:205px;object-fit:cover;object-position:center 22%;display:block;border-radius:9px}.preset-option b{display:block;padding:7px 3px 2px}.external-drop{display:grid;gap:12px;padding:18px;border:1px dashed #52729b;border-radius:16px;background:#0b121e}.external-drop input{max-width:100%}.external-controls{display:grid;gap:10px;margin-top:12px}.external-controls label{display:grid;grid-template-columns:74px 1fr 42px;align-items:center;gap:8px;font-size:12px;color:var(--muted)}.character-name-input{width:min(220px,100%);background:#0d1421;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px}.build-card{overflow:hidden}.build-visual{height:240px;border-radius:14px;overflow:hidden;background:#0a0f18;border:1px solid #33455f}.build-visual img{display:block;width:100%;height:100%;object-fit:contain}.build-card select{width:100%;margin-top:10px;padding:10px;border-radius:10px;background:#0d1421;color:var(--text);border:1px solid var(--line)}.library-list{display:grid;gap:10px}.library-row{display:grid;grid-template-columns:104px 1fr auto;gap:12px;align-items:center;border:1px solid #35445c;background:#0d1420;border-radius:15px;padding:8px}.library-thumb{height:116px;border-radius:10px;overflow:hidden;background:#080d15}.library-thumb img{width:100%;height:100%;object-fit:contain;display:block}.battle-art{width:100%;height:138px;object-fit:contain;display:block}.battle-art.empty{display:grid;place-items:center;color:var(--muted);font-size:11px;background:#0a0f18}.card-visual{width:44px;height:52px;float:right;margin:0 0 8px 8px;border:1px solid #486282;border-radius:8px;overflow:hidden;background:#0b1018}.card-visual img{width:100%;height:100%;object-fit:contain;display:block}.history-characters{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.history-visual{width:36px;height:42px;border:1px solid #40516d;border-radius:7px;overflow:hidden;background:#0a0f18}.history-visual img{width:100%;height:100%;object-fit:contain;display:block}.sd-card,.build-visual,.card-visual,.history-visual,.library-thumb{position:relative}@media(max-width:760px){.visual-slot-stage{height:260px}.preset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.preset-option img{height:200px}.source-workspace{min-height:auto}.library-row{grid-template-columns:76px 1fr}.library-row .row{grid-column:1/-1}.library-thumb{height:88px}}
+
+/* CZN-style combat: one theatrical battlefield with combatants and cards as the focus. */
+.combat-panel-v05{padding:12px;background:#090d16}.combat-panel-v05 #combatMap{display:none}.jrpg-topbar{position:relative;z-index:3;margin:0 0 8px;padding:6px 8px}.jrpg-topbar .muted{color:#8fa6c9}.jrpg-topbar h2{font-size:25px;letter-spacing:-.05em}.jrpg-meta .resource{border-color:#45587a;background:rgba(8,13,24,.8)}
+.battle-stage{position:relative;display:block;min-height:500px;padding:0;overflow:hidden;border:1px solid #3c506f;border-radius:18px;background:#101827 center/cover no-repeat;box-shadow:inset 0 -170px 90px rgba(1,4,10,.85),inset 0 0 70px rgba(0,0,0,.45)}
+.battle-stage:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,8,16,.38),rgba(3,7,14,.05) 42%,rgba(3,6,12,.8) 100%);pointer-events:none}.battle-lane{position:absolute;z-index:1;min-height:0;border:0;border-radius:0;padding:0;background:none}.battle-lane>.small{display:none}.ally-side{left:4%;bottom:42px;width:52%;height:320px}.enemy-side{right:5%;top:38px;width:42%;height:380px}.sd-party{height:100%;min-height:0;gap:10px;align-items:flex-end;justify-content:flex-start;flex-wrap:nowrap}.sd-enemy-wrap{height:100%;min-height:0;align-items:center;justify-content:center}.battle-vs{display:none}
+.sd-card{width:150px;padding:0;border:0;border-radius:0;background:none;box-shadow:none}.sd-card img{height:245px;width:100%;object-fit:contain;filter:drop-shadow(0 16px 16px rgba(0,0,0,.75))}.sd-card .sd-name{display:inline-block;padding:4px 7px;margin:0;background:rgba(4,8,16,.76);border-left:2px solid var(--accent);font-size:11px;text-shadow:0 1px 3px #000}.sd-mini-bar{height:7px;margin-top:4px;background:rgba(1,4,9,.75);border-color:rgba(180,218,255,.55)}.enemy-side .sd-card{width:300px!important}.enemy-side .sd-card img{height:330px!important;filter:drop-shadow(0 20px 20px rgba(0,0,0,.88))}.enemy-side .sd-name{font-size:14px;border-left-color:#ff7597}
+.enemy-illustration img{object-fit:cover!important;object-position:center 38%;filter:saturate(.72) contrast(1.18) brightness(.78) drop-shadow(0 20px 20px rgba(0,0,0,.88))!important}.battle-info-grid{position:absolute;z-index:4;left:18px;right:18px;top:94px;display:block;margin:0;pointer-events:none}.status-panel{display:none}.enemy-panel{display:block;position:absolute;right:0;top:0;width:230px;padding:9px 11px;border:1px solid rgba(255,184,202,.5);border-radius:11px;background:rgba(7,10,18,.72);backdrop-filter:blur(5px)}.enemy-panel .section-title{display:none}.enemy-card-v05{padding:0}.enemy-card-row{gap:7px}.enemy-icon{display:none}.enemy-card-row h2{font-size:16px}.enemy-card-row .bar{height:8px}.enemy-panel #enemyStatus{font-size:10px}.enemy-panel .intent{margin-top:8px;padding:6px 8px;font-size:11px;background:rgba(76,25,39,.84)}
+.hand-jrpg{position:relative;z-index:3;display:flex;justify-content:center;gap:8px;overflow-x:auto;padding:12px 5px 2px;scrollbar-width:thin}.hand-jrpg .hand-card{flex:0 0 180px;min-width:180px;max-width:180px;height:270px;border:0;background:none;box-shadow:0 10px 24px rgba(0,0,0,.48);transform-origin:50% 100%;transition:transform .15s}.hand-jrpg .hand-card:nth-child(odd){transform:rotate(-1.5deg)}.hand-jrpg .hand-card:nth-child(even){transform:rotate(1.5deg)}.hand-jrpg .hand-card:hover{transform:translateY(-18px) scale(1.06)!important;z-index:5}.hand-jrpg .tactical-card{min-height:270px}.hand-jrpg .card-heading{top:68px}.hand-jrpg .card-heading h3{font-size:18px}.hand-jrpg .card-desc{font-size:11px}.hand-jrpg .cost{transform:scale(.86) rotate(-7deg);transform-origin:left top}.hand-jrpg .card-type-pill{transform:scale(.88);transform-origin:right top}
+@media(max-width:900px){.battle-stage{min-height:430px}.ally-side{left:3%;width:62%;height:270px}.enemy-side{right:0;width:48%;height:320px}.sd-card{width:110px}.sd-card img{height:205px}.enemy-side .sd-card{width:230px!important}.enemy-side .sd-card img{height:270px!important}.enemy-panel{width:190px}.hand-jrpg .hand-card{flex-basis:160px;min-width:160px;max-width:160px;height:246px}.hand-jrpg .tactical-card{min-height:246px}}
+
+</style>
+<style>
+/* Card system derived from the supplied Chaos Zero Nightmare references: art fills the inner card; UI rides over a dark lower plate. */
+.reward-card,.hand-card{padding:0;overflow:hidden;background:#080c14;border-color:var(--card-accent,#66dcff)}
+.tactical-card{--card-accent:#66dcff;position:relative;isolation:isolate;min-height:348px;height:100%;overflow:hidden;border:2px solid var(--card-accent);border-radius:16px;background:#080c14;color:#fff;box-shadow:0 16px 34px rgba(0,0,0,.42),0 0 16px color-mix(in srgb,var(--card-accent) 32%,transparent),inset 0 0 0 1px rgba(255,255,255,.28)}
+.tactical-card:before{content:"";position:absolute;z-index:8;pointer-events:none;inset:4px;border:1px solid rgba(255,255,255,.32);border-radius:11px;box-shadow:inset 0 0 28px rgba(0,0,0,.2)}
+.tactical-card:after{content:"";position:absolute;z-index:8;pointer-events:none;inset:0 0 auto;height:5px;background:linear-gradient(90deg,var(--card-accent) 0 67%,#f0a2ff 67%);box-shadow:0 0 16px var(--card-accent)}
+.card-art{position:absolute;z-index:0;inset:0;overflow:hidden;background:#080c14}.card-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,5,10,.08) 0 30%,rgba(2,5,10,.05) 48%,rgba(2,5,10,.22) 63%,rgba(2,5,10,.72) 100%)}.card-art-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:saturate(1.07) contrast(1.04) brightness(.98)}
+.cost{position:absolute;z-index:7;left:12px;top:12px;display:grid;grid-template-rows:1fr auto;place-items:center;min-width:48px;height:54px;padding:5px 8px 6px;border:2px solid var(--card-accent);border-radius:50% 50% 50% 11px;background:#fbf7ef;color:#101520;font:900 27px/.88 "Noto Sans KR","Pretendard","Malgun Gothic",sans-serif;box-shadow:0 0 0 3px rgba(6,10,18,.85),0 6px 14px rgba(0,0,0,.46);transform:rotate(-7deg)}.cost small{font:900 8px/1 "Noto Sans KR","Pretendard",sans-serif;letter-spacing:.14em;transform:rotate(7deg)}
+.card-heading{position:absolute;z-index:7;left:14px;right:12px;top:78px;text-shadow:0 2px 7px #000,0 0 16px rgba(0,0,0,.8)}.card-heading .card-eyebrow{color:var(--card-accent);font:900 8px/1 "Noto Sans KR","Pretendard",sans-serif;letter-spacing:.16em}.card-heading h3{margin:5px 0 0;color:#fff;font:900 23px/1.02 "Noto Sans KR","Pretendard","Malgun Gothic",sans-serif;letter-spacing:-.06em}
+.card-type-pill{position:absolute;z-index:7;right:11px;top:14px;display:flex;align-items:center;gap:5px;padding:6px 9px;border:1px solid var(--card-accent);border-radius:999px;background:rgba(4,7,13,.66);color:#fff;font:900 9px/1 "Noto Sans KR","Pretendard",sans-serif;letter-spacing:.05em;text-shadow:0 1px 2px #000}.card-type-pill b{display:grid;place-items:center;width:14px;height:14px;border-radius:50%;background:var(--card-accent);color:#07101a;font-size:9px}
+.card-owner{display:none}.card-body{position:absolute;z-index:4;left:12px;right:12px;bottom:13px;padding:0;background:none;text-align:center;text-shadow:0 2px 6px #000,0 0 12px rgba(0,0,0,.8)}.card-body .card-eyebrow{display:none}.tactical-card .card-desc{min-height:0;color:#fff;font:800 13px/1.5 "Noto Sans KR","Pretendard","Malgun Gothic",sans-serif}.card-footer{display:flex;justify-content:center;gap:4px;flex-wrap:wrap;margin-top:8px;padding:0;border:0}.tactical-card .tag{padding:3px 6px;border:1px solid rgba(255,255,255,.62);border-radius:4px;background:rgba(4,8,14,.3);color:#fff;font:900 8px/1 "Noto Sans KR","Pretendard",sans-serif;letter-spacing:.05em}.card-body .small{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <div class="brand">TRIAD <span>// RUN</span></div>
+    <div class="row">
+      <span id="saveState" class="muted small">V0.8 · IMAGE-FIRST CHARACTER FLOW</span>
+      <button class="ghost" onclick="goHome()">홈</button>
+    </div>
+  </div>
+
+  <section id="home" class="screen active">
+    <div class="panel hero">
+      <div>
+        <div class="muted">3-CHARACTER ROGUELIKE DECKBUILDER PROTOTYPE</div>
+        <h1>TRIAD<br><span style="color:var(--accent)">// RUN</span></h1>
+        <p>내 일러스트를 먼저 캐릭터로 지정한 뒤 전투 빌드를 고르세요. 완성 일러·파츠 조립·외부 원본 이미지 모두 전투, 카드, 히스토리까지 같은 캐릭터로 유지됩니다.</p>
+        <div class="row" style="justify-content:center">
+          <button class="primary" onclick="newRun()">새 게임</button>
+          <button id="resumeBtn" onclick="resumeRun()">이어하기</button>
+          <button onclick="showHistory()">빌드 히스토리</button>
+        </div>
+        <p class="small">프로토타입 규칙: 캐릭터 일러 저장·불러오기·삭제 · 외부 원본 보존 · 개별 HP · 에너지 3 · 기본 드로우 4 · 중복 카드 Lv업(최대 5)</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="partySelect" class="screen">
+    <div class="panel">
+      <div class="section-title">
+        <div><div class="muted small">STEP 1 · CHARACTER VISUAL</div><h2>내 캐릭터 일러 3명 지정</h2><div class="muted small">전투 역할은 일러가 확정된 뒤에 고릅니다. 일러와 역할은 서로 묶이지 않아요.</div></div>
+        <span id="visualReadyCount" class="badge">0/3</span>
+      </div>
+      <div id="visualSlotGrid" class="grid grid3"></div>
+      <div class="row" style="justify-content:space-between;margin-top:14px">
+        <button onclick="openIllustrationLibrary()">저장 일러 관리</button>
+        <button id="toCustomize" class="primary" onclick="openCustomize()">첫 캐릭터 일러 편집</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="customize" class="screen">
+    <div class="panel">
+      <div class="section-title">
+        <div>
+          <div class="muted small">STEP 1 · CHARACTER VISUAL</div>
+          <h2>캐릭터 원본 일러 지정</h2>
+          <div class="muted small">완성 일러, 파츠 조립, 외부 원본 중 하나를 캐릭터의 고정 시각 원본으로 사용합니다.</div>
+        </div>
+        <div class="row"><button onclick="saveCurrentIllustration()">현재 일러 저장</button><button onclick="openIllustrationLibrary()">저장 일러</button></div>
+      </div>
+      <div id="characterTabs" class="character-tabs"></div>
+      <div class="customizer-layout">
+        <div class="customizer-preview-panel">
+          <div class="preview-toolbar">
+            <div><input id="editorCharacterName" class="character-name-input" value="CHARACTER" oninput="setCharacterName(this.value)"><div id="editorStatus" class="muted small"></div></div>
+          </div>
+          <div id="assembledPreview" class="assembled-preview"></div>
+          <div id="partsRatioControls" class="ratio-controls">
+            <label>키 <input id="heightSlider" type="range" min="1" max="20" value="10" oninput="setRatio('height',this.value)"><span id="heightValue">기본</span></label>
+            <label>체형 <input id="bodySlider" type="range" min="1" max="20" value="10" oninput="setRatio('body',this.value)"><span id="bodyValue">기본</span></label>
+          </div>
+          <div class="selection-summary" id="selectionSummary"></div>
+          <div class="row" style="margin-top:12px"><button id="confirmAppearanceBtn" class="good custom-confirm" onclick="toggleAppearanceConfirm()"></button></div>
+        </div>
+        <div class="parts-panel">
+          <div id="sourceTabs" class="source-tabs"></div>
+          <div id="sourceWorkspace" class="source-workspace"></div>
+        </div>
+      </div>
+      <div class="row" style="justify-content:space-between;margin-top:16px">
+        <button onclick="showScreen('partySelect')">이전</button>
+        <div class="row"><span id="confirmProgress" class="muted small"></span><button id="toBuildBtn" type="button" class="primary" disabled onclick="openBuildSelect();return false">모두 확정 → 전투 빌드 선택</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="buildSelect" class="screen">
+    <div class="panel">
+      <div class="section-title">
+        <div><div class="muted small">STEP 2 · COMBAT BUILD</div><h2>일러에 전투 빌드 연결</h2><div class="muted small">이름과 원본 일러는 그대로 두고, 전투 역할·HP·전용 카드만 선택합니다.</div></div>
+        <span id="buildReadyCount" class="badge">0/3</span>
+      </div>
+      <div id="buildGrid" class="grid grid3"></div>
+      <div class="row" style="justify-content:space-between;margin-top:14px">
+        <button onclick="openCustomize()">일러 수정</button>
+        <button id="toDraftBtn" class="good" disabled onclick="buildStartDraft()">시작 카드 뽑기</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="startDraft" class="screen">
+    <div class="panel">
+      <div class="section-title">
+        <div><div class="muted small">STEP 3 · STARTING DECK</div><h2>8장 중 시작 카드 5장 선택</h2></div>
+        <span id="draftCount" class="badge">0/5</span>
+      </div>
+      <div id="draftGrid" class="card-list"></div>
+      <div class="row" style="justify-content:flex-end;margin-top:14px">
+        <button id="startRunBtn" class="good" disabled onclick="startRun()">RUN 시작</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="route" class="screen">
+    <div class="panel">
+      <div id="mapline" class="mapline"></div>
+      <div class="section-title">
+        <div><div class="muted small" id="actLabel"></div><h2 id="stageLabel"></h2></div>
+        <div class="row"><span class="tag" id="deckLabel"></span><span class="tag" id="artifactLabel"></span><button type="button" class="primary" onclick="chooseRoute('battle')">전투 시작</button></div>
+      </div>
+      <div id="routeChoices" class="grid grid3"></div>
+    </div>
+  </section>
+
+  <section id="combat" class="screen">
+    <div class="panel combat-panel-v05">
+      <div id="combatMap" class="mapline"></div>
+
+      <div class="jrpg-topbar">
+        <div>
+          <div class="muted small">TURN RPG BATTLE</div>
+          <h2 id="battleTitle">TRIAD SD BATTLE</h2>
+        </div>
+        <div class="jrpg-meta">
+          <span id="turnLabel" class="tag"></span>
+          <span class="resource">⚡ 에너지 <b id="energyLabel"></b></span>
+          <span class="resource">🃏 덱 <b id="drawLabel"></b></span>
+          <span class="resource">🗑 버림 <b id="discardLabel"></b></span>
+          <button class="primary" onclick="endTurn()">턴 종료</button>
+        </div>
+      </div>
+
+      <div class="battle-stage">
+        <div class="battle-lane ally-side">
+          <div class="small muted">내 파티 원본 일러</div>
+          <div id="partySprites" class="sd-party"></div>
+        </div>
+
+        <div class="battle-vs">
+          <div class="vs-badge">VS</div>
+          <div class="muted small">턴제 전투</div>
+        </div>
+
+        <div class="battle-lane enemy-side">
+          <div class="small muted">적 SD</div>
+          <div id="enemySpriteWrap" class="sd-enemy-wrap"></div>
+        </div>
+      </div>
+
+      <div class="battle-info-grid">
+        <div class="status-panel">
+          <div class="section-title"><h3>아군 상태</h3><span class="muted small">보호막 / 생존 확인</span></div>
+          <div id="partyCombat" class="party-status-list"></div>
+        </div>
+
+        <div class="status-panel enemy-panel">
+          <div class="section-title"><h3>적 정보</h3><span class="muted small">다음 행동 포함</span></div>
+          <div class="enemy-card-v05">
+            <div class="enemy-card-row">
+              <div class="enemy-icon" id="enemyIcon">👁️</div>
+              <div style="flex:1">
+                <h2 id="enemyName"></h2>
+                <div id="enemyHpText" class="small muted"></div>
+                <div class="bar"><i id="enemyHpBar" style="width:100%"></i></div>
+              </div>
+            </div>
+            <div style="height:10px"></div>
+            <div id="enemyStatus"></div>
+            <div style="height:10px"></div>
+            <div class="intent" id="enemyIntent"></div>
+          </div>
+        </div>
+
+        <div class="status-panel log-panel">
+          <div class="section-title"><h3>전투 로그</h3><span class="muted small">행동 기록</span></div>
+          <div class="log battle-log" id="combatLog"></div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:14px">
+        <div>
+          <div class="muted small">PLAYER PHASE</div>
+          <h3>행동 카드</h3>
+        </div>
+        <span class="muted small">선택한 원본 일러를 유지하는 카드 턴제 전투</span>
+      </div>
+      <div id="hand" class="hand hand-jrpg"></div>
+    </div>
+  </section>
+
+  <section id="reward" class="screen">
+    <div class="panel">
+      <div class="section-title">
+        <div><div class="muted small">STAGE CLEAR</div><h2>카드 보상</h2></div>
+        <span class="muted">보유 카드는 등장 가중치 ×3</span>
+      </div>
+      <div id="rewardGrid" class="grid grid3"></div>
+      <div class="row" style="justify-content:space-between;margin-top:14px">
+        <button onclick="takeReward(null)">건너뛰기</button>
+        <span class="muted small">중복 선택 시 복사본 대신 Lv +1 · Lv5는 후보 제외</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="history" class="screen">
+    <div class="panel">
+      <div class="section-title">
+        <div><div class="muted small">PERMANENT LOG</div><h2>빌드 히스토리</h2></div>
+        <button class="bad" onclick="clearHistory()">전체 삭제</button>
+      </div>
+      <div id="historyList" class="stack"></div>
+    </div>
+  </section>
+</div>
+
+<div id="artifactModal" class="modal">
+  <div class="panel">
+    <div class="section-title"><h2>유물 획득</h2><button onclick="skipArtifact()">보상 건너뛰기</button></div>
+    <div id="artifactOffer" class="grid grid3"></div>
+  </div>
+</div>
+
+<div id="historyModal" class="modal">
+  <div class="panel">
+    <div class="section-title"><h2>런 상세</h2><button onclick="closeModal('historyModal')">닫기</button></div>
+    <div id="historyDetail"></div>
+  </div>
+</div>
+
+<div id="illustrationLibraryModal" class="modal">
+  <div class="panel">
+    <div class="section-title"><div><h2>저장 일러 보관함</h2><div class="muted small">저장한 완성 일러·파츠 조립·외부 원본을 다시 적용하거나 삭제할 수 있어요.</div></div><button onclick="closeModal('illustrationLibraryModal')">닫기</button></div>
+    <div id="visualLibraryList" class="library-list"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const COMBAT_DATA=window.TRIAD_COMBAT_DATA;
+const CARD_DATA=window.TRIAD_CARD_CHARACTER_DATA;
+const TRIAD_ARCH=window.TRIAD_ARCH;
+if(!COMBAT_DATA||!CARD_DATA||!TRIAD_ARCH)throw new Error('TRIAD canonical combat/card/architecture data failed to load');
+const LEGACY_EFFECT_TYPE=Object.freeze({strike:'DAMAGE',guard:'SHIELD',quick:'CHAIN',heavy:'DAMAGE',focus:'DRAW',battery:'MODIFY_ENERGY',mark:'CHAIN',dot:'CHAIN',burst:'MULTI_HIT',heal:'HEAL',combo:'CHAIN',scale:'SCALE',counter:'CHAIN',execute:'CONDITIONAL',signature:'CHAIN',inferno:'CHAIN',volley:'MULTI_HIT',bastion:'CHAIN',ambush:'CONDITIONAL',renewal:'CHAIN',overload:'CHAIN'});
+const EFFECT_REGISTRY=new TRIAD_ARCH.EffectRegistry();
+TRIAD_ARCH.EFFECT_TYPES.forEach(type=>EFFECT_REGISTRY.register(type,(effect,context)=>({effect,context})));
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const rngContext=()=>run||setup;
+const choice=a=>TRIAD_ARCH.pick(rngContext(),a);
+const shuffle=a=>TRIAD_ARCH.shuffle(rngContext(),a);
+const uid=()=>TRIAD_ARCH.uid();
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+const CORES=[
+{id:'EMBER',name:'엠버',role:'화상/폭발',emoji:'🔥',baseHp:72,color:'#ff8a6b',tags:['화상','폭발']},
+{id:'VOLT',name:'볼트',role:'감전/연쇄',emoji:'⚡',baseHp:68,color:'#66dcff',tags:['감전','연쇄']},
+{id:'AEGIS',name:'에이기스',role:'보호막/반격',emoji:'🛡️',baseHp:92,color:'#8da8ff',tags:['보호막','반격']},
+{id:'SHADE',name:'셰이드',role:'표식/연계',emoji:'🎯',baseHp:70,color:'#c095ff',tags:['표식','연계']},
+{id:'BLOOM',name:'블룸',role:'회복/집중',emoji:'🌿',baseHp:76,color:'#82e9a2',tags:['회복','집중']},
+{id:'RIFT',name:'리프트',role:'에너지/소모',emoji:'🌀',baseHp:66,color:'#e7a0ff',tags:['에너지','소모']}
+];
+
+const CARD_PATTERNS=[
+{key:'strike',name:'기본 타격',cost:1,kind:'attack',base:7,text:'피해 {v}'},
+{key:'guard',name:'방어 전개',cost:1,kind:'shield',base:7,text:'아군 전체 보호막 {v}'},
+{key:'quick',name:'퀵 액션',cost:0,kind:'attack',base:4,text:'피해 {v}. 카드 1장 드로우'},
+{key:'heavy',name:'중량 타격',cost:2,kind:'attack',base:15,text:'피해 {v}'},
+{key:'focus',name:'집중 전환',cost:1,kind:'draw',base:2,text:'카드 {v}장 드로우'},
+{key:'battery',name:'에너지 변환',cost:0,kind:'energy',base:1,text:'에너지 +{v}. 전투 중 소멸'},
+{key:'mark',name:'취약 포착',cost:1,kind:'mark',base:2,text:'피해 4 + 표식 {v}'},
+{key:'dot',name:'지속 압박',cost:1,kind:'dot',base:2,text:'피해 5 + 상태이상 {v}'},
+{key:'burst',name:'연속 공격',cost:2,kind:'multi',base:3,text:'{v}회 × 피해 4'},
+{key:'heal',name:'응급 복구',cost:1,kind:'heal',base:6,text:'가장 체력이 낮은 아군 HP {v} 회복'},
+{key:'combo',name:'연계 기동',cost:1,kind:'combo',base:8,text:'피해 {v}. 직전 카드와 주인이 다르면 추가 피해'},
+{key:'scale',name:'증폭 루프',cost:2,kind:'scale',base:12,text:'피해 {v}. 대상 상태이상마다 추가 피해'},
+{key:'counter',name:'반격 자세',cost:1,kind:'counter',base:5,text:'아군 전체 보호막 {v} + 반격'},
+{key:'execute',name:'결정타',cost:2,kind:'execute',base:13,text:'피해 {v}. 적 HP 35% 이하에서 강화'},
+{key:'signature',name:'시그니처',cost:3,kind:'signature',base:22,text:'캐릭터 핵심 기믹을 모두 사용하는 강력한 기술'}
+/* {key:'inferno'} {key:'volley'} {key:'bastion'} {key:'ambush'} {key:'renewal'} {key:'overload'} */
+];
+
+/* The signature keeps index 15 for save compatibility; these are the six added general-card variants. */
+CARD_PATTERNS.push(
+  {key:'inferno',name:'Inferno',cost:2,kind:'attack',base:14,text:'Damage {v}. Burn 2'},
+  {key:'volley',name:'Volley',cost:1,kind:'multi',base:4,text:'3 hits × Damage {v}'},
+  {key:'bastion',name:'Bastion',cost:2,kind:'shield',base:10,text:'Party shield {v}. Reflect next hit'},
+  {key:'ambush',name:'Ambush',cost:0,kind:'attack',base:9,text:'Damage {v}. Critical when first'},
+  {key:'renewal',name:'Renewal',cost:1,kind:'heal',base:8,text:'Recover HP {v}. Remove burn'},
+  {key:'overload',name:'Overload',cost:2,kind:'energy',base:2,text:'Energy +{v}. Next effect ×2'}
+);
+function coreBy(id){return CORES.find(c=>c.id===id)}
+function makeCards(coreId){
+  const core=coreBy(coreId);
+  return CARD_PATTERNS.map((p,i)=>({
+    id:`${coreId}_${String(i+1).padStart(2,'0')}`,owner:coreId,
+    name:`${core.name} · ${p.key==='signature'?CARD_DATA.signatureProfile(coreId).name:p.name}`,
+    displayName:p.key==='signature'?CARD_DATA.signatureProfile(coreId).name:p.name,
+    cost:p.cost,kind:p.kind,base:p.base,
+    tags:[...core.tags, ...(p.key==='signature'?['시그니처']:[])], isSignature:p.key==='signature', pattern:p
+  }));
+}
+const ALL_CARDS=Object.fromEntries(CORES.flatMap(c=>makeCards(c.id)).map(c=>[c.id,c]));
+
+const ARTIFACTS=[
+{id:'FIRST_ZERO',name:'초동 가속기',text:'매 전투 첫 번째 카드 비용이 0',type:'firstZero'},
+{id:'DRAW_PLUS',name:'전술 메모리',text:'전투 시작 손패 +1',type:'drawPlus'},
+{id:'ENERGY_PLUS',name:'과충전 셀',text:'매 턴 첫 에너지 +1',type:'energyPlus'},
+{id:'SHIELD_START',name:'위상 코팅',text:'전투 시작 시 모든 아군 보호막 8',type:'shieldStart'},
+{id:'HEAL_AFTER',name:'재생 모듈',text:'전투 승리 시 생존 아군 HP 5 회복',type:'healAfter'},
+{id:'STATUS_AMP',name:'상태 증폭 렌즈',text:'화상·감전·표식 부여량 +1',type:'statusAmp'},
+{id:'TRIAD_CHAIN',name:'삼중 링크',text:'서로 다른 캐릭터 카드를 연속 사용하면 피해 +4',type:'triadChain'},
+{id:'BOSS_GUARD',name:'보스 프로토콜',text:'보스전 시작 시 모든 아군 보호막 15',type:'bossGuard'}
+];
+
+// Data-driven validation adapter. It indexes the current TRIAD content in place;
+// it does not replace or rebalance the existing runtime records.
+function targetSpecForPattern(pattern){
+  if(['guard','bastion','renewal'].includes(pattern.key))return{sourceTeam:'PLAYER',targetTeam:'PLAYER',scope:'ALL',selector:'FIRST',allowSelf:true};
+  if(pattern.key==='heal')return{sourceTeam:'PLAYER',targetTeam:'PLAYER',scope:'SINGLE',selector:'LOWEST_HP',count:1,allowSelf:true};
+  if(['focus','battery'].includes(pattern.key))return{sourceTeam:'PLAYER',targetTeam:'PLAYER',scope:'SINGLE',selector:'SELF',count:1,allowSelf:true};
+  return{sourceTeam:'PLAYER',targetTeam:'ENEMY',scope:'SINGLE',selector:'FIRST',count:1,allowSelf:false};
+}
+const TRIAD_RUNTIME_DATABASE=Object.freeze({
+  characters:CORES.map(core=>({id:core.id,name:core.name,baseHp:core.baseHp})),
+  cards:Object.values(ALL_CARDS).map(card=>({id:card.id,owner:card.owner,cost:card.cost,effects:[{type:LEGACY_EFFECT_TYPE[card.pattern.key]||'CHAIN',amount:Math.max(0,Number(card.base)||0),target:targetSpecForPattern(card.pattern)}]})),
+  statuses:[{id:'burn'},{id:'shock'},{id:'mark'}],
+  artifacts:ARTIFACTS.map(artifact=>({id:artifact.id,type:artifact.type})),
+  enemies:COMBAT_DATA.MONSTERS.filter(enemy=>enemy.rank!=='boss').map(enemy=>({id:enemy.id,maxHp:enemy.maxHp})),
+  bosses:COMBAT_DATA.MONSTERS.filter(enemy=>enemy.rank==='boss').map(enemy=>({id:enemy.id,maxHp:enemy.maxHp})),
+  events:[{id:'REST'},{id:'RANDOM_EVENT'}]
+});
+const TRIAD_SCHEMA_ERRORS=TRIAD_ARCH.validateDatabase(TRIAD_RUNTIME_DATABASE,EFFECT_REGISTRY);
+if(TRIAD_SCHEMA_ERRORS.length)throw new Error(`TRIAD runtime data validation failed: ${TRIAD_SCHEMA_ERRORS.map(error=>`${error.path}:${error.code}`).join(', ')}`);
+window.TRIAD_RUNTIME_DATABASE=TRIAD_RUNTIME_DATABASE;
+
+let setup={characters:[],draft:[],draftSelected:[],seed:TRIAD_ARCH.seedFromEntropy()};
+let run=null;
+let visualLibraryTargetId=null;
+
+setup.rngState=setup.seed;setup.rngAlgorithm=TRIAD_ARCH.RNG_ALGORITHM;
+function rngSeed(){return TRIAD_ARCH.seedFromEntropy()}
+function showScreen(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo(0,0)}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
+function goHome(){showScreen('home');refreshHome()}
+function refreshHome(){const active=localStorage.getItem('triad_active_run');$('#resumeBtn').disabled=!active}
+function clone(v){return JSON.parse(JSON.stringify(v))}
+function newSetup(){const seed=rngSeed();return{characters:[0,1,2].map(i=>makeCharacter(i)),draft:[],draftSelected:[],seed,rngState:seed,rngAlgorithm:TRIAD_ARCH.RNG_ALGORITHM}}
+function newRun(){setup=newSetup();customizerState.activeId=setup.characters[0].id;renderVisualSlotGrid();showScreen('partySelect')}
+function partyCoreIds(){return setup.characters.map(c=>c.coreId).filter(Boolean)}
+function legacyVisual(a,i=0){if(a?.external)return normalizeVisual({sourceType:'external',dataUrl:a.external,assetName:'이전 외부 이미지',appearance:a},i);return normalizeVisual({sourceType:'parts',appearance:a},i)}
+function normalizeRunCharacters(data){
+  if(data.characters?.length)return data.characters.map((c,i)=>normalizeCharacter(c,i));
+  return (data.party||[]).map((p,i)=>normalizeCharacter({id:p.characterId||`legacy-slot-${i+1}`,name:p.name||coreBy(p.id)?.name,coreId:p.id,visual:p.visual||legacyVisual(data.appearance?.[p.id],i),confirmed:true},i));
+}
+function resumeRun(){
+  const s=localStorage.getItem('triad_active_run'); if(!s)return;
+  try{const migrated=TRIAD_ARCH.migrateSave(JSON.parse(s));run=migrated.save;if(migrated.migrated)TRIAD_ARCH.addCombatLog(run,'SAVE_MIGRATED',{fromVersion:migrated.fromVersion,toVersion:run.saveVersion})}catch(e){localStorage.removeItem('triad_active_run');refreshHome();return toast('저장된 런을 읽지 못해 정리했어요')}
+  run.characters=normalizeRunCharacters(run);run.party=(run.party||[]).map((p,i)=>{const ch=run.characters.find(c=>c.id===p.characterId)||run.characters.find(c=>c.coreId===p.id)||run.characters[i];return{...p,characterId:p.characterId||ch?.id,name:p.name||ch?.name,visual:p.visual||clone(ch?.visual)}});setup={characters:clone(run.characters),draft:[],draftSelected:[]};
+  primeVisualUrls(run.party?.map(p=>p.visual).filter(Boolean)||[]);
+  if(run.combat) {showScreen('combat'); renderCombat()}
+  else if(run.rewardOffer?.length){renderRewardOffer(run.rewardOffer);showScreen('reward')}
+  else {showRoute()}
+}
+const CORE_ART={EMBER:'card_art/signature/ember.webp',VOLT:'card_art/signature/volt.webp',AEGIS:'card_art/signature/aegis.webp',SHADE:'card_art/signature/shade.webp',BLOOM:'card_art/signature/bloom.webp',RIFT:'card_art/signature/rift.webp'};
+function sourceLabel(v){return v.sourceType==='external'?'외부 원본':v.sourceType==='parts'?'파츠 조립':'완성 일러'}
+function renderVisualSlotGrid(){
+  const grid=$('#visualSlotGrid');if(!grid)return;
+  grid.innerHTML=setup.characters.map((c,i)=>`<div class="core-card visual-slot ${c.confirmed?'selected':''}">
+    <div class="visual-slot-stage">${visualImageHtml(c.visual)}<span class="source-badge">${sourceLabel(c.visual)}</span></div>
+    <div class="core-art-meta"><div><h3>${esc(c.name)}</h3><div class="muted small">${c.confirmed?'일러 지정 완료':'일러 지정 필요'}</div></div><span class="badge">${i+1}</span></div>
+    <div class="visual-slot-actions"><button class="primary" onclick="openCustomize('${c.id}')">${c.confirmed?'수정':'일러 지정'}</button><button onclick="openIllustrationLibrary('${c.id}')">저장본</button></div>
+  </div>`).join('');
+  const ready=setup.characters.filter(c=>c.confirmed).length;$('#visualReadyCount').textContent=ready+'/3';
+  const first=setup.characters.find(c=>!c.confirmed)||setup.characters[0];if(first)$('#toCustomize').textContent=first.confirmed?'캐릭터 일러 수정':'첫 캐릭터 일러 편집';
+}
+function renderCoreGrid(){renderVisualSlotGrid()}
+const ASSET_ROOT='assets';
+const CHARACTER_ASSETS=window.TRIAD_CHARACTER_ASSETS?.female||{};
+const REAL_PARTS={FEMALE:CHARACTER_ASSETS.REAL_PARTS||{}};
+const REAL_THUMBS={FEMALE:CHARACTER_ASSETS.REAL_THUMBS||{}};
+const CLEAN_RUNTIME_PARTS={FEMALE:CHARACTER_ASSETS.CLEAN_RUNTIME_PARTS||{}};
+// Female foundation plus seven 20-variant 2D part families.  The legacy
+// Blender outputs deliberately are not a runtime dependency.
+const FEMALE_ASSET_MANIFEST=Object.freeze({base:'TRIAD-F-BODY-01',slots:['eyes','eyebrows','nose','mouth','expression','hairBack','hairFront','top','bottom','outerwear','shoes'],total:window.TRIAD_ASSET_MANIFEST?.records?.length||0});
+const PARTS=[{key:'eyes',assetLayer:'EYE',label:'EYES'},{key:'eyebrows',assetLayer:'BRW',label:'EYEBROWS'},{key:'nose',assetLayer:'NSE',label:'NOSE'},{key:'mouth',assetLayer:'MTH',label:'MOUTH'},{key:'expression',assetLayer:'EXP',label:'EXPRESSION',allowOff:true},{key:'hairBack',assetLayer:'HAIR_BACK',label:'HAIR BACK',allowOff:true},{key:'hairFront',assetLayer:'HAIR_FRONT',label:'HAIR FRONT',allowOff:true},{key:'top',assetLayer:'TOP',label:'TOP',allowOff:true},{key:'bottom',assetLayer:'BOTTOM',label:'BOTTOM',allowOff:true},{key:'outerwear',assetLayer:'OUTERWEAR',label:'OUTERWEAR',allowOff:true},{key:'shoes',assetLayer:'SHOES',label:'SHOES',allowOff:true}];
+const FACE_FEATURES=[];
+const TERRA_FEMALE_01=Object.freeze({base:'assets/2_5d/characters/body_base_01_fitted_mvp.png'});
+const TERRA_25D_FEATURES=Object.freeze({eyes:'assets/2_5d/face/eyes/eyes_',eyebrows:'assets/2_5d/face/eyebrows/eyebrows_',noses:'assets/2_5d/face/noses/noses_',ears:'assets/2_5d/face/ears/ears_',mouths:'assets/2_5d/face/mouths/mouths_'});
+function featureAsset(kind,n){return `${TERRA_25D_FEATURES[kind]}${pad2(n)}.png`}
+function resolveManifestPath(path){if(!path)return '';if(!path.startsWith('embedded:'))return path;const match=path.match(/^embedded:TRIAD_CHARACTER_ASSETS\.(REAL_PARTS|REAL_THUMBS|CLEAN_RUNTIME_PARTS)\.FEMALE\.([A-Z_]+)\.(\d+)$/);if(!match)return '';const source=match[1]==='REAL_PARTS'?REAL_PARTS.FEMALE:match[1]==='REAL_THUMBS'?REAL_THUMBS.FEMALE:CLEAN_RUNTIME_PARTS.FEMALE;return source?.[match[2]]?.[String(Number(match[3]))]||''}
+function manifestRecord(slot,n){return window.TRIAD_ASSET_MANIFEST?.findBySlot?.(slot,Number(n))||window.TRIAD_ASSET_MANIFEST?.bySlot?.[slot]?.[Number(n)]||null}
+function activeAssetsForSlot(slot){const group=window.TRIAD_ASSET_MANIFEST?.activeBySlot?.[slot]||{};return Object.values(group).sort((a,b)=>a.variant-b.variant)}
+function facialAsset(slot,n){return resolveManifestPath(manifestRecord(slot,n)?.path||'')}
+const HEIGHT_MORPHS=['SHORT','STANDARD','TALL'];
+const BODY_MORPHS=['SLIM','STANDARD','CURVY / STRONG'];
+let customizerState={activeId:null,part:'eyes'};
+const VISUAL_LIBRARY_KEY='triad_illustration_library_v1';
+const VISUAL_DB_NAME='triad_illustration_assets_v1';
+const visualUrlCache=new Map(),visualUrlLoading=new Map();
+function defaultAppearance(i=0){return{face:1+(i%3),eyes:1,eyebrows:1,nose:1,mouth:1,expression:0,hairBack:1,hairFront:1+(i%10),top:1+(i%10),bottom:1+((i*2)%10),outerwear:1+((i*4)%10),shoes:1+((i*5)%10),height:10,body:10,faceFeatures:{eyes:1,eyebrows:1,noses:1,ears:1,mouths:1}}}
+function isLegacyMaleAppearance(a){return String(a?.gender||'').toUpperCase()==='MALE'||String(a?.bodyMaster||'').toUpperCase().includes('MALE')}
+function normalizeAppearance(a,i=0){const d=defaultAppearance(i),out={...d,...(a||{})};if(a&&a.outfit&&a.top==null)out.top=a.outfit;const legacyHair=Number(a?.hair);if(a?.hairBack==null&&legacyHair)out.hairBack=legacyHair;if(a?.hairFront==null&&legacyHair)out.hairFront=legacyHair;delete out.gender;['face','height','body'].forEach(k=>{const v=Number(out[k]);out[k]=Number.isFinite(v)?Math.max(1,Math.min(20,v)):d[k]});const migrated=[];const normalizeSelectable=(key,allowOff)=>{const requested=Number(out[key]),active=activeAssetsForSlot(key).map(record=>record.variant);if(allowOff&&active.length===0){if(requested!==0)migrated.push({slot:key,from:Number.isFinite(requested)?requested:null,to:0});out[key]=0;return}const fallback=active.includes(Number(d[key]))?Number(d[key]):active[0];if(allowOff&&requested===0){out[key]=0;return}if(active.includes(requested)){out[key]=requested;return}out[key]=fallback;migrated.push({slot:key,from:Number.isFinite(requested)?requested:null,to:fallback})};['hairBack','hairFront','top','bottom','outerwear','shoes'].forEach(key=>normalizeSelectable(key,true));const legacy=a?.faceFeatures||{};if(a?.eyes==null&&legacy.eyes!=null)out.eyes=legacy.eyes;if(a?.eyebrows==null&&legacy.eyebrows!=null)out.eyebrows=legacy.eyebrows;if(a?.nose==null&&legacy.noses!=null)out.nose=legacy.noses;if(a?.mouth==null&&legacy.mouths!=null)out.mouth=legacy.mouths;['eyes','eyebrows','nose','mouth'].forEach(key=>normalizeSelectable(key,false));normalizeSelectable('expression',true);out.inactiveAssetMigration=migrated;out.faceFeatures={...d.faceFeatures,...legacy};return out}
+function defaultVisual(i=0){return{sourceType:'parts',presetId:CORES[i%CORES.length].id,appearance:defaultAppearance(i),assetId:null,assetName:'',dataUrl:null,transform:{scale:100,x:50,y:50}}}
+function normalizeVisual(v,i=0){const d=defaultVisual(i),rawAppearance=v?.appearance||v,wasMale=isLegacyMaleAppearance(rawAppearance),out={...d,...(v||{})};out.sourceType=wasMale?'legacy':['preset','parts','external'].includes(out.sourceType)?out.sourceType:'preset';out.presetId=CORE_ART[out.presetId]?out.presetId:d.presetId;out.appearance=normalizeAppearance(rawAppearance,i);out.assetId=out.assetId||null;out.assetName=out.assetName||'';out.dataUrl=out.dataUrl||null;out.legacyReason=wasMale?'LEGACY_MALE_VISUAL_REQUIRES_FEMALE_SELECTION':'';out.transform={scale:clamp(Number(out.transform?.scale)||100,70,145),x:clamp(Number(out.transform?.x)||50,0,100),y:clamp(Number(out.transform?.y)||50,0,100)};return out}
+function makeCharacter(i=0){return{id:`slot-${i+1}-${uid()}`,name:`캐릭터 ${i+1}`,coreId:null,visual:defaultVisual(i),confirmed:false}}
+function normalizeCharacter(c,i=0){return{id:c?.id||`slot-${i+1}-${uid()}`,name:c?.name||`캐릭터 ${i+1}`,coreId:CORES.some(x=>x.id===c?.coreId)?c.coreId:null,visual:normalizeVisual(c?.visual||c?.appearance,i),confirmed:Boolean(c?.confirmed)}}
+function activeCharacter(){return setup.characters.find(c=>c.id===customizerState.activeId)||setup.characters[0]||null}
+function activeVisual(){return activeCharacter()?.visual||null}
+function activeAppearance(){return activeVisual()?.appearance||null}
+function pad2(n){return String(n).padStart(2,'0')}
+function runtimeAsset(layer,n=1){const slot={BASE:'body',FACE:'face',EYE:'eyes',BRW:'eyebrows',NSE:'nose',MTH:'mouth',EXP:'expression',HAIR_BACK:'hairBack',HAIR_FRONT:'hairFront',TOP:'top',BOTTOM:'bottom',OUTERWEAR:'outerwear',SHOES:'shoes'}[layer],manifestPath=slot?resolveManifestPath(manifestRecord(slot,n)?.path||''):'';if(manifestPath)return manifestPath;const g=REAL_PARTS.FEMALE||{};if(layer==='BASE')return g.BASE||'';return g[layer]?.[String(n)]||'';}
+function thumbAsset(part,n){const rawLayer=PARTS.find(p=>p.key===part)?.assetLayer||String(part).toUpperCase();/* Face thumbnails must remain the isolated runtime layer: legacy full-face thumb sheets are prohibited here. */if(['EYE','BRW','NSE','MTH','EXP'].includes(rawLayer))return runtimeAsset(rawLayer,n);const record=manifestRecord(part,n),manifestPath=resolveManifestPath(record?.thumbPath||'');if(manifestPath)return manifestPath;const layer=rawLayer==='HAIR_BACK'||rawLayer==='HAIR_FRONT'?'HAIR':rawLayer;return REAL_THUMBS.FEMALE?.[layer]?.[String(n)]||runtimeAsset(rawLayer,n);}
+function openVisualDb(){return new Promise((resolve,reject)=>{if(!window.indexedDB)return reject(new Error('IndexedDB unavailable'));const req=indexedDB.open(VISUAL_DB_NAME,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains('assets'))db.createObjectStore('assets',{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function putVisualAsset(file){const id=`art-${uid()}`,db=await openVisualDb();await new Promise((resolve,reject)=>{const tx=db.transaction('assets','readwrite');tx.objectStore('assets').put({id,blob:file,name:file.name,type:file.type,createdAt:Date.now()});tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close();visualUrlCache.set(id,URL.createObjectURL(file));return id}
+async function getVisualAssetUrl(id){if(!id)return '';if(visualUrlCache.has(id))return visualUrlCache.get(id);if(visualUrlLoading.has(id))return visualUrlLoading.get(id);const loading=(async()=>{try{const db=await openVisualDb();const item=await new Promise((resolve,reject)=>{const tx=db.transaction('assets','readonly'),req=tx.objectStore('assets').get(id);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});db.close();if(!item?.blob)return '';const url=URL.createObjectURL(item.blob);visualUrlCache.set(id,url);return url}catch(e){return ''}finally{visualUrlLoading.delete(id)}})();visualUrlLoading.set(id,loading);return loading}
+async function deleteVisualAsset(id){if(!id)return;const url=visualUrlCache.get(id);if(url)URL.revokeObjectURL(url);visualUrlCache.delete(id);try{const db=await openVisualDb();await new Promise((resolve,reject)=>{const tx=db.transaction('assets','readwrite');tx.objectStore('assets').delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}catch(e){}}
+function externalSrc(v){return v.dataUrl||visualUrlCache.get(v.assetId)||''}
+function primeVisualUrls(visuals=[]){const pending=visuals.filter(v=>v?.sourceType==='external'&&v.assetId&&!visualUrlCache.has(v.assetId));if(!pending.length)return Promise.resolve();return Promise.all(pending.map(v=>getVisualAssetUrl(v.assetId))).then(()=>{if($('#customize')?.classList.contains('active'))renderCustom();if($('#partySelect')?.classList.contains('active'))renderVisualSlotGrid();if($('#buildSelect')?.classList.contains('active'))renderBuildSelect();if(run?.combat&&$('#combat')?.classList.contains('active'))renderCombat();renderHistory()})}
+function morphLabel(value,labels){return labels[Math.max(0,Math.min(labels.length-1,Math.round((Number(value||10)-1)*(labels.length-1)/19)))]}
+function partsVisualHtml(a){const image=(kind,n,label,extra='')=>{const src=Number(n)===0?'':runtimeAsset(kind,n);return src?`<img class="real-layer ${extra}" src="${src}" alt="${label}">`:''};const base=runtimeAsset('BASE'),faceClass='face-component';return `<div class="real-shell" data-female-body="TRIAD-F-BODY-01" data-faceless-surface="TRIAD-F-FACELESS-01" data-production="CANONICAL_2D_AND_2_5D_PARTS"><div class="real-stack">${image('HAIR_BACK',a.hairBack,'HAIR BACK')}${base?`<img class="real-layer mannequin-layer" src="${base}" alt="Female faceless body foundation">`:''}${image('EYE',a.eyes,'EYES',faceClass)}${image('BRW',a.eyebrows,'EYEBROWS',faceClass)}${image('NSE',a.nose,'NOSE',faceClass)}${image('MTH',a.mouth,'MOUTH',faceClass)}${image('EXP',a.expression,'EXPRESSION',faceClass)}${image('BOTTOM',a.bottom,'BOTTOM')}${image('TOP',a.top,'TOP')}${image('SHOES',a.shoes,'SHOES')}${image('OUTERWEAR',a.outerwear,'OUTERWEAR')}${image('HAIR_FRONT',a.hairFront,'HAIR FRONT')}</div></div>`}
+function visualImageHtml(v,className=''){if(!v)return `<div class="battle-art empty ${className}">일러 없음</div>`;if(v.sourceType==='legacy')return `<div class="battle-art empty ${className}">LEGACY VISUAL<br><small>Choose a female visual to continue.</small></div>`;if(v.sourceType==='parts')return partsVisualHtml(v.appearance);if(v.sourceType==='preset')return `<img class="${className}" src="${CORE_ART[v.presetId]}" alt="완성 일러">`;const src=externalSrc(v);if(!src){if(v.assetId)primeVisualUrls([v]);return `<div class="battle-art empty ${className}">원본 불러오는 중…</div>`}const t=v.transform||{};const dx=((Number(t.x)||50)-50)*.35,dy=((Number(t.y)||50)-50)*.35,scale=(Number(t.scale)||100)/100;return `<img class="external-preview ${className}" src="${src}" alt="${esc(v.assetName||'외부 원본 일러')}" style="object-position:${t.x||50}% ${t.y||50}%;transform:translate(${dx}%,${dy}%) scale(${scale})">`}
+function getIllustrationLibrary(){try{return JSON.parse(localStorage.getItem(VISUAL_LIBRARY_KEY)||'[]')}catch(e){return[]}}
+function setIllustrationLibrary(items){localStorage.setItem(VISUAL_LIBRARY_KEY,JSON.stringify(items.slice(0,100)))}
+function illustrationName(v){return v.sourceType==='external'?(v.assetName||'외부 원본 일러'):v.sourceType==='parts'?'파츠 조립 일러':`${coreBy(v.presetId)?.name||'완성'} 일러`}
+function assetReferences(assetId){if(!assetId)return 0;const has=v=>v?.assetId===assetId;let n=getIllustrationLibrary().filter(x=>has(x.visual)).length;n+=setup.characters.filter(c=>has(c.visual)).length;n+=(run?.party||[]).filter(p=>has(p.visual)).length;n+=(run?.characters||[]).filter(c=>has(c.visual)).length;try{n+=JSON.parse(localStorage.getItem('triad_history')||'[]').flatMap(x=>x.characters||x.party||[]).filter(x=>has(x.visual)).length}catch(e){}return n}
+function openCustomize(slotId){if(!setup.characters.length)setup=newSetup();customizerState.activeId=slotId||customizerState.activeId||setup.characters[0].id;if(!setup.characters.some(c=>c.id===customizerState.activeId))customizerState.activeId=setup.characters[0].id;renderCustom();showScreen('customize');const v=activeVisual();if(v?.sourceType==='external')primeVisualUrls([v])}
+function renderCustom(){renderCharacterTabs();renderEditor();renderSourceTabs();renderSourceWorkspace();updateConfirmProgress()}
+function renderCharacterTabs(){$('#characterTabs').innerHTML=setup.characters.map((c,i)=>`<button class="character-tab ${customizerState.activeId===c.id?'active':''} ${c.confirmed?'confirmed':''}" onclick="selectCustomizerCharacter('${c.id}')"><span class="badge">${i+1}</span><span><b>${esc(c.name)}</b><br><span class="small muted">${sourceLabel(c.visual)}</span></span><span class="tab-state">${c.confirmed?'✓ 확정':'편집'}</span></button>`).join('')}
+function selectCustomizerCharacter(id){customizerState.activeId=id;renderCustom();const v=activeVisual();if(v?.sourceType==='external')primeVisualUrls([v])}
+function setCharacterName(value){const c=activeCharacter();if(!c||c.confirmed)return;c.name=(value||'캐릭터').slice(0,24);renderCharacterTabs();renderVisualSlotGrid()}
+function renderEditor(){
+  const c=activeCharacter(),v=activeVisual(),a=activeAppearance(); if(!c||!v)return;
+  $('#editorCharacterName').value=c.name; $('#editorCharacterName').disabled=c.confirmed;
+  $('#editorStatus').textContent=c.confirmed?'이 캐릭터의 원본 일러가 확정되어 있습니다.':'원본 일러를 고르고 확정하면 전투와 카드에도 같은 모습으로 사용됩니다.';
+  const parts=v.sourceType==='parts';
+  $('#partsRatioControls').style.display=parts?'grid':'none';
+  $('#assembledPreview').innerHTML=visualImageHtml(v);
+  $('#heightSlider').value=a.height; $('#heightSlider').disabled=c.confirmed;
+  $('#bodySlider').value=a.body; $('#bodySlider').disabled=c.confirmed;
+  $('#heightValue').textContent=pad2(a.height); $('#bodyValue').textContent=pad2(a.body);
+  $('#selectionSummary').innerHTML=[`<div class="summary-chip">원본 <b>${sourceLabel(v)}</b></div>`,parts?PARTS.map(p=>`<div class="summary-chip">${p.label} <b>${pad2(a[p.key])}</b></div>`).join(''):''].join('');
+  const btn=$('#confirmAppearanceBtn'); btn.textContent=c.confirmed?'확정 취소':'이 일러로 확정'; btn.classList.toggle('cancel-confirm',c.confirmed);
+  document.querySelector('.parts-panel')?.classList.toggle('locked',c.confirmed);
+}
+function renderSourceTabs(){const v=activeVisual(),c=activeCharacter();$('#sourceTabs').innerHTML=[['preset','완성 일러'],['parts','파츠 조립'],['external','외부 원본']].map(([id,label])=>`<button class="source-tab ${v.sourceType===id?'active':''}" ${c.confirmed?'disabled':''} onclick="setVisualSource('${id}')">${label}</button>`).join('')}
+function setVisualSource(type){const c=activeCharacter();if(!c||c.confirmed)return;c.visual.sourceType=type;renderCustom();if(type==='external')primeVisualUrls([c.visual])}
+function renderSourceWorkspace(){const v=activeVisual(),c=activeCharacter(),box=$('#sourceWorkspace');if(v.sourceType==='preset'){box.innerHTML=`<div class="source-intro"><strong>완성 일러 프리셋</strong><div class="small muted">이 그림이 캐릭터의 원본으로 유지됩니다. 전투 빌드는 다음 단계에서 따로 고릅니다.</div></div><div class="preset-grid">${CORES.map(core=>`<button class="preset-option ${v.presetId===core.id?'selected':''}" ${c.confirmed?'disabled':''} onclick="selectPresetIllustration('${core.id}')"><img src="${CORE_ART[core.id]}" alt="${core.name}"><b>${core.name} 일러</b></button>`).join('')}</div>`;return}if(v.sourceType==='external'){const has=Boolean(v.assetId||v.dataUrl);box.innerHTML=`<div class="source-intro"><strong>외부 원본 일러</strong><div class="small muted">이미지는 재생성·자동 크롭·JPEG 재압축 없이 원본 파일로 보존됩니다.</div></div><div class="external-drop"><input type="file" accept="image/*" ${c.confirmed?'disabled':''} onchange="loadExternalForActive(this.files[0])"><div class="small muted">${has?`현재 원본: ${esc(v.assetName||'이전 외부 이미지')}`:'이미지 파일을 고르면 이 캐릭터의 원본으로 사용됩니다.'}</div>${has?`<button ${c.confirmed?'disabled':''} onclick="removeExternalForActive()">외부 원본 해제</button>`:''}</div>${has?`<div class="external-controls"><label>확대 <input type="range" min="70" max="145" value="${v.transform.scale}" ${c.confirmed?'disabled':''} oninput="setExternalTransform('scale',this.value)"><span>${v.transform.scale}%</span></label><label>가로 <input type="range" min="0" max="100" value="${v.transform.x}" ${c.confirmed?'disabled':''} oninput="setExternalTransform('x',this.value)"><span>${v.transform.x}</span></label><label>세로 <input type="range" min="0" max="100" value="${v.transform.y}" ${c.confirmed?'disabled':''} oninput="setExternalTransform('y',this.value)"><span>${v.transform.y}</span></label></div>`:''}`;return}box.innerHTML=`<div class="source-intro"><strong>파츠 조립 일러</strong><div class="small muted">무안면 여성 베이스 위에 얼굴·헤어·의상을 독립 레이어로 조립합니다. 기존 FACE 값은 저장 호환용으로 보존됩니다.</div></div><div id="partTabs" class="part-tabs"></div><div class="parts-help"><strong id="partTitle"></strong><span class="muted small">카테고리별 파츠를 선택하세요.</span></div><div class="selected-part-preview"><div id="partLargePreview" class="part-large-preview"></div><div><div class="muted small">현재 선택한 파츠</div><strong id="partLargeLabel">-</strong><div class="muted small" style="margin-top:5px">실제 조립 결과는 왼쪽 원본 미리보기에 바로 반영됩니다.</div></div></div><div id="partGrid" class="part-grid"></div>`;renderPartTabs();renderPartGrid()}
+function selectPresetIllustration(id){const c=activeCharacter();if(!c||c.confirmed)return;c.visual.sourceType='preset';c.visual.presetId=id;renderCustom()}
+function renderPartTabs(){const el=$('#partTabs');if(el)el.innerHTML=PARTS.map(p=>`<button class="part-tab ${customizerState.part===p.key?'active':''}" onclick="setPartTab('${p.key}')">${p.label}</button>`).join('')}
+function setPartTab(key){customizerState.part=key;renderPartTabs();renderPartGrid()}
+function setAppearanceGender(gender){const c=activeCharacter(),a=activeAppearance();if(!c||c.confirmed)return;c.visual.sourceType='parts';a.gender=gender;renderCustom()}
+// All runtime character records are female.  A former male appearance is deliberately
+// left unresolved so its player explicitly chooses a new female visual.
+function normalizeCharacter(c,i=0){const visual=normalizeVisual(c?.visual||c?.appearance,i);return{id:c?.id||`slot-${i+1}-${uid()}`,name:c?.name||`CHARACTER ${i+1}`,coreId:CORES.some(x=>x.id===c?.coreId)?c.coreId:null,visual,confirmed:visual.sourceType==='legacy'?false:Boolean(c?.confirmed)}}
+function renderPartGrid(){const a=activeAppearance(),part=PARTS.find(p=>p.key===customizerState.part),current=Number(a?.[part?.key]),grid=$('#partGrid');if(!a||!part||!grid)return;const assets=activeAssetsForSlot(part.key),removable=Boolean(part.allowOff),facial=['eyes','eyebrows','nose','mouth','expression'].includes(part.key),hair=['hairBack','hairFront'].includes(part.key),clothing=['top','bottom','outerwear','shoes'].includes(part.key);$('#partTitle').textContent=`${part.label} (${removable?'OFF + ':''}${assets.length})`;const preview=current===0?runtimeAsset('BASE'):thumbAsset(part.key,current),large=$('#partLargePreview'),spriteClass=facial?`face-sprite face-${part.key}`:hair?'hair-sprite':clothing?'slot-sprite':'';large.className=`part-large-preview${facial?` face-preview face-${part.key}`:hair?' hair-preview':clothing?` slot-preview slot-${part.key}`:''}`;large.innerHTML=preview?`<img class="${spriteClass}" src="${preview}" alt="${part.label}">`:'';$('#partLargeLabel').textContent=current===0?`${part.label} OFF`:`${part.label} ${pad2(current)}`;const off=removable?`<button class="part-option ${current===0?'selected':''}" onclick="selectPart('${part.key}',0)"><span style="display:grid;place-items:center;min-height:72px;color:#ffcad3;font-weight:800">REMOVE</span><span>OFF</span></button>`:'';grid.innerHTML=off+assets.map(record=>{const n=record.variant;return `<button class="part-option ${facial?`face-option face-${part.key} `:hair?'hair-option ':clothing?`slot-option slot-${part.key} `:''}${current===n?'selected':''}" onclick="selectPart('${part.key}',${n})"><img class="${spriteClass}" loading="lazy" src="${thumbAsset(part.key,n)}" alt="${part.label} ${pad2(n)}"><span>${pad2(n)}</span></button>`}).join('')}
+function selectPart(key,n){const c=activeCharacter(),a=activeAppearance(),part=PARTS.find(p=>p.key===key),value=Number(n);if(!c||c.confirmed||!part)return;if(value===0&&part.allowOff){c.visual.sourceType='parts';a[key]=0;renderCustom();return}if(!activeAssetsForSlot(key).some(record=>record.variant===value))return;c.visual.sourceType='parts';a[key]=value;renderCustom()}
+function setAppearanceGender(){/* Removed: production characters are female-only. */}
+function validateFemaleAssetContract(){const missing=PARTS.flatMap(part=>activeAssetsForSlot(part.key).filter(record=>!runtimeAsset(part.assetLayer,record.variant)).map(record=>`${part.assetLayer}_${pad2(record.variant)}`));return{...FEMALE_ASSET_MANIFEST,valid:missing.length===0,missing}}
+window.TRIAD_FEMALE_ASSET_MANIFEST=FEMALE_ASSET_MANIFEST;
+window.validateFemaleAssetContract=validateFemaleAssetContract;
+function setRatio(key,val){const c=activeCharacter(),a=activeAppearance();if(!c||c.confirmed)return;a[key]=Number(val);renderEditor();renderVisualSlotGrid()}
+function setExternalTransform(key,val){const c=activeCharacter();if(!c||c.confirmed)return;c.visual.transform[key]=Number(val);renderEditor();renderSourceWorkspace();renderVisualSlotGrid()}
+function toggleAppearanceConfirm(){const c=activeCharacter();if(!c)return;c.confirmed=!c.confirmed;renderCustom();renderVisualSlotGrid();toast(c.confirmed?'일러를 확정했어요':'확정을 취소했어요. 다시 편집할 수 있어요')}
+function updateConfirmProgress(){const n=setup.characters.filter(c=>c.confirmed).length;$('#confirmProgress').textContent=`일러 확정 ${n} / ${setup.characters.length}`;$('#toBuildBtn').disabled=n!==setup.characters.length}
+async function loadExternalForActive(file){const c=activeCharacter();if(!file||!c||c.confirmed)return;if(!file.type.startsWith('image/'))return toast('이미지 파일만 사용할 수 있어요');try{const assetId=await putVisualAsset(file);c.visual.sourceType='external';c.visual.assetId=assetId;c.visual.assetName=file.name;c.visual.dataUrl=null;renderCustom();renderVisualSlotGrid();toast('외부 원본 일러를 적용했어요')}catch(e){toast('원본 이미지를 저장하지 못했어요')}}
+async function removeExternalForActive(){const c=activeCharacter();if(!c||c.confirmed)return;const assetId=c.visual.assetId;c.visual.sourceType='preset';c.visual.assetId=null;c.visual.assetName='';c.visual.dataUrl=null;renderCustom();renderVisualSlotGrid();if(assetId&&assetReferences(assetId)===0)await deleteVisualAsset(assetId)}
+function saveCurrentIllustration(){const c=activeCharacter();if(!c)return;const name=`${c.name} · ${illustrationName(c.visual)}`;const items=getIllustrationLibrary();items.unshift({id:`saved-${uid()}`,name:name.slice(0,40),createdAt:Date.now(),visual:clone(c.visual)});setIllustrationLibrary(items);toast('현재 일러를 보관함에 저장했어요')}
+function saveAppearancePreset(){saveCurrentIllustration()}
+function openIllustrationLibrary(targetId){if(!setup.characters.length)setup=newSetup();visualLibraryTargetId=targetId||customizerState.activeId||setup.characters[0].id;renderVisualLibrary();$('#illustrationLibraryModal').classList.add('open')}
+function renderVisualLibrary(){const items=getIllustrationLibrary(),el=$('#visualLibraryList');if(!el)return;el.innerHTML=items.length?items.map(item=>`<div class="library-row"><div class="library-thumb">${visualImageHtml(item.visual)}</div><div><strong>${esc(item.name)}</strong><div class="small muted" style="margin-top:5px">${sourceLabel(item.visual)} · ${new Date(item.createdAt).toLocaleDateString()}</div></div><div class="row"><button class="primary" onclick="applySavedIllustration('${item.id}')">현재 슬롯에 적용</button><button class="bad" onclick="deleteSavedIllustration('${item.id}')">삭제</button></div></div>`).join(''):'<div class="source-intro"><strong>저장된 일러가 없어요.</strong><div class="small muted">완성 일러, 파츠 조립 또는 외부 원본을 만든 뒤 저장할 수 있어요.</div></div>';primeVisualUrls(items.map(x=>x.visual))}
+function applySavedIllustration(id){const item=getIllustrationLibrary().find(x=>x.id===id),c=setup.characters.find(x=>x.id===visualLibraryTargetId);if(!item||!c)return;c.visual=normalizeVisual(clone(item.visual),setup.characters.indexOf(c));c.confirmed=false;customizerState.activeId=c.id;closeModal('illustrationLibraryModal');openCustomize(c.id);toast('저장 일러를 현재 캐릭터에 적용했어요')}
+async function deleteSavedIllustration(id){const items=getIllustrationLibrary(),item=items.find(x=>x.id===id);if(!item||!confirm(`'${item.name}' 저장 일러를 삭제할까요?`))return;setIllustrationLibrary(items.filter(x=>x.id!==id));if(item.visual.assetId&&assetReferences(item.visual.assetId)===0)await deleteVisualAsset(item.visual.assetId);renderVisualLibrary();toast('저장 일러를 삭제했어요')}
+function openBuildSelect(){
+  if(setup.characters.some(c=>!c.confirmed))return toast('세 캐릭터의 일러를 모두 확정해 주세요');
+  try{renderBuildSelect();showScreen('buildSelect')}catch(e){
+    console.error(e);
+    $('#buildGrid').innerHTML=setup.characters.map((c,i)=>`<div class="core-card build-card"><div class="build-visual">${visualImageHtml(c.visual)}</div><h3>${esc(c.name)}</h3><div class="small muted">캐릭터 ${i+1}의 전투 빌드를 선택하세요.</div></div>`).join('');
+    showScreen('buildSelect'); toast('전투 빌드 선택 화면을 열었습니다');
+  }
+}
+function renderBuildSelect(){const el=$('#buildGrid');if(!el)return;el.innerHTML=setup.characters.map((c,i)=>{const options=['<option value="">전투 빌드 선택</option>',...CORES.map(core=>`<option value="${core.id}" ${c.coreId===core.id?'selected':''}>${core.emoji} ${core.name} · ${core.role}</option>`)].join('');const core=coreBy(c.coreId);return `<div class="core-card build-card"><div class="build-visual">${visualImageHtml(c.visual)}</div><h3>${esc(c.name)}</h3><div class="small muted">${sourceLabel(c.visual)} · 슬롯 ${i+1}</div><select onchange="setCharacterCore('${c.id}',this.value)">${options}</select>${core?`<div style="margin-top:9px">${core.tags.map(t=>`<span class="tag">${t}</span>`).join('')}<span class="small muted"> HP ${core.baseHp} · 전용 카드 15장</span></div>`:''}</div>`}).join('');const n=setup.characters.filter(c=>c.coreId).length;$('#buildReadyCount').textContent=n+'/3';$('#toDraftBtn').disabled=n!==setup.characters.length}
+function setCharacterCore(characterId,coreId){const c=setup.characters.find(x=>x.id===characterId);if(!c)return;if(coreId&&setup.characters.some(x=>x.id!==characterId&&x.coreId===coreId)){toast('같은 전투 빌드는 한 명에게만 연결할 수 있어요');renderBuildSelect();return}c.coreId=coreId||null;renderBuildSelect()}
+
+function pickUnique(arr,n,used=new Set()){
+  const out=[]; for(const x of shuffle(arr)){if(!used.has(x.id)){out.push(x);used.add(x.id);if(out.length===n)break}} return out;
+}
+function buildStartDraft(){
+  if(setup.characters.some(c=>!c.confirmed)){toast('세 캐릭터의 일러를 모두 확정해 주세요');return}
+  if(setup.characters.some(c=>!c.coreId)){toast('세 캐릭터의 전투 빌드를 모두 골라 주세요');return}
+  setup.draft=[]; const used=new Set();
+  partyCoreIds().forEach(id=>setup.draft.push(...pickUnique(makeCards(id).filter(c=>!c.isSignature),2,used)));
+  const pool=partyCoreIds().flatMap(id=>makeCards(id)).filter(c=>!c.isSignature);setup.draft.push(...pickUnique(pool,2,used));
+  setup.draftSelected=[];renderDraft();showScreen('startDraft')
+}
+function effectiveCardLevel(card,level=1){const owner=run?.party?.find(p=>p.id===card.owner);return Math.max(0,Math.min(5,(Number(level)||1)-1+(Number(owner?.breakthrough)||0)))}
+function ensureSignatureDeck(deck,characters){const out=[...deck];for(const character of characters){const signatureId=`${character.coreId}_15`;if(!out.some(card=>card.id===signatureId))out.push({id:signatureId,level:1,isSignature:true})}return out}
+function cardValue(card,level){return CARD_DATA.value(card.pattern.key,effectiveCardLevel(card,level))}
+function cardDesc(card,level=1){
+  const star=effectiveCardLevel(card,level),dataText=CARD_DATA.description(card.pattern.key,star,card.owner);
+  if(dataText)return dataText;
+  return card.pattern.text.replaceAll('{v}',cardValue(card,level))
+}
+function characterForCore(coreId){return run?.party?.find(p=>p.id===coreId)||setup.characters.find(c=>c.coreId===coreId)||null}
+/* Full-art card overlay: title/cost at upper left and description centered at lower edge. */
+function cardHtml(card,level=1,extra=''){
+  const owner=coreBy(card.owner);
+  const key=card.pattern.key;
+  const signature=key==='signature';
+  const art=signature?`card_art/signature/${card.owner.toLowerCase()}.webp`:`card_art/regular/${card.owner.toLowerCase()}/${key}.webp`;
+  const accent=owner?.color||'#66dcff';
+  const label=card.displayName||card.pattern.name||key;
+  const desc=cardDesc(card,level);
+  return `<article class="tactical-card" style="--card-accent:${accent}" aria-label="${esc(label)}">
+    <div class="card-art"><img class="card-art-image" src="${art}" alt="" loading="lazy" decoding="async"></div>
+    <div class="cost"><span>${card.cost}</span><small>AP</small></div>
+    <div class="card-type-pill"><b>${signature?'★':'◇'}</b>${signature?'고유 스킬':'스킬'}</div>
+    <div class="card-heading"><div class="card-eyebrow">${signature?'UNIQUE CARD':key.toUpperCase()}</div><h3>${esc(label)}</h3></div>
+    <div class="card-body"><div class="card-desc">${esc(desc)}</div><div class="card-footer">${card.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}${extra}</div></div>
+  </article>`;
+}
+function renderDraft(){
+  $('#draftGrid').innerHTML=setup.draft.map(c=>`<div class="reward-card ${setup.draftSelected.includes(c.id)?'selected':''}" onclick="toggleDraft('${c.id}')">${cardHtml(c)}</div>`).join('');
+  $('#draftCount').textContent=setup.draftSelected.length+'/5';$('#startRunBtn').disabled=setup.draftSelected.length!==5
+}
+function toggleDraft(id){
+  if(setup.draftSelected.includes(id))setup.draftSelected=setup.draftSelected.filter(x=>x!==id);
+  else if(setup.draftSelected.length<5)setup.draftSelected.push(id);
+  renderDraft()
+}
+function startRun(){
+  const now=Date.now();
+  const characters=setup.characters.map(c=>clone(c));
+  run={
+    id:uid(),saveVersion:TRIAD_ARCH.SAVE_VERSION,dataVersion:'TRIAD_RUNTIME_V0_8',seed:setup.seed||rngSeed(),rngAlgorithm:TRIAD_ARCH.RNG_ALGORITHM,rngState:setup.rngState||setup.seed,combatLog:[],scheduledEffects:[],startedAt:now,stage:1,act:1,characters,party:characters.map(ch=>{const stats=CARD_DATA.characterStats(ch.coreId,Number(ch.breakthrough)||0);return{id:ch.coreId,characterId:ch.id,name:ch.name,visual:clone(ch.visual),breakthrough:Number(ch.breakthrough)||0,stats,maxHp:stats.maxHp,hp:stats.maxHp,shield:0}}),
+    deck:ensureSignatureDeck(setup.draftSelected.map(id=>({id,level:1})),characters),
+    startingDeck:[...setup.draftSelected],artifacts:[],path:[],wins:0,combat:null,lastOwner:null,stats:{damage:0,healing:0,cardsPlayed:0,maxTurnDamage:0},
+    rewardPending:false
+  };
+  TRIAD_ARCH.addCombatLog(run,'RUN_STARTED',{party:run.party.map(p=>p.id),startingDeck:run.startingDeck});primeVisualUrls(run.party.map(p=>p.visual));saveRun();showRoute()
+}
+function saveRun(){if(run){run.saveVersion=TRIAD_ARCH.SAVE_VERSION;run.dataVersion='TRIAD_RUNTIME_V0_8';localStorage.setItem('triad_active_run',JSON.stringify(run));$('#saveState').textContent='자동 저장됨'}}
+function showRoute(){
+  if(run.stage>30){finishRun('WIN');return}
+  run.act=Math.ceil(run.stage/10);
+  renderMap('#mapline'); $('#actLabel').textContent=`ACT ${run.act} · SEED ${run.seed}`;$('#stageLabel').textContent=`STAGE ${run.stage} / 30`;
+  $('#deckLabel').textContent=`덱 ${run.deck.length}장`;$('#artifactLabel').textContent=`유물 ${run.artifacts.length}개`;
+  const choices=routeOptions(run.stage);$('#routeChoices').innerHTML=choices.map((r,i)=>`<button class="route-card" onclick="chooseRoute('${r.type}')"><strong>${r.icon} ${r.name}</strong><span class="muted">${r.text}</span></button>`).join('');
+  showScreen('route');saveRun()
+}
+function routeOptions(stage){
+  if(stage%10===0)return[{type:'boss',icon:'☠️',name:`ACT ${Math.ceil(stage/10)} BOSS`,text:'보스전. 승리 시 희귀 유물 획득'}];
+  const types=[
+    {type:'battle',icon:'⚔️',name:'일반 전투',text:'안정적인 카드 보상'},
+    {type:'elite',icon:'💀',name:'엘리트',text:'강한 적. 승리 시 유물 획득 확률'},
+    {type:'rest',icon:'⛺',name:'휴식',text:'생존 아군 HP 25% 회복'},
+    {type:'event',icon:'❔',name:'이벤트',text:'무작위 회복 또는 유물'},
+    {type:'battle',icon:'⚔️',name:'전투',text:'카드 보상을 노리는 경로'}
+  ];
+  let out=shuffle(types).slice(0,3);
+  if(!out.some(x=>x.type==='battle'))out[0]=types[0];
+  return out
+}
+function chooseRoute(type){
+  run.path.push({stage:run.stage,type});
+  TRIAD_ARCH.addCombatLog(run,'ROUTE_CHOSEN',{routeType:type});
+  if(type==='rest'){healParty(.25);toast('휴식으로 HP를 회복했어요');completeStage(false)}
+  else if(type==='event'){
+    if(TRIAD_ARCH.random(run)<.55){TRIAD_ARCH.addCombatLog(run,'EVENT_RESOLVED',{eventType:'HEAL'});healParty(.18);toast('이벤트: HP를 회복했어요');completeStage(false)}
+    else offerArtifact(()=>completeStage(false))
+  } else startCombat(type)
+}
+function healParty(rate){run.party.forEach(p=>{if(p.hp>0)p.hp=Math.min(p.maxHp,p.hp+Math.ceil(p.maxHp*rate))})}
+function enemyFor(stage,type){
+  const boss=type==='boss', elite=type==='elite';
+  const act=Math.ceil(stage/10), scale=1+(stage-1)*.055;
+  const hp=Math.round((boss?105:elite?74:52)*scale);
+  const dmg=Math.round((boss?10:elite?8:6)*(1+(stage-1)*.035));
+  const names=boss?['검은 기도체','제로 코어','마지막 관측자']:elite?['균열 집행자','기억 포식자','붉은 감시체']:['결손체','잔향 사냥꾼','폐허 드론','오류 생명체'];
+  return{name:boss?names[act-1]:choice(names),maxHp:hp,hp,baseDmg:dmg,burn:0,shock:0,mark:0,boss,elite,icon:boss?'👹':elite?'💀':choice(['👁️','🤖','👾','🦂'])}
+}
+function startCombat(type){
+  const e=enemyFor(run.stage,type);
+  run.combat={type,enemy:e,turn:1,energy:3,draw:[],discard:[],hand:[],exhaust:[],firstCard:true,turnDamage:0,intent:null,counter:0};
+  TRIAD_ARCH.addCombatLog(run,'BATTLE_STARTED',{battleType:type,enemyId:e.id||e.name});
+  run.party.forEach(p=>p.shield=0);
+  if(hasArtifact('shieldStart'))run.party.forEach(p=>p.shield+=8);
+  if(e.boss&&hasArtifact('bossGuard'))run.party.forEach(p=>p.shield+=15);
+  run.combat.draw=shuffle(run.deck.map(x=>({...x})));
+  newTurn(true);showScreen('combat');renderCombat();saveRun()
+}
+function hasArtifact(type){return run.artifacts.some(id=>ARTIFACTS.find(a=>a.id===id)?.type===type)}
+function newTurn(initial=false){
+  const c=run.combat;c.energy=3+(hasArtifact('energyPlus')?1:0);c.turnDamage=0;c.firstCard=true;
+  if(!initial){c.turn++}
+  applyEnemyDots();
+  if(c.enemy.hp<=0)return winCombat();
+  drawCards(4+(initial&&hasArtifact('drawPlus')?1:0));
+  c.intent={damage:c.enemy.baseDmg+Math.floor((c.turn-1)/3),hits:c.enemy.boss&&c.turn%3===0?2:1};
+}
+function drawOne(){
+  const c=run.combat;
+  if(!c.draw.length){if(!c.discard.length)return null;c.draw=shuffle(c.discard.splice(0))}
+  const x=c.draw.pop();if(x){c.hand.push(x);TRIAD_ARCH.addCombatLog(run,'DRAW',{cardId:x.id})}return x
+}
+function drawCards(n){for(let i=0;i<n;i++)drawOne()}
+function applyEnemyDots(){
+  const e=run.combat.enemy;
+  const dot=e.burn+e.shock;
+  if(dot>0){dealDamage(dot,'상태이상');e.burn=Math.max(0,e.burn-1)}
+}
+function getCardState(id){return run.deck.find(x=>x.id===id)}
+function playCard(idx){
+  run.battleSpriteState=run.battleSpriteState||{};
+  const c=run.combat, state=c.hand[idx];if(!state)return;
+  const card=ALL_CARDS[state.id];let cost=card.cost;
+  if(c.firstCard&&hasArtifact('firstZero'))cost=0;
+  if(cost>c.energy)return toast('에너지가 부족해요');
+  c.energy-=cost;c.hand.splice(idx,1);run.stats.cardsPlayed++;
+  const prevOwner=run.lastOwner;run.lastOwner=card.owner;
+  run.battleSpriteState[card.owner]=['shield','counter'].includes(card.kind)?'guard':['attack','quick','multi','combo','scale','execute'].includes(card.kind)?'attack':['signature','dot','mark'].includes(card.kind)?'skill':'idle';
+  const v=cardValue(card,state.level), statusBonus=hasArtifact('statusAmp')?1:0;
+  let exhaust=false;
+  const comboBonus=(hasArtifact('triadChain')&&prevOwner&&prevOwner!==card.owner)?4:0;
+  switch(card.kind){
+    case 'attack': dealDamage(v+comboBonus,card.name);break;
+    case 'shield': addShield(v);break;
+    case 'quick': dealDamage(v+comboBonus,card.name);drawCards(1);break;
+    case 'draw': drawCards(v);break;
+    case 'energy': c.energy+=v;exhaust=true;break;
+    case 'mark': dealDamage(4+comboBonus,card.name);c.enemy.mark+=v+statusBonus;break;
+    case 'dot':
+      dealDamage(5+comboBonus,card.name);
+      if(coreBy(card.owner).tags.includes('화상'))c.enemy.burn+=v+statusBonus;
+      else c.enemy.shock+=v+statusBonus;break;
+    case 'multi': for(let i=0;i<v;i++)dealDamage(4+Math.floor(comboBonus/v),card.name);break;
+    case 'heal': healLowest(v);break;
+    case 'combo': dealDamage(v+(prevOwner&&prevOwner!==card.owner?7:0)+comboBonus,card.name);break;
+    case 'scale': dealDamage(v+(c.enemy.burn+c.enemy.shock+c.enemy.mark)*2+comboBonus,card.name);break;
+    case 'counter': addShield(v);c.counter+=4+state.level;break;
+    case 'execute': dealDamage(v*(c.enemy.hp/c.enemy.maxHp<=.35?2:1)+comboBonus,card.name);break;
+    case 'signature':
+      dealDamage(v+c.enemy.mark*3+comboBonus,card.name);addShield(Math.round(v*.4));
+      c.enemy.burn+=1+statusBonus;c.enemy.shock+=1+statusBonus;break;
+  }
+  if(!exhaust)c.discard.push(state);else c.exhaust.push(state);
+  c.firstCard=false;
+  if(state.level>=3 && ['mark','dot','shield','heal'].includes(card.kind)){
+    if(card.kind==='mark')c.enemy.mark+=1;
+    if(card.kind==='dot')c.enemy.burn+=1;
+    if(card.kind==='shield')addShield(2);
+    if(card.kind==='heal')healLowest(2);
+  }
+  if(c.enemy.hp<=0)return winCombat();
+  renderCombat();saveRun()
+}
+function dealDamage(amount,label){
+  const e=run.combat.enemy;let mult=1+(e.mark*.07);amount=Math.max(0,Math.round(amount*mult));e.hp=Math.max(0,e.hp-amount);
+  run.stats.damage+=amount;run.combat.turnDamage+=amount;run.stats.maxTurnDamage=Math.max(run.stats.maxTurnDamage,run.combat.turnDamage);
+  logCombat(`${label}: ${amount} 피해`)
+}
+function addShield(amount){run.party.filter(p=>p.hp>0).forEach(p=>{p.shield+=amount;TRIAD_ARCH.addCombatLog(run,'SHIELD',{actor:run.combat?.activeCard?.ownerId||null,target:p.id,effect:'SHIELD',shield:amount})});logCombat(`아군 전체 보호막 +${amount}`)}
+function healLowest(amount){
+  const alive=run.party.filter(p=>p.hp>0&&p.hp<p.maxHp).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp);if(!alive.length)return;
+  const p=alive[0], before=p.hp;p.hp=Math.min(p.maxHp,p.hp+amount);run.stats.healing+=p.hp-before;TRIAD_ARCH.addCombatLog(run,'HEAL',{actor:run.combat?.activeCard?.ownerId||null,target:p.id,effect:'HEAL',heal:p.hp-before});logCombat(`${p.name} HP +${p.hp-before}`)
+}
+function endTurn(){
+  const c=run.combat;if(!c)return;
+  c.discard.push(...c.hand.splice(0));
+  enemyTurn();
+  if(run.party.every(p=>p.hp<=0))return finishRun('DEFEAT');
+  newTurn(false);renderCombat();saveRun()
+}
+function enemyTurn(){
+  const c=run.combat,e=c.enemy;
+  for(let h=0;h<c.intent.hits;h++){
+    const targets=run.party.filter(p=>p.hp>0);if(!targets.length)break;
+    const p=choice(targets);let dmg=c.intent.damage;
+    const blocked=Math.min(p.shield,dmg);p.shield-=blocked;dmg-=blocked;p.hp=Math.max(0,p.hp-dmg);run.battleSpriteState=run.battleSpriteState||{};run.battleSpriteState[p.id]=p.hp<=0?'ko':blocked>0?'guard':'hit';
+    logCombat(`${e.name} → ${p.name}: ${dmg} 피해${blocked?` (${blocked} 방어)`:''}`);
+    if(c.counter&&blocked>0)dealDamage(c.counter,'반격')
+  }
+}
+function logCombat(msg){const el=$('#combatLog');if(el){el.innerHTML+=`<div>• ${esc(msg)}</div>`;el.scrollTop=el.scrollHeight}}
+
+// Canonical combat bindings replace the prototype helpers while preserving the
+// existing route, deck, UI, status, relic, and save-flow contracts.
+function enemyFor(stage,type){const data=COMBAT_DATA.pickMonster(stage,type,()=>TRIAD_ARCH.random(run));return{data,id:data.id,name:data.name,elementId:data.elementId,maxHp:data.maxHp,hp:data.maxHp,baseDmg:data.skills[0].medianDamage,burn:0,shock:0,mark:0,boss:data.rank==='boss',elite:data.rank==='elite',icon:data.icon,skills:data.skills}}
+function newTurn(initial=false){const c=run.combat;c.energy=3+(hasArtifact('energyPlus')?1:0);c.turnDamage=0;c.firstCard=true;if(!initial)c.turn++;TRIAD_ARCH.executeScheduledEffects(run,c.turn,'PLAYER_START',(effect,scheduled)=>EFFECT_REGISTRY.resolve(effect,{run,scheduled}));applyEnemyDots();if(c.enemy.hp<=0)return winCombat();drawCards(4+(initial&&hasArtifact('drawPlus')?1:0));c.intent=COMBAT_DATA.buildIntent(c.enemy.data,c.turn);TRIAD_ARCH.addCombatLog(run,'TURN_STARTED',{energy:c.energy,enemyIntent:c.intent.skillId})}
+function dealDamage(amount,label,ownerId=null,cardKey=''){const c=run.combat,e=c.enemy,active=c.activeCard||{},actorId=ownerId||active.ownerId||run.party.find(p=>p.hp>0)?.id||'EMBER',actor=run.party.find(p=>p.id===actorId),stats=actor?.stats||CARD_DATA.characterStats(actorId,actor?.breakthrough||0),type=CARD_DATA.damageType(cardKey||active.cardKey,actorId),hit=COMBAT_DATA.resolveHit({medianDamage:amount,attackElementId:actorId,targetElementId:e.elementId,critChance:stats?.critChance,critMultiplier:stats?.critMultiplier,modifier:CARD_DATA.damageMultiplier(stats,type),canCrit:Boolean(ownerId||active.ownerId),rng:()=>TRIAD_ARCH.random(run)}),marked=Math.max(0,Math.round(hit.amount*(1+(e.mark||0)*.07)));e.hp=Math.max(0,e.hp-marked);run.stats.damage+=marked;c.turnDamage+=marked;run.stats.maxTurnDamage=Math.max(run.stats.maxTurnDamage,c.turnDamage);TRIAD_ARCH.addCombatLog(run,'DAMAGE',{actor:actorId,target:e.id,card:active.cardKey||null,effect:'DAMAGE',damage:marked});logCombat(`${label}: ${marked} damage${hit.weakness?' · weakness':''}${hit.critical?' · critical':''}`)}
+function enemyTurn(){const c=run.combat,e=c.enemy;for(let hitIndex=0;hitIndex<c.intent.hits;hitIndex++){const targetState={source:{id:e.id,team:TRIAD_ARCH.TEAM.ENEMY,hp:e.hp,maxHp:e.maxHp},teams:{PLAYER:run.party.map(p=>({...p,team:TRIAD_ARCH.TEAM.PLAYER})),ENEMY:[{id:e.id,team:TRIAD_ARCH.TEAM.ENEMY,hp:e.hp,maxHp:e.maxHp}]},rngContext:run};const selected=TRIAD_ARCH.resolveTargets(targetState,{sourceTeam:TRIAD_ARCH.TEAM.ENEMY,targetTeam:TRIAD_ARCH.TEAM.PLAYER,scope:TRIAD_ARCH.SCOPE.SINGLE,selector:TRIAD_ARCH.SELECTOR.RANDOM,count:1});const p=run.party.find(unit=>unit.id===selected[0]?.id);if(!p)break;const stats=p.stats||CARD_DATA.characterStats(p.id,p.breakthrough||0),hit=COMBAT_DATA.resolveHit({medianDamage:c.intent.damage,attackElementId:e.elementId,targetElementId:p.id,critChance:e.data?.critChance,critMultiplier:e.data?.critMultiplier,rng:()=>TRIAD_ARCH.random(run)}),incoming=Math.max(0,Math.round(hit.amount*CARD_DATA.incomingDamageMultiplier(stats))),blocked=Math.min(p.shield,incoming),damage=incoming-blocked;p.shield-=blocked;p.hp=Math.max(0,p.hp-damage);run.battleSpriteState=run.battleSpriteState||{};run.battleSpriteState[p.id]=p.hp<=0?'ko':blocked>0?'guard':'hit';TRIAD_ARCH.addCombatLog(run,'ENEMY_ACTION',{actor:e.id,target:p.id,effect:'DAMAGE',damage,shieldAbsorbed:blocked,targetSpec:{sourceTeam:'ENEMY',targetTeam:'PLAYER',scope:'SINGLE',selector:'RANDOM'}});logCombat(`${e.name} → ${p.name}: ${damage} damage${blocked?` (${blocked} blocked)`:''}`);if(c.counter&&blocked>0)dealDamage(c.counter,'Counter',p.id,'counter')}}
+function playCard(idx){run.battleSpriteState=run.battleSpriteState||{};const c=run.combat,state=c.hand[idx];if(!state)return;const card=ALL_CARDS[state.id];if(!card)return;let cost=card.cost;if(c.firstCard&&hasArtifact('firstZero'))cost=0;if(cost>c.energy)return toast('Not enough energy');c.energy-=cost;const effectType=LEGACY_EFFECT_TYPE[card.pattern.key]||'CHAIN';EFFECT_REGISTRY.resolve({type:effectType},{run,card});TRIAD_ARCH.addCombatLog(run,'CARD_PLAY',{actor:card.owner,card:card.id,effect:effectType,energyDelta:-cost,energy:c.energy});c.hand.splice(idx,1);run.stats.cardsPlayed++;const previousOwner=run.lastOwner;run.lastOwner=card.owner;c.activeCard={ownerId:card.owner,cardKey:card.pattern.key};run.battleSpriteState[card.owner]=['guard','bastion','counter'].includes(card.pattern.key)?'guard':'attack';const level=effectiveCardLevel(card,state.level),v=cardValue(card,state.level),secondary=CARD_DATA.secondary(card.pattern.key,level),statusBonus=hasArtifact('statusAmp')?1:0,comboBonus=hasArtifact('triadChain')&&previousOwner&&previousOwner!==card.owner?4:0,profile=CARD_DATA.signatureProfile(card.owner);let exhaust=false;switch(card.pattern.key){case 'strike':case 'heavy':dealDamage(v+comboBonus,card.name);break;case 'guard':addShield(v);break;case 'quick':dealDamage(v+comboBonus,card.name);drawCards(1);break;case 'focus':drawCards(v);break;case 'battery':c.energy+=v;exhaust=true;break;case 'mark':dealDamage(4+comboBonus,card.name);c.enemy.mark+=v+statusBonus;break;case 'dot':dealDamage(5+comboBonus,card.name);if(card.owner==='EMBER'||card.owner==='RIFT')c.enemy.burn+=v+statusBonus;else c.enemy.shock+=v+statusBonus;break;case 'burst':for(let i=0;i<Math.max(1,secondary||3);i++)dealDamage(v+comboBonus,card.name);break;case 'heal':healLowest(v);break;case 'combo':dealDamage(v+(previousOwner&&previousOwner!==card.owner?7:0)+comboBonus,card.name);break;case 'scale':dealDamage(v+(c.enemy.burn+c.enemy.shock+c.enemy.mark)*Math.max(1,secondary||2)+comboBonus,card.name);break;case 'counter':addShield(v);c.counter+=secondary||v;break;case 'execute':dealDamage(v*(c.enemy.hp/c.enemy.maxHp<=.35?2:1)+comboBonus,card.name);break;case 'signature':dealDamage(Math.round(v*profile.damageMultiplier)+comboBonus,card.name);addShield(Math.round(v*profile.shieldRatio));if(profile.healRatio)healLowest(Math.round(v*profile.healRatio));c.enemy.burn+=profile.burn||0;c.enemy.shock+=profile.shock||0;c.enemy.mark+=profile.mark||0;if(profile.draw)drawCards(profile.draw);if(profile.counterRatio)c.counter+=Math.round(v*profile.counterRatio);break;case 'inferno':dealDamage(v+comboBonus,card.name);c.enemy.burn+=secondary+statusBonus;break;case 'volley':for(let i=0;i<3;i++)dealDamage(v+comboBonus,card.name);break;case 'bastion':addShield(v);c.counter+=secondary;break;case 'ambush':dealDamage(v+(c.firstCard?secondary:0)+comboBonus,card.name);break;case 'renewal':healLowest(v);addShield(secondary);break;case 'overload':dealDamage(v+secondary+comboBonus,card.name);break;default:dealDamage(v+comboBonus,card.name)}const perk=CARD_DATA.star5Perk(card.pattern.key,level);if(perk?.shieldBonus)addShield(perk.shieldBonus);if(perk?.healBonus)healLowest(perk.healBonus);if(perk?.statusBonus)c.enemy.burn+=perk.statusBonus;if(!exhaust)c.discard.push(state);else c.exhaust.push(state);c.firstCard=false;if(c.enemy.hp<=0)return winCombat();renderCombat();saveRun()}
+
+function svgDataUri(s){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)}
+const SD_CORE_LOOK={
+  EMBER:{hair:'#6b1e18',accent:'#ff755f',accent2:'#ffc0b1',eye:'#d46a44',weapon:'flame'},
+  VOLT:{hair:'#f2efe8',accent:'#6fe0ff',accent2:'#d5f4ff',eye:'#4ec8ff',weapon:'bolt'},
+  AEGIS:{hair:'#d6f2ff',accent:'#6c8dff',accent2:'#eff4ff',eye:'#8fb2ff',weapon:'shield'},
+  SHADE:{hair:'#34204d',accent:'#b488ff',accent2:'#efe1ff',eye:'#9c71ff',weapon:'rifle'},
+  BLOOM:{hair:'#46a56f',accent:'#89e7a6',accent2:'#e7fff0',eye:'#4ba45d',weapon:'staff'},
+  RIFT:{hair:'#17131d',accent:'#9f82ff',accent2:'#ebe8ff',eye:'#8672ff',weapon:'orb'}
+};
+function sdCoreSvg(id){
+  const s=SD_CORE_LOOK[id]||SD_CORE_LOOK.EMBER;
+  const weapon = s.weapon==='flame'
+    ? `<g transform="translate(78 104)"><path d="M0 22 Q12 -2 25 12 Q30 0 41 12 Q46 26 25 41 Q4 33 0 22Z" fill="${s.accent}"/><path d="M12 24 Q18 12 25 20 Q29 11 35 19 Q33 30 25 35 Q16 31 12 24Z" fill="#ffd66a"/></g>`
+    : s.weapon==='bolt'
+    ? `<g transform="translate(76 104)"><path d="M18 0 L42 0 L30 21 L44 21 L12 56 L22 30 L7 30 Z" fill="${s.accent}"/></g>`
+    : s.weapon==='shield'
+    ? `<g transform="translate(76 102)"><path d="M24 0 L46 7 L43 35 Q38 49 24 58 Q10 49 5 35 L2 7 Z" fill="${s.accent}" stroke="#ffffff" stroke-width="3"/><path d="M24 6 L39 10 L37 31 Q34 41 24 48 Q14 41 11 31 L9 10 Z" fill="${s.accent2}"/></g>`
+    : s.weapon==='rifle'
+    ? `<g transform="translate(75 108)"><rect x="0" y="14" width="50" height="10" rx="4" fill="${s.accent}"/><rect x="32" y="5" width="8" height="10" rx="2" fill="${s.accent2}"/><rect x="10" y="24" width="8" height="18" rx="2" fill="#222a3d"/></g>`
+    : s.weapon==='staff'
+    ? `<g transform="translate(82 96)"><rect x="18" y="8" width="6" height="54" rx="3" fill="${s.accent2}"/><circle cx="21" cy="8" r="14" fill="${s.accent}"/><path d="M12 8 Q21 -6 30 8 Q21 22 12 8Z" fill="#efffef" opacity=".72"/></g>`
+    : `<g transform="translate(80 100)"><circle cx="20" cy="20" r="16" fill="${s.accent}"/><circle cx="20" cy="20" r="8" fill="${s.accent2}"/><path d="M4 20 Q20 2 36 20 Q20 38 4 20Z" fill="none" stroke="${s.accent}" stroke-width="4"/></g>`;
+  return `<svg viewBox="0 0 160 190" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="sdshadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity=".25"/></filter>
+      <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe5d6"/><stop offset="1" stop-color="#e3b09a"/></linearGradient>
+    </defs>
+    <ellipse cx="80" cy="178" rx="48" ry="8" fill="#000" opacity=".18"/>
+    <g filter="url(#sdshadow)">
+      <path d="M46 36 Q56 5 80 5 Q104 5 114 36 L118 84 Q103 100 80 100 Q57 100 42 84Z" fill="${s.hair}"/>
+      <circle cx="80" cy="50" r="30" fill="url(#skin)"/>
+      <path d="M50 35 Q62 18 80 18 Q98 18 110 35 Q95 30 80 31 Q65 30 50 35Z" fill="${s.hair}"/>
+      <circle cx="68" cy="50" r="7" fill="#fff"/><circle cx="92" cy="50" r="7" fill="#fff"/>
+      <circle cx="68" cy="50" r="4" fill="${s.eye}"/><circle cx="92" cy="50" r="4" fill="${s.eye}"/>
+      <circle cx="68" cy="50" r="2" fill="#151922"/><circle cx="92" cy="50" r="2" fill="#151922"/>
+      <path d="M60 40 Q68 36 76 40 M84 40 Q92 36 100 40" fill="none" stroke="#55352f" stroke-width="3" stroke-linecap="round"/>
+      <path d="M71 66 Q80 74 89 66" fill="none" stroke="#bd5c69" stroke-width="3" stroke-linecap="round"/>
+      <rect x="72" y="77" width="16" height="12" rx="6" fill="url(#skin)"/>
+      <path d="M47 95 Q80 82 113 95 L108 143 Q80 154 52 143Z" fill="${s.accent2}" stroke="${s.accent}" stroke-width="5"/>
+      <path d="M55 96 L37 105 L34 148 L54 144Z M105 96 L123 105 L126 148 L106 144Z" fill="${s.accent}" stroke="#20304a" stroke-width="4"/>
+      <path d="M52 142 L67 142 L62 175 L49 175Z M108 142 L93 142 L98 175 L111 175Z" fill="url(#skin)"/>
+      <path d="M52 175 L71 175 L74 183 Q63 188 50 184Z M108 175 L89 175 L86 183 Q97 188 110 184Z" fill="${s.accent}" stroke="#ffffff" stroke-width="4"/>
+      ${weapon}
+    </g>
+  </svg>`
+}
+function sdEnemySvg(e){
+  const c = e.boss ? ['#86243a','#f25f82'] : e.elite ? ['#4c245f','#c58cff'] : ['#233a5b','#62c6ff'];
+  const eye = e.boss ? '#ffd15a' : e.elite ? '#ff9cff' : '#86e7ff';
+  const horns = e.boss
+    ? `<path d="M44 40 Q32 6 52 12 L64 42Z M116 40 Q128 6 108 12 L96 42Z" fill="${c[1]}"/>`
+    : e.elite
+    ? `<path d="M48 42 Q36 20 50 20 L62 42Z M112 42 Q124 20 110 20 L98 42Z" fill="${c[1]}"/>`
+    : '';
+  return `<svg viewBox="0 0 180 210" xmlns="http://www.w3.org/2000/svg">
+    <defs><filter id="eshadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#000" flood-opacity=".28"/></filter></defs>
+    <ellipse cx="90" cy="198" rx="52" ry="8" fill="#000" opacity=".2"/>
+    <g filter="url(#eshadow)">
+      ${horns}
+      <path d="M41 53 Q47 20 90 20 Q133 20 139 53 L148 100 Q138 148 90 162 Q42 148 32 100Z" fill="${c[0]}" stroke="${c[1]}" stroke-width="6"/>
+      <path d="M56 73 Q90 50 124 73 Q117 109 90 116 Q63 109 56 73Z" fill="#0e1524"/>
+      <circle cx="74" cy="84" r="10" fill="${eye}"/><circle cx="106" cy="84" r="10" fill="${eye}"/><circle cx="74" cy="84" r="4" fill="#111"/><circle cx="106" cy="84" r="4" fill="#111"/>
+      <path d="M72 112 Q90 128 108 112" fill="none" stroke="${c[1]}" stroke-width="4" stroke-linecap="round"/>
+      <path d="M62 156 L50 191 L73 182 L90 198 L107 182 L130 191 L118 156 Z" fill="${c[1]}" opacity=".92"/>
+    </g>
+  </svg>`
+}
+function partySpriteCard(p){
+  const state=run?.battleSpriteState?.[p.id]||(p.hp<=0?'ko':'idle');
+  const art=visualImageHtml(p.visual,'battle-art');
+  const core=coreBy(p.id);
+  return `<div class="sd-card ${p.hp<=0?'dead':''}">
+    ${art}
+    <div class="sd-name">${core.emoji} ${p.name}</div>
+    <div class="sd-mini-bar"><i style="width:${100*p.hp/p.maxHp}%"></i></div>
+    <div class="sd-mini-bar shield"><i style="width:${Math.min(100,p.shield*3)}%"></i></div>
+  </div>`
+}
+function partyStatusCard(p){
+  const core=coreBy(p.id);
+  return `<div class="party-status-item ${p.hp<=0?'dead':''}">
+    <div class="party-status-head">
+      <strong>${core.emoji} ${p.name}</strong>
+      <span class="tag">${p.hp>0?'생존':'전투불능'}</span>
+    </div>
+    <div class="small muted" style="margin-top:6px">HP ${p.hp}/${p.maxHp}</div>
+    <div class="bar"><i style="width:${100*p.hp/p.maxHp}%"></i></div>
+    <div class="small muted" style="margin-top:8px">보호막 ${p.shield}</div>
+    <div class="bar shield"><i style="width:${Math.min(100,p.shield*3)}%"></i></div>
+  </div>`
+}
+function renderCombat(){
+  if(!run.combat)return;
+  primeVisualUrls(run.party.map(p=>p.visual).filter(Boolean));
+  const c=run.combat,e=c.enemy;renderMap('#combatMap');
+  const backdrop=String(Math.max(1,Math.min(10,Math.ceil(run.stage/3)))).padStart(2,'0');
+  $('.battle-stage').style.backgroundImage=`url("assets/battle_backgrounds/stage${backdrop}_${['a_ruined_checkpoint','a_flooded_metro','a_toxic_refinery','a_dead_forest_village','a_cathedral_graveyard','a_frozen_exclusion_zone','a_ash_convoy_graveyard','a_bioresearch_breach','a_storm_shipyard','a_annihilation_crater'][Number(backdrop)-1]||'a_ruined_checkpoint'}.png")`;
+  $('#battleTitle').textContent=`STAGE ${run.stage} · ${c.type==='boss'?'BOSS':c.type==='elite'?'ELITE':'BATTLE'}`;
+  $('#turnLabel').textContent=`TURN ${c.turn}`;
+  $('#energyLabel').textContent=c.energy;
+  $('#drawLabel').textContent=c.draw.length;
+  $('#discardLabel').textContent=c.discard.length;
+
+  $('#partySprites').innerHTML=run.party.map(p=>partySpriteCard(p)).join('');
+  $('#enemySpriteWrap').innerHTML=`<div class="sd-card" style="width:170px"><img style="height:182px" src="${svgDataUri(sdEnemySvg(e))}" alt="${e.name} SD"><div class="sd-name">${e.icon} ${e.name}</div></div>`;
+
+  $('#enemySpriteWrap').innerHTML=`<div class="sd-card enemy-illustration"><img src="card_art/regular/shade/ambush.webp" alt="${esc(e.name)}"><div class="sd-name">${e.name}</div><div class="sd-mini-bar"><i style="width:${100*e.hp/e.maxHp}%"></i></div></div>`;
+  $('#enemyIcon').textContent=e.icon;
+  $('#enemyName').textContent=e.name;
+  $('#enemyHpText').textContent=`HP ${e.hp} / ${e.maxHp}`;
+  $('#enemyHpBar').style.width=`${100*e.hp/e.maxHp}%`;
+  $('#enemyStatus').innerHTML=[e.burn?`🔥 화상 ${e.burn}`:'',e.shock?`⚡ 감전 ${e.shock}`:'',e.mark?`🎯 표식 ${e.mark}`:'']
+    .filter(Boolean).map(x=>`<span class="tag">${x}</span>`).join(' ') || '<span class="muted small">상태이상 없음</span>';
+  $('#enemyIntent').textContent=`다음 행동: ${c.intent.damage} 피해${c.intent.hits>1?` × ${c.intent.hits}`:''}`;
+
+  $('#partyCombat').innerHTML=run.party.map(p=>partyStatusCard(p)).join('');
+
+  $('#hand').innerHTML=c.hand.map((state,i)=>{
+    const card=ALL_CARDS[state.id];
+    let cost=card.cost;if(c.firstCard&&hasArtifact('firstZero'))cost=0;
+    return `<div class="hand-card ${cost<=c.energy?'playable':'unplayable'}" onclick="playCard(${i})">${cardHtml(card,state.level,`<div class="small muted" style="margin-top:6px">Lv.${state.level}</div>`)}</div>`
+  }).join('');
+}
+function renderMap(sel){
+  const el=$(sel); if(!el)return;
+  el.innerHTML=Array.from({length:30},(_,i)=>{const n=i+1;return`<div class="node ${n<run.stage?'done':''} ${n===run.stage?'current':''} ${n%10===0?'boss':''}">${n}<br>${n%10===0?'BOSS':'·'}</div>`}).join('')
+}
+function winCombat(){
+  const type=run.combat.type;run.wins++;
+  if(hasArtifact('healAfter'))run.party.filter(p=>p.hp>0).forEach(p=>p.hp=Math.min(p.maxHp,p.hp+5));
+  TRIAD_ARCH.addCombatLog(run,'BATTLE_RESULT',{result:'VICTORY',battleType:type});run.combat=null;saveRun();
+  if(type==='boss'||type==='elite'){
+    const chance=type==='boss'?1:.6;if(TRIAD_ARCH.random(run)<chance)return offerArtifact(()=>showReward())
+  }
+  showReward()
+}
+function offerArtifact(done){
+  const owned=new Set(run.artifacts),pool=ARTIFACTS.filter(a=>!owned.has(a.id));
+  if(!pool.length){done();return}
+  const offer=shuffle(pool).slice(0,Math.min(3,pool.length));
+  $('#artifactOffer').innerHTML=offer.map(a=>`<button class="route-card" onclick="takeArtifact('${a.id}')"><strong>◈ ${a.name}</strong><span class="muted">${a.text}</span></button>`).join('');
+  $('#artifactModal').dataset.done='pending';window._artifactDone=done;$('#artifactModal').classList.add('open')
+}
+function takeArtifact(id){run.artifacts.push(id);TRIAD_ARCH.addCombatLog(run,'ARTIFACT_GAINED',{artifactId:id});closeModal('artifactModal');saveRun();toast('유물을 획득했어요');const cb=window._artifactDone;window._artifactDone=null;if(cb)cb()}
+function skipArtifact(){const cb=window._artifactDone;window._artifactDone=null;closeModal('artifactModal');if(cb)cb()}
+function closeModal(id){$('#'+id).classList.remove('open')}
+function renderRewardOffer(ids){
+  const offer=ids.map(id=>ALL_CARDS[id]).filter(Boolean);
+  $('#rewardGrid').innerHTML=offer.map(c=>{const state=getCardState(c.id),next=state?Math.min(5,state.level+1):1;
+    return `<button class="reward-card" onclick="takeReward('${c.id}')">${cardHtml(c,next,`<div style="margin-top:8px"><span class="badge">${state?`Lv${state.level}→${next}`:'NEW'}</span></div>`)}</button>`}).join('');
+}
+function showReward(){
+  const pool=partyCoreIds().flatMap(id=>makeCards(id)).filter(c=>!c.isSignature).filter(c=>{
+    const s=getCardState(c.id);return !s||s.level<5
+  });
+  const weighted=[];pool.forEach(c=>{const w=getCardState(c.id)?3:1;for(let i=0;i<w;i++)weighted.push(c)});
+  const ids=new Set(),offer=[];for(const c of shuffle(weighted)){if(!ids.has(c.id)){ids.add(c.id);offer.push(c);if(offer.length===3)break}}
+  run.rewardOffer=offer.map(x=>x.id);
+  renderRewardOffer(run.rewardOffer);
+  showScreen('reward');saveRun()
+}
+function takeReward(id){
+  if(id){const s=getCardState(id);if(s)s.level=Math.min(5,s.level+1);else run.deck.push({id,level:1})}
+  TRIAD_ARCH.addCombatLog(run,'REWARD_RESOLVED',{cardId:id||null,skipped:!id});
+  run.rewardOffer=null;completeStage(true)
+}
+function completeStage(fromReward){
+  run.stage++;
+  if(run.stage>30){finishRun('WIN');return}
+  saveRun();showRoute()
+}
+function finishRun(result){
+  if(!run)return;
+  const h=JSON.parse(localStorage.getItem('triad_history')||'[]');
+  const snap={
+    id:run.id,date:new Date().toISOString(),result,stage:Math.min(run.stage,30),seed:run.seed,
+    duration:Date.now()-run.startedAt,party:run.party.map(p=>({id:p.id,name:p.name,characterId:p.characterId,visual:clone(p.visual)})),
+    characters:clone(run.characters||[]),startingDeck:run.startingDeck,deck:run.deck,artifacts:run.artifacts,path:run.path,stats:run.stats
+  };
+  h.unshift(snap);localStorage.setItem('triad_history',JSON.stringify(h.slice(0,100)));
+  localStorage.removeItem('triad_active_run');run=null;refreshHome();toast(result==='WIN'?'런 클리어! 히스토리에 저장했어요':'런 종료. 기록을 히스토리에 저장했어요');showHistory()
+}
+function showHistory(){renderHistory();showScreen('history')}
+function historyCharacters(x){return x.characters?.length?x.characters:(x.party||[]).map((p,i)=>({id:p.characterId||`history-${i}`,name:p.name||coreBy(p.id)?.name,coreId:p.coreId||p.id,visual:p.visual||legacyVisual(x.appearance?.[p.id],i)}))}
+function renderHistory(){
+  const h=JSON.parse(localStorage.getItem('triad_history')||'[]');
+  $('#historyList').innerHTML=h.length?h.map((x,i)=>{const chars=historyCharacters(x);return`<div class="history-card"><div>
+    <div class="row"><span class="badge">${x.result==='WIN'?'WIN':'END'}</span><strong>${new Date(x.date).toLocaleString()}</strong><span class="tag">STAGE ${x.stage}</span></div>
+    <div class="history-characters" style="margin-top:8px">${chars.map(c=>`<div class="history-visual">${visualImageHtml(c.visual)}</div><span>${coreBy(c.coreId)?.emoji||'◈'} ${esc(c.name)}</span>`).join('')}</div>
+    <div class="small muted" style="margin-top:5px">덱 ${x.deck.length}장 · Lv5 ${x.deck.filter(c=>c.level===5).length}장 · 유물 ${x.artifacts.length}개 · SEED ${x.seed}</div>
+    </div><div class="row"><button onclick="openHistory(${i})">상세</button><button onclick="replayHistory(${i})">같은 조합</button><button class="bad" onclick="deleteHistory(${i})">삭제</button></div></div>`}).join(''):'<div class="muted">아직 저장된 런이 없어요.</div>'
+}
+function openHistory(i){
+  const x=JSON.parse(localStorage.getItem('triad_history')||'[]')[i];if(!x)return;
+  $('#historyDetail').innerHTML=`<div class="grid grid2">
+  <div><h3>${x.result} · STAGE ${x.stage}</h3><p class="muted">플레이 시간 ${Math.floor(x.duration/60000)}분 ${Math.floor((x.duration%60000)/1000)}초 · SEED ${x.seed}</p>
+  <h3>전투 통계</h3><p>총 피해 ${x.stats.damage} · 회복 ${x.stats.healing} · 카드 사용 ${x.stats.cardsPlayed} · 한 턴 최대 피해 ${x.stats.maxTurnDamage}</p>
+  <h3>유물</h3><p>${x.artifacts.map(id=>ARTIFACTS.find(a=>a.id===id)?.name).join(' · ')||'없음'}</p></div>
+  <div><h3>최종 덱</h3><div class="stack">${x.deck.map(s=>{const c=ALL_CARDS[s.id];return`<div class="core-card"><strong>${c.name}</strong> <span class="tag">Lv.${s.level}</span><div class="small muted">${cardDesc(c,s.level)}</div></div>`}).join('')}</div></div></div>`;
+  $('#historyModal').classList.add('open')
+}
+function replayHistory(i){
+  const x=JSON.parse(localStorage.getItem('triad_history')||'[]')[i];if(!x)return;
+  setup={characters:historyCharacters(x).map((c,j)=>normalizeCharacter({...c,confirmed:true},j)),draft:[],draftSelected:[]};customizerState.activeId=setup.characters[0]?.id||null;renderVisualSlotGrid();openCustomize();toast('일러와 전투 빌드를 복원했어요. 덱은 새로 시작해요')
+}
+function deleteHistory(i){const h=JSON.parse(localStorage.getItem('triad_history')||'[]');h.splice(i,1);localStorage.setItem('triad_history',JSON.stringify(h));renderHistory()}
+function clearHistory(){if(confirm('빌드 히스토리를 모두 삭제할까요?')){localStorage.removeItem('triad_history');renderHistory()}}
+window.addEventListener('beforeunload',saveRun);
+// File:// execution can occasionally ignore an inline handler after a stale cached load.
+// Keep a direct listener as the authoritative transition from visual confirmation to build selection.
+document.getElementById('toBuildBtn')?.addEventListener('click',openBuildSelect);
+refreshHome();renderCoreGrid();
+</script>
+</body>
+</html>

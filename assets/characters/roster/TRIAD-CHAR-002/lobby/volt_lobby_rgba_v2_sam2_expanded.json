@@ -1,0 +1,45 @@
+{
+  "schema": "triad.sd.person-alpha.v1",
+  "createdAt": "2026-08-23T16:29:09.568765+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\card_art\\signature\\volt.webp",
+    "sha256": "67dce7e1b13544e6eaaa92088e71d2c95cb7019fb5ab185c4fe080b4e1d7fa74"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-002\\lobby\\volt_lobby_rgba_v2_sam2_expanded.png",
+    "sha256": "34e674faed23b480337412e295522504c0bc5a4de7eff975bf5d539b4de4779e"
+  },
+  "mask": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-002\\lobby\\volt_lobby_rgba_v2_sam2_expanded_mask.png",
+    "sha256": "992c9c348c86e79ef77b5d1c2a3d0a8420d572caac078b7ce9eecdcaac29880a"
+  },
+  "detection": {
+    "dino_prompt": "person.",
+    "dino_score": 0.3641931712627411,
+    "dino_box_xyxy": [
+      242.271,
+      188.651,
+      519.456,
+      955.637
+    ],
+    "sam_prompt_box_xyxy": [
+      117.538,
+      96.612,
+      644.189,
+      1093.695
+    ],
+    "sam_score": 0.7806344032287598,
+    "fraction": 0.1237521701388889,
+    "boxPadding": {
+      "x": 0.45,
+      "top": 0.12,
+      "bottom": 0.18
+    },
+    "not_a_clothing_mask": true
+  },
+  "alphaFraction": 0.14726313838252314,
+  "readOnlyExternalApp": "C:\\Users\\AAA\\Documents\\Codex\\반중력 협업 폴더\\Character-Motion-Forge-v4.2.6-work\\local_body_studio",
+  "modelFilesModified": false,
+  "runtimeEligible": false
+}

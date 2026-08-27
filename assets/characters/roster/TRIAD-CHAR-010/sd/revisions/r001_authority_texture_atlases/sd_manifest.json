@@ -1,0 +1,112 @@
+{
+  "schema": "triad.sd.bundle.v1",
+  "status": "PASS_ACTIVE_FINAL",
+  "characterId": "TRIAD-CHAR-010",
+  "revision": 1,
+  "frameWidth": 512,
+  "frameHeight": 512,
+  "clips": {
+    "enter": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_enter_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "idle": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_idle_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "attack": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_attack_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "skill": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_skill_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "ultimate": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_ultimate_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "guard": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_guard_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "hit": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_hit_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "ko": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_ko_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    },
+    "victory": {
+      "atlas": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_victory_r001_84f.webp",
+      "frames": 84,
+      "fps": 30,
+      "columns": 12,
+      "rows": 7
+    }
+  },
+  "assets": {
+    "enter": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_enter_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "idle": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_idle_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "attack": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_attack_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "skill": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_skill_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "ultimate": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_ultimate_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "guard": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_guard_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "hit": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_hit_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "ko": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_ko_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    },
+    "victory": {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r001_authority_texture_atlases/nox_victory_r001_84f.webp",
+      "status": "PASS_ACTIVE_FINAL"
+    }
+  },
+  "runtimeEligible": true
+}

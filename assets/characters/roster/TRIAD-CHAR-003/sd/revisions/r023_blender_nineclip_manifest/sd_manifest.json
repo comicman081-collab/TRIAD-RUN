@@ -1,0 +1,53 @@
+{
+  "schema": "triad.sd.bundle.v1",
+  "status": "PASS_ACTIVE_FINAL",
+  "characterId": "TRIAD-CHAR-003",
+  "revision": 23,
+  "frameWidth": 512,
+  "frameHeight": 512,
+  "anchor": { "x": 256, "y": 493 },
+  "faction": "PLAYER",
+  "battleLane": "LEFT",
+  "facing": "RIGHT",
+  "enemyLane": "RIGHT",
+  "runtimeMirror": false,
+  "sourceArt": "card_art/signature/aegis.webp",
+  "clips": {
+    "enter": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r018_blender_enter_phase_normalized_84f/enter_r18_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "arrive": 36, "ready": 63 }, "motion": "RIGHT_FACING_RUN_IN_LAND_READY", "authoredPoseCadenceFps": 10 },
+    "idle": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r007_blender_idle_equipment_safe_84f/idle_r7_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": true, "events": {}, "motion": "RIGHT_FACING_SHIELD_IDLE_LOOP", "authoredPoseCadenceFps": 10 },
+    "attack": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r009_blender_attack_equipment_safe_84f/attack_r9_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "impact": 42 }, "motion": "RIGHT_FACING_SHIELD_BASH", "authoredPoseCadenceFps": 10 },
+    "skill": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r019_blender_skill_phase_normalized_84f/skill_r19_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "effect": 42, "recover": 63 }, "motion": "RIGHT_FACING_SHIELD_SUPPORT_SKILL", "authoredPoseCadenceFps": 10 },
+    "ultimate": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r020_blender_ultimate_phase_normalized_84f/ultimate_r20_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "effect": 45, "impact": 48, "recover": 66 }, "motion": "RIGHT_FACING_TOWER_SHIELD_ULTIMATE", "authoredPoseCadenceFps": 10 },
+    "guard": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r017_blender_guard_phase_normalized_84f/guard_r17_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "guard": 21, "release": 63 }, "motion": "RIGHT_FACING_TOWER_SHIELD_GUARD", "authoredPoseCadenceFps": 10 },
+    "hit": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r016_blender_hit_phase_normalized_84f/hit_r16_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "impact": 33, "recover": 63 }, "motion": "RIGHT_FACING_SHIELD_HIT_RECOIL", "authoredPoseCadenceFps": 10 },
+    "ko": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r021e_blender_ko_canonical_84f/ko_r21_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "holdLastFrame": true, "events": { "down": 45, "hold": 72 }, "motion": "RIGHT_FACING_CONTROLLED_SHIELD_KO_CONTINUOUS", "authoredPoseCadenceFps": 10 },
+    "victory": { "atlas": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r022b_blender_victory_clean_84f/victory_r22_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "holdLastFrame": true, "events": { "pose": 51, "hold": 72 }, "motion": "RIGHT_FACING_DIGNIFIED_SHIELD_VICTORY_CLEAN", "authoredPoseCadenceFps": 10 }
+  },
+  "assets": {
+    "enter": { "assetId": "TRIAD-SD-CHAR003-ENTER-R18-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r018_blender_enter_phase_normalized_84f/enter_r18_84f.webp", "sha256": "943d479a67c92271416ead1464ea3f41040ede3a59bcd5d0d559d9a50be6ec95", "status": "PASS_ACTIVE_FINAL" },
+    "idle": { "assetId": "TRIAD-SD-CHAR003-IDLE-R07-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r007_blender_idle_equipment_safe_84f/idle_r7_84f.webp", "sha256": "68daa76a04d927cdebb48bc1963044ccb3e0ed97acede11f4d8dec578a2334c1", "status": "PASS_ACTIVE_FINAL" },
+    "attack": { "assetId": "TRIAD-SD-CHAR003-ATTACK-R09-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r009_blender_attack_equipment_safe_84f/attack_r9_84f.webp", "sha256": "8f643239f8ff6e4bb6e59c809cb1078d607b75c629a55b55fee2e9a9c2a688a9", "status": "PASS_ACTIVE_FINAL" },
+    "skill": { "assetId": "TRIAD-SD-CHAR003-SKILL-R19-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r019_blender_skill_phase_normalized_84f/skill_r19_84f.webp", "sha256": "079980ddd57ad95c3744705d99172fbad951e790bf70ca2776209c1cd0c63f2a", "status": "PASS_ACTIVE_FINAL" },
+    "ultimate": { "assetId": "TRIAD-SD-CHAR003-ULTIMATE-R20-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r020_blender_ultimate_phase_normalized_84f/ultimate_r20_84f.webp", "sha256": "4f0f5f34d17765cd4ec33a5831340d3f58540121588eaae9363d380b4da1b3c4", "status": "PASS_ACTIVE_FINAL" },
+    "guard": { "assetId": "TRIAD-SD-CHAR003-GUARD-R17-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r017_blender_guard_phase_normalized_84f/guard_r17_84f.webp", "sha256": "dc711cad190bada9c733cf88d81d64498005ad83a9ccb4b7897b9ee059b6dbd8", "status": "PASS_ACTIVE_FINAL" },
+    "hit": { "assetId": "TRIAD-SD-CHAR003-HIT-R16-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r016_blender_hit_phase_normalized_84f/hit_r16_84f.webp", "sha256": "9a1d65bafd24869a77af0b20bbc7f6d5b518dcbce130c8ec300e78f61c9bc38c", "status": "PASS_ACTIVE_FINAL" },
+    "ko": { "assetId": "TRIAD-SD-CHAR003-KO-R21-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r021e_blender_ko_canonical_84f/ko_r21_84f.webp", "sha256": "a28e93a70c75725a8243576627da2bdc50b83825b8dbb26fe2a5b2c2e50ee840", "status": "PASS_ACTIVE_FINAL" },
+    "victory": { "assetId": "TRIAD-SD-CHAR003-VICTORY-R22-84F", "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r022b_blender_victory_clean_84f/victory_r22_84f.webp", "sha256": "8140c63bd34baa3908a21445ccca153052dd172bf796a0ec08c946a0804e41c2", "status": "PASS_ACTIVE_FINAL" }
+  },
+  "qa": {
+    "summary": "assets/characters/roster/TRIAD-CHAR-003/sd/qa/AEGIS_NINE_CLIP_CANONICAL_SUMMARY.png",
+    "enterContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r018_blender_enter_phase_normalized_84f/AEGIS_ENTER_R18_28_UNIQUE_CONTACT.png",
+    "idleContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r007_blender_idle_equipment_safe_84f/AEGIS_IDLE_R7_28_UNIQUE_CONTACT.png",
+    "attackContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r009_blender_attack_equipment_safe_84f/AEGIS_ATTACK_R9_28_UNIQUE_CONTACT.png",
+    "skillContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r019_blender_skill_phase_normalized_84f/AEGIS_SKILL_R19_28_UNIQUE_CONTACT.png",
+    "ultimateContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r020_blender_ultimate_phase_normalized_84f/AEGIS_ULTIMATE_R20_28_UNIQUE_CONTACT.png",
+    "guardContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r017_blender_guard_phase_normalized_84f/AEGIS_GUARD_R17_28_UNIQUE_CONTACT.png",
+    "hitContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r016_blender_hit_phase_normalized_84f/AEGIS_HIT_R16_28_UNIQUE_CONTACT.png",
+    "koContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r021e_blender_ko_canonical_84f/AEGIS_KO_R21_28_UNIQUE_CONTACT.png",
+    "victoryContact": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r022b_blender_victory_clean_84f/AEGIS_VICTORY_R22_28_UNIQUE_CONTACT.png"
+  },
+  "runtimeEligible": true,
+  "localForgeUsed": false,
+  "localAssetGeneration": "BLENDER_ONLY",
+  "modelFilesModified": false
+}

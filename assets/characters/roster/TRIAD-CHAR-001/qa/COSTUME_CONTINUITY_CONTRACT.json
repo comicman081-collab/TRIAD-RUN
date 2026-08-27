@@ -1,0 +1,31 @@
+{
+  "characterId": "TRIAD-CHAR-001",
+  "characterName": "엠버",
+  "costumeId": "EMBER_INFERNO_ORB_ARMOR_V1",
+  "authoritySource": "card_art/signature/ember.webp",
+  "authoritySha256": "11A30C2E8E6156D3B4BA9A489079417B60BD51BD18610F2C3A604638E35C6C62",
+  "fingerprint": {
+    "hair": "long flowing deep-red hair",
+    "upperGarment": "black and ember-gold armored battle bodice with angular pauldrons",
+    "lowerGarment": "split black-red flame-lined long coat and armored leggings",
+    "sleevesGloves": "dark plated long gloves with gold flame trim",
+    "boots": "black gold armored knee-high boots",
+    "palette": "ember orange, crimson, black, antique gold",
+    "weapon": "two-handed burning solar orb catalyst",
+    "coverage": "adult non-explicit commercial mobile RPG maximum exposure"
+  },
+  "review": {
+    "authoringRoute": "EXISTING_CANONICAL_SOURCE",
+    "acceptanceRoute": "LOCAL_DETERMINISTIC_VISUAL",
+    "adultProportionRead": "PASS",
+    "identityAndHair": "PASS",
+    "costumeFingerprint": "PASS",
+    "weaponReadability": "PASS",
+    "lobbyAlpha": "LOCAL_BLENDER_CHECKER_ALL_NEUTRAL_ALPHA_PASS",
+    "lobbyAlphaSha256": "3A48413C90E3164BBC2D408E50466E8FA874561DD90B86D8345130A4CA47D768",
+    "silhouetteCompleteness": "PASS_HAIR_ARMOR_ORB_COAT_BOOTS",
+    "qaPanels": "CHECKERBOARD_GREEN_ALPHA_MASK_PASS",
+    "atlasReview": "UNCHANGED_EXISTING_PASS"
+  },
+  "status": "COSTUME_CONTINUITY_PASS"
+}

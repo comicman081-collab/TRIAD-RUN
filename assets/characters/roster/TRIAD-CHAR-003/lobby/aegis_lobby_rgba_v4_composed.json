@@ -1,0 +1,53 @@
+{
+  "schema": "triad.lobby.alpha-compose.v1",
+  "createdAt": "2026-08-23T16:41:29.513995+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\card_art\\signature\\aegis.webp",
+    "sha256": "b7d28cb1d638174f93d88b060ae9729ab5dc82c46d787662507e33ed5d399b17"
+  },
+  "base": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v1_sam2.png",
+    "sha256": "6d1b2742baace4a675a871c078b9844c018ced71cadac85f2b28fc228eeb87ba"
+  },
+  "extra": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v3_sam2_person_shield.png",
+    "sha256": "35dc94ace30bd02bcaeb4b44fa7cd529d8eaba23426c8ee9f8e7feb342b687bf"
+  },
+  "extraPolygon": [
+    [
+      275,
+      45
+    ],
+    [
+      455,
+      35
+    ],
+    [
+      735,
+      825
+    ],
+    [
+      660,
+      945
+    ],
+    [
+      550,
+      920
+    ],
+    [
+      390,
+      570
+    ],
+    [
+      250,
+      135
+    ]
+  ],
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v4_composed.png",
+    "sha256": "679b1a30ef552c61f2001f2d8f5beed75e76c4e687d29e740accd5d18229d976"
+  },
+  "sourceRgbModified": false,
+  "runtimeEligible": false
+}

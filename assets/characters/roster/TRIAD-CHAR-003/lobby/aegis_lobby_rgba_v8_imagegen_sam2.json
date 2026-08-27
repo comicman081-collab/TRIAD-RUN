@@ -1,0 +1,34 @@
+{
+  "schema": "triad.sd.person-alpha.v1",
+  "createdAt": "2026-08-23T16:46:55.377158+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v7_imagegen.png",
+    "sha256": "6eee31a992930e60f1c19fc17e7004c21a84c2d342a714b33dc423dfa80e68c3"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v8_imagegen_sam2.png",
+    "sha256": "f2151708367dabc3a2dff715ee25004e1e00a8361e592aa2b657f3cb6516ae38"
+  },
+  "mask": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v8_imagegen_sam2_mask.png",
+    "sha256": "2b07d46bd371179bee6eb6c401b2a19276895f2c21fbdd4d44785795da3e31a8"
+  },
+  "detection": {
+    "dino_prompt": "person.",
+    "dino_score": 0.3916776180267334,
+    "dino_box_xyxy": [
+      -0.047,
+      281.153,
+      915.772,
+      1305.02
+    ],
+    "sam_score": 0.9239035248756409,
+    "fraction": 0.1787573496500651,
+    "not_a_clothing_mask": true
+  },
+  "alphaFraction": 0.20191383361816406,
+  "readOnlyExternalApp": "C:\\Users\\AAA\\Documents\\Codex\\반중력 협업 폴더\\Character-Motion-Forge-v4.2.6-work\\local_body_studio",
+  "modelFilesModified": false,
+  "runtimeEligible": false
+}

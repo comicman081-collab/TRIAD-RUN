@@ -1,0 +1,262 @@
+{
+  "schema": "triad.lobby.alpha-component-cleanup.v1",
+  "createdAt": "2026-08-23T16:43:05.758799+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v4_composed.png",
+    "sha256": "679b1a30ef552c61f2001f2d8f5beed75e76c4e687d29e740accd5d18229d976"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v5_clean.png",
+    "sha256": "5a6ed1d9180d578b5d420fbfe5d61810b15ee85b435f07d5673948ebf09f94c7"
+  },
+  "minArea": 1000,
+  "edgeRadius": 1,
+  "componentCount": 74,
+  "keptComponentCount": 1,
+  "removedComponentCount": 73,
+  "largestComponents": [
+    {
+      "id": 2,
+      "area": 315964,
+      "x": 0,
+      "y": 58,
+      "width": 725,
+      "height": 890
+    },
+    {
+      "id": 7,
+      "area": 373,
+      "x": 2,
+      "y": 404,
+      "width": 17,
+      "height": 32
+    },
+    {
+      "id": 46,
+      "area": 128,
+      "x": 68,
+      "y": 665,
+      "width": 11,
+      "height": 16
+    },
+    {
+      "id": 42,
+      "area": 111,
+      "x": 2,
+      "y": 647,
+      "width": 17,
+      "height": 8
+    },
+    {
+      "id": 35,
+      "area": 101,
+      "x": 87,
+      "y": 630,
+      "width": 10,
+      "height": 18
+    },
+    {
+      "id": 58,
+      "area": 100,
+      "x": 228,
+      "y": 720,
+      "width": 12,
+      "height": 14
+    },
+    {
+      "id": 73,
+      "area": 93,
+      "x": 23,
+      "y": 790,
+      "width": 11,
+      "height": 11
+    },
+    {
+      "id": 30,
+      "area": 91,
+      "x": 132,
+      "y": 612,
+      "width": 12,
+      "height": 14
+    },
+    {
+      "id": 53,
+      "area": 91,
+      "x": 10,
+      "y": 681,
+      "width": 10,
+      "height": 11
+    },
+    {
+      "id": 74,
+      "area": 76,
+      "x": 12,
+      "y": 792,
+      "width": 7,
+      "height": 13
+    },
+    {
+      "id": 5,
+      "area": 67,
+      "x": 517,
+      "y": 279,
+      "width": 11,
+      "height": 8
+    },
+    {
+      "id": 64,
+      "area": 63,
+      "x": 207,
+      "y": 743,
+      "width": 9,
+      "height": 9
+    },
+    {
+      "id": 63,
+      "area": 58,
+      "x": 186,
+      "y": 743,
+      "width": 7,
+      "height": 12
+    },
+    {
+      "id": 23,
+      "area": 45,
+      "x": 135,
+      "y": 594,
+      "width": 9,
+      "height": 8
+    },
+    {
+      "id": 8,
+      "area": 38,
+      "x": 43,
+      "y": 439,
+      "width": 6,
+      "height": 8
+    },
+    {
+      "id": 28,
+      "area": 32,
+      "x": 13,
+      "y": 611,
+      "width": 6,
+      "height": 6
+    },
+    {
+      "id": 47,
+      "area": 32,
+      "x": 60,
+      "y": 666,
+      "width": 7,
+      "height": 8
+    },
+    {
+      "id": 70,
+      "area": 32,
+      "x": 26,
+      "y": 773,
+      "width": 5,
+      "height": 7
+    },
+    {
+      "id": 32,
+      "area": 31,
+      "x": 324,
+      "y": 617,
+      "width": 6,
+      "height": 9
+    },
+    {
+      "id": 26,
+      "area": 27,
+      "x": 14,
+      "y": 602,
+      "width": 5,
+      "height": 6
+    },
+    {
+      "id": 71,
+      "area": 26,
+      "x": 26,
+      "y": 782,
+      "width": 5,
+      "height": 6
+    },
+    {
+      "id": 25,
+      "area": 24,
+      "x": 8,
+      "y": 602,
+      "width": 4,
+      "height": 7
+    },
+    {
+      "id": 10,
+      "area": 23,
+      "x": 93,
+      "y": 482,
+      "width": 4,
+      "height": 6
+    },
+    {
+      "id": 34,
+      "area": 23,
+      "x": 14,
+      "y": 630,
+      "width": 5,
+      "height": 5
+    },
+    {
+      "id": 60,
+      "area": 23,
+      "x": 206,
+      "y": 729,
+      "width": 5,
+      "height": 5
+    },
+    {
+      "id": 66,
+      "area": 22,
+      "x": 200,
+      "y": 747,
+      "width": 5,
+      "height": 5
+    },
+    {
+      "id": 6,
+      "area": 21,
+      "x": 507,
+      "y": 315,
+      "width": 4,
+      "height": 6
+    },
+    {
+      "id": 1,
+      "area": 18,
+      "x": 315,
+      "y": 51,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 9,
+      "area": 18,
+      "x": 74,
+      "y": 441,
+      "width": 5,
+      "height": 4
+    },
+    {
+      "id": 61,
+      "area": 18,
+      "x": 212,
+      "y": 729,
+      "width": 4,
+      "height": 5
+    }
+  ],
+  "rgbRegenerated": false,
+  "runtimeEligible": false
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "triad.sd.person-alpha.v1",
+  "createdAt": "2026-08-26T09:26:49.993439+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-009\\source\\kaia_authority_gpt_web_v1.png",
+    "sha256": "f3a0b45ae343119563580a668899b89873e048940148f93e92dc483c0f232300"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-009\\lobby\\kaia_lobby_rgba_v1_gpt_web_sam2.png",
+    "sha256": "9447a5db89d423d520831669980b421e215152030e815503b11126b164b54a99"
+  },
+  "mask": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-009\\lobby\\kaia_lobby_rgba_v1_gpt_web_sam2_mask.png",
+    "sha256": "c96b255ec29a66a9d38b7921af6475bb16868c3426cfbb8850aae3b99b640053"
+  },
+  "detection": {
+    "dino_prompt": "person.",
+    "dino_score": 0.8090824484825134,
+    "dino_box_xyxy": [
+      217.351,
+      66.235,
+      820.933,
+      1499.507
+    ],
+    "sam_prompt_box_xyxy": [
+      0.0,
+      0.0,
+      1024.0,
+      1536.0
+    ],
+    "sam_score": 0.9423011541366577,
+    "fraction": 0.6737111409505209,
+    "boxPadding": {
+      "x": 0.4,
+      "top": 0.2,
+      "bottom": 0.15
+    },
+    "positivePoints": [],
+    "negativePoints": [],
+    "not_a_clothing_mask": true,
+    "includedPrompts": [
+      {
+        "prompt": "sword.",
+        "status": "INCLUDED_CANDIDATE",
+        "box_xyxy": [
+          104.359,
+          30.276,
+          430.582,
+          1292.629
+        ],
+        "sam_score": 0.8255075812339783,
+        "fraction": 0.03493944803873698
+      }
+    ]
+  },
+  "alphaFraction": 0.7587604522705078,
+  "readOnlyExternalApp": "C:\\Users\\AAA\\Documents\\Codex\\반중력 협업 폴더\\Character-Motion-Forge-v4.2.6-work\\local_body_studio",
+  "modelFilesModified": false,
+  "runtimeEligible": false
+}

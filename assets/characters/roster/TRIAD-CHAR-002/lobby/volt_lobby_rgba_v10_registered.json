@@ -1,0 +1,38 @@
+{
+  "status": "REGISTERED_CANDIDATE_VISUAL_QA_REQUIRED",
+  "runtimeEligible": false,
+  "assetType": "NON_SD_CHARACTER_RGBA",
+  "backgroundPolicy": "TRANSPARENT_ONLY",
+  "source": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-002\\lobby\\volt_lobby_rgba_v9_clean_largest.png",
+  "sourceSha256": "6FB0129BB034B22D0332A10370C7FFB2084977CF9B19DCF8779D44B0525CAD65",
+  "output": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-002\\lobby\\volt_lobby_rgba_v10_registered.png",
+  "outputSha256": "A160CE90C536452B401F70D3C5AAC4CCE987BD576D962E453634DC9B2D267D0E",
+  "sourceCanvas": {
+    "width": 768,
+    "height": 1152
+  },
+  "sourceAlphaBbox": {
+    "minX": 207,
+    "minY": 189,
+    "maxX": 658,
+    "maxY": 993
+  },
+  "canonicalCanvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "registeredSize": {
+    "width": 818,
+    "height": 1456
+  },
+  "registeredOffset": {
+    "x": 103,
+    "y": 40
+  },
+  "scale": 1.808695652173913,
+  "padding": 40,
+  "rgbRegenerated": false,
+  "geometricRegistrationOnly": true,
+  "modelFilesModified": false,
+  "createdAt": "2026-08-23T16:55:42.386159+00:00"
+}

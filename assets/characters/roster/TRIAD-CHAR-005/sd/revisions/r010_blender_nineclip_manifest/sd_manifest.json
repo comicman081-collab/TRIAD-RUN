@@ -1,0 +1,41 @@
+{
+  "schema": "triad.sd.bundle.v1",
+  "status": "PASS_ACTIVE_FINAL",
+  "characterId": "TRIAD-CHAR-005",
+  "revision": 10,
+  "frameWidth": 512,
+  "frameHeight": 512,
+  "anchor": { "x": 256, "y": 493 },
+  "faction": "PLAYER",
+  "battleLane": "LEFT",
+  "facing": "RIGHT",
+  "enemyLane": "RIGHT",
+  "runtimeMirror": false,
+  "clips": {
+    "enter": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r002c_blender_enter_canonical_84f/enter_r2_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "arrive": 42, "ready": 66 }, "motion": "RIGHT_FACING_RUN_IN_LAND_READY", "authoredPoseCadenceFps": 10 },
+    "idle": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r001_blender_idle_canonical_84f/idle_r1_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": true, "events": {}, "motion": "RIGHT_FACING_STAFF_IDLE_LOOP", "authoredPoseCadenceFps": 10 },
+    "attack": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r003d_blender_attack_canonical_84f/attack_r3_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "release": 42, "projectile": 42, "impact": 48 }, "motion": "RIGHT_FACING_STAFF_THRUST_CAST", "authoredPoseCadenceFps": 10 },
+    "skill": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r006b_blender_skill_canonical_84f/skill_r6_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "effect": 42, "recover": 63 }, "motion": "RIGHT_FACING_SUPPORT_CAST", "authoredPoseCadenceFps": 10 },
+    "ultimate": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r007b_blender_ultimate_canonical_84f/ultimate_r7_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "effect": 45, "impact": 51, "recover": 66 }, "motion": "RIGHT_FACING_FLORAL_STAFF_ULTIMATE", "authoredPoseCadenceFps": 10 },
+    "guard": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r005b_blender_guard_canonical_84f/guard_r5_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "guard": 27, "block": 42, "release": 63 }, "motion": "RIGHT_FACING_STAFF_GUARD", "authoredPoseCadenceFps": 10 },
+    "hit": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r004b_blender_hit_canonical_84f/hit_r4_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "events": { "impact": 33, "recover": 63 }, "motion": "RIGHT_FACING_HIT_RECOIL", "authoredPoseCadenceFps": 10 },
+    "ko": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r008b_blender_ko_canonical_84f/ko_r8_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "holdLastFrame": true, "events": { "collapse": 48, "hold": 72 }, "motion": "RIGHT_FACING_KO_COLLAPSE_HOLD", "authoredPoseCadenceFps": 10 },
+    "victory": { "atlas": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r009b_blender_victory_canonical_84f/victory_r9_84f.webp", "frames": 84, "fps": 30, "columns": 12, "rows": 7, "loop": false, "holdLastFrame": true, "events": { "pose": 45, "hold": 72 }, "motion": "RIGHT_FACING_HEALER_VICTORY_HOLD", "authoredPoseCadenceFps": 10 }
+  },
+  "assets": {
+    "enter": { "assetId": "TRIAD-SD-CHAR005-ENTER-R02-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r002c_blender_enter_canonical_84f/enter_r2_84f.webp", "sha256": "8822764c64c0d672801a7ee68115a97914d717c72cab98e3fa89890a1648ea5c", "status": "PASS_ACTIVE_FINAL" },
+    "idle": { "assetId": "TRIAD-SD-CHAR005-IDLE-R01-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r001_blender_idle_canonical_84f/idle_r1_84f.webp", "sha256": "f6b0a92a3dd24c3f922601e54da4091996241cdcd4e399879d117b1261a646f5", "status": "PASS_ACTIVE_FINAL" },
+    "attack": { "assetId": "TRIAD-SD-CHAR005-ATTACK-R03-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r003d_blender_attack_canonical_84f/attack_r3_84f.webp", "sha256": "502423f449743052141d1ef42222b36374cba0a6b619cc3a17b77c2aaf7a83c0", "status": "PASS_ACTIVE_FINAL" },
+    "skill": { "assetId": "TRIAD-SD-CHAR005-SKILL-R06-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r006b_blender_skill_canonical_84f/skill_r6_84f.webp", "sha256": "cae1317bd8f2eeb1608ce518ba637da0e4500557c7c41f23d408004733832198", "status": "PASS_ACTIVE_FINAL" },
+    "ultimate": { "assetId": "TRIAD-SD-CHAR005-ULTIMATE-R07-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r007b_blender_ultimate_canonical_84f/ultimate_r7_84f.webp", "sha256": "ea4940c2176a2bda2d8d3f1ba5ec509e6b3ef22de90522af502f29838c817547", "status": "PASS_ACTIVE_FINAL" },
+    "guard": { "assetId": "TRIAD-SD-CHAR005-GUARD-R05-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r005b_blender_guard_canonical_84f/guard_r5_84f.webp", "sha256": "8f39ae87d5cbd9e116320e6b16d56c5ccc4e9216e1ff6a75a3d9ce7aa0194e81", "status": "PASS_ACTIVE_FINAL" },
+    "hit": { "assetId": "TRIAD-SD-CHAR005-HIT-R04-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r004b_blender_hit_canonical_84f/hit_r4_84f.webp", "sha256": "a951d567451e7435e2b553cd621e471825186e190a947e385c060727765311f6", "status": "PASS_ACTIVE_FINAL" },
+    "ko": { "assetId": "TRIAD-SD-CHAR005-KO-R08-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r008b_blender_ko_canonical_84f/ko_r8_84f.webp", "sha256": "f3f8391d1e63829ac423efc1282c9150be84c4ad3e31fc75e8641846676463f3", "status": "PASS_ACTIVE_FINAL" },
+    "victory": { "assetId": "TRIAD-SD-CHAR005-VICTORY-R09-84F", "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r009b_blender_victory_canonical_84f/victory_r9_84f.webp", "sha256": "a3593e9e6c82060356676958121755f81d132ba4e24ecd4015a5c2e0056c43c0", "status": "PASS_ACTIVE_FINAL" }
+  },
+  "qa": { "summary": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/BLOOM_NINE_CLIP_SUMMARY.png" },
+  "runtimeEligible": true,
+  "localForgeUsed": false,
+  "localAssetGeneration": "BLENDER_ONLY",
+  "modelFilesModified": false
+}

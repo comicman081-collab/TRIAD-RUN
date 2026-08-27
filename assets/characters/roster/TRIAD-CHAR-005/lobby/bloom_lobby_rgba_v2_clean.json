@@ -1,0 +1,230 @@
+{
+  "schema": "triad.lobby.alpha-component-cleanup.v1",
+  "createdAt": "2026-08-23T16:43:16.831661+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-005\\lobby\\bloom_lobby_rgba_v1_sam2.png",
+    "sha256": "fb5b7c5c88829a6ca856e579dc3e039a39aa201aad323facd3ecb5ebe5baccfa"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-005\\lobby\\bloom_lobby_rgba_v2_clean.png",
+    "sha256": "f2bb11d30192db4cde33826de030d63d69aa136afbee3e1a141fbe1734fdc5d3"
+  },
+  "minArea": 1000,
+  "edgeRadius": 1,
+  "componentCount": 26,
+  "keptComponentCount": 3,
+  "removedComponentCount": 23,
+  "largestComponents": [
+    {
+      "id": 1,
+      "area": 127787,
+      "x": 258,
+      "y": 357,
+      "width": 364,
+      "height": 703
+    },
+    {
+      "id": 14,
+      "area": 23816,
+      "x": 135,
+      "y": 757,
+      "width": 166,
+      "height": 258
+    },
+    {
+      "id": 2,
+      "area": 1151,
+      "x": 255,
+      "y": 559,
+      "width": 21,
+      "height": 95
+    },
+    {
+      "id": 26,
+      "area": 107,
+      "x": 308,
+      "y": 1034,
+      "width": 7,
+      "height": 20
+    },
+    {
+      "id": 16,
+      "area": 85,
+      "x": 294,
+      "y": 846,
+      "width": 7,
+      "height": 15
+    },
+    {
+      "id": 10,
+      "area": 84,
+      "x": 207,
+      "y": 728,
+      "width": 11,
+      "height": 11
+    },
+    {
+      "id": 12,
+      "area": 81,
+      "x": 526,
+      "y": 749,
+      "width": 11,
+      "height": 11
+    },
+    {
+      "id": 7,
+      "area": 68,
+      "x": 229,
+      "y": 711,
+      "width": 12,
+      "height": 9
+    },
+    {
+      "id": 23,
+      "area": 68,
+      "x": 311,
+      "y": 994,
+      "width": 5,
+      "height": 17
+    },
+    {
+      "id": 15,
+      "area": 39,
+      "x": 551,
+      "y": 770,
+      "width": 4,
+      "height": 11
+    },
+    {
+      "id": 21,
+      "area": 39,
+      "x": 295,
+      "y": 898,
+      "width": 5,
+      "height": 10
+    },
+    {
+      "id": 24,
+      "area": 39,
+      "x": 303,
+      "y": 1008,
+      "width": 4,
+      "height": 12
+    },
+    {
+      "id": 25,
+      "area": 36,
+      "x": 312,
+      "y": 1016,
+      "width": 3,
+      "height": 12
+    },
+    {
+      "id": 11,
+      "area": 24,
+      "x": 201,
+      "y": 744,
+      "width": 3,
+      "height": 8
+    },
+    {
+      "id": 17,
+      "area": 21,
+      "x": 297,
+      "y": 862,
+      "width": 3,
+      "height": 7
+    },
+    {
+      "id": 18,
+      "area": 21,
+      "x": 297,
+      "y": 872,
+      "width": 3,
+      "height": 7
+    },
+    {
+      "id": 22,
+      "area": 18,
+      "x": 312,
+      "y": 986,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 5,
+      "area": 15,
+      "x": 288,
+      "y": 693,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 20,
+      "area": 15,
+      "x": 297,
+      "y": 891,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 4,
+      "area": 12,
+      "x": 276,
+      "y": 667,
+      "width": 3,
+      "height": 4
+    },
+    {
+      "id": 6,
+      "area": 12,
+      "x": 255,
+      "y": 698,
+      "width": 4,
+      "height": 3
+    },
+    {
+      "id": 19,
+      "area": 12,
+      "x": 297,
+      "y": 882,
+      "width": 3,
+      "height": 4
+    },
+    {
+      "id": 3,
+      "area": 9,
+      "x": 267,
+      "y": 662,
+      "width": 3,
+      "height": 3
+    },
+    {
+      "id": 8,
+      "area": 9,
+      "x": 486,
+      "y": 716,
+      "width": 3,
+      "height": 3
+    },
+    {
+      "id": 9,
+      "area": 9,
+      "x": 219,
+      "y": 726,
+      "width": 3,
+      "height": 3
+    },
+    {
+      "id": 13,
+      "area": 9,
+      "x": 522,
+      "y": 752,
+      "width": 3,
+      "height": 3
+    }
+  ],
+  "rgbRegenerated": false,
+  "runtimeEligible": false
+}

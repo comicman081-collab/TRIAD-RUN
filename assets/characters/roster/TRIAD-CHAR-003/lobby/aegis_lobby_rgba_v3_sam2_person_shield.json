@@ -1,0 +1,48 @@
+{
+  "schema": "triad.sd.person-alpha.v1",
+  "createdAt": "2026-08-23T16:39:35.136756+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\card_art\\signature\\aegis.webp",
+    "sha256": "b7d28cb1d638174f93d88b060ae9729ab5dc82c46d787662507e33ed5d399b17"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v3_sam2_person_shield.png",
+    "sha256": "35dc94ace30bd02bcaeb4b44fa7cd529d8eaba23426c8ee9f8e7feb342b687bf"
+  },
+  "mask": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v3_sam2_person_shield_mask.png",
+    "sha256": "105925891b58e92c7a0a3bc31bfed4138084ebca778b6bfcdbfc803923644f31"
+  },
+  "detection": {
+    "dino_prompt": "person.",
+    "dino_score": 0.5673518180847168,
+    "dino_box_xyxy": [
+      -1.475,
+      210.825,
+      487.319,
+      943.003
+    ],
+    "sam_score": 0.9280440807342529,
+    "fraction": 0.1649542914496528,
+    "not_a_clothing_mask": true,
+    "includedPrompts": [
+      {
+        "prompt": "shield.",
+        "status": "INCLUDED_CANDIDATE",
+        "box_xyxy": [
+          253.756,
+          -0.513,
+          742.754,
+          955.418
+        ],
+        "sam_score": 0.9176552891731262,
+        "fraction": 0.2449001736111111
+      }
+    ]
+  },
+  "alphaFraction": 0.45437056929976855,
+  "readOnlyExternalApp": "C:\\Users\\AAA\\Documents\\Codex\\반중력 협업 폴더\\Character-Motion-Forge-v4.2.6-work\\local_body_studio",
+  "modelFilesModified": false,
+  "runtimeEligible": false
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "triad.lobby.checkerboard-removal.v1",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "runtimeEligible": false,
+  "source": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v7_imagegen.png",
+  "sourceSha256": "6EEE31A992930E60F1C19FC17E7004C21A84C2D342A714B33DC423DFA80E68C3",
+  "output": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-003\\lobby\\aegis_lobby_rgba_v9_checker_alpha.png",
+  "outputSha256": "542874100C7267284FB7A396963CB041EAA33C04DEF516B705A82A6F9809C158",
+  "canvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "foregroundPixels": 698790,
+  "foregroundFraction": 0.4442787170410156,
+  "parameters": {
+    "neutralDelta": 0.065,
+    "minimumChannel": 0.82,
+    "edgeFeather": 1,
+    "borderConnectedOnly": true
+  },
+  "rgbRegenerated": false,
+  "modelFilesModified": false,
+  "createdAt": "2026-08-23T16:50:50.336185+00:00"
+}

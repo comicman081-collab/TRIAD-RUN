@@ -1,0 +1,31 @@
+{
+  "characterId": "TRIAD-CHAR-012",
+  "characterName": "벨라",
+  "costumeId": "VELA_RIFT_VOIDSCYTHE_V1",
+  "authoritySource": "assets/characters/roster/TRIAD-CHAR-012/source/vela_authority_gpt_web_v1.png",
+  "authoritySha256": "C2EFC00AA68C95CA08D592B8D9E01DA945EAB932B51737ED5DD1F19F531077E8",
+  "fingerprint": {
+    "hair": "very long dark-purple waved hair with magenta rift highlights",
+    "upperGarment": "indigo black magenta silver armored high-cut rift bodysuit",
+    "lowerGarment": "asymmetric void robe panels with harness straps and floating ribbons",
+    "sleevesGloves": "black-purple armored gauntlets with silver rift trim",
+    "boots": "black indigo armored thigh-high high-heel boots",
+    "palette": "black, indigo, magenta, void violet, silver",
+    "weapon": "giant crescent void scythe with singularity rings and orbiting rift spheres",
+    "coverage": "adult non-explicit commercial mobile RPG maximum exposure"
+  },
+  "review": {
+    "authoringRoute": "GPT_WEB",
+    "acceptanceRoute": "LOCAL_DETERMINISTIC_VISUAL",
+    "adultProportionRead": "PASS",
+    "identityAndHair": "PASS",
+    "costumeFingerprint": "PASS",
+    "weaponReadability": "PASS",
+    "lobbyAlpha": "GPT_WEB_NATIVE_RGBA_LOCAL_VISUAL_PASS",
+    "lobbyAlphaSha256": "C2EFC00AA68C95CA08D592B8D9E01DA945EAB932B51737ED5DD1F19F531077E8",
+    "alphaZeroPixelCount": 613924,
+    "silhouetteCompleteness": "PASS_HAIR_ROBE_SCYTHE_RIBBONS_SINGULARITIES",
+    "atlasReview": "LOCAL_DETERMINISTIC_VISUAL_PASS_R001"
+  },
+  "status": "COSTUME_CONTINUITY_PASS"
+}

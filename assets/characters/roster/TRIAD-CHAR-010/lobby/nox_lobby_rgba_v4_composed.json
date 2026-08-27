@@ -1,0 +1,41 @@
+{
+  "schema": "triad.lobby.alpha-compose.v1",
+  "createdAt": "2026-08-26T09:42:06.381253+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "assets\\characters\\roster\\TRIAD-CHAR-010\\source\\nox_authority_gpt_web_v1.png",
+    "sha256": "af45be163666903eb78cca4bd35045982e727dff04f7c2162c25c95a2e916d3f"
+  },
+  "base": {
+    "path": "assets\\characters\\roster\\TRIAD-CHAR-010\\lobby\\nox_lobby_rgba_v3_left_weapon.png",
+    "sha256": "973a1fd5cd0cb2626c69cf9da753bf8ef4f703c4a787df6094aaf62d2987768e"
+  },
+  "extra": {
+    "path": "assets\\characters\\roster\\TRIAD-CHAR-010\\lobby\\nox_lobby_rgba_v1_gpt_web_sam2.png",
+    "sha256": "699dca0871ff01e6366b7013fa1c6d92cf92429d1da57ffb77c370f7577da63e"
+  },
+  "extraPolygon": [
+    [
+      650,
+      420
+    ],
+    [
+      1023,
+      420
+    ],
+    [
+      1023,
+      1380
+    ],
+    [
+      690,
+      1280
+    ]
+  ],
+  "output": {
+    "path": "assets\\characters\\roster\\TRIAD-CHAR-010\\lobby\\nox_lobby_rgba_v4_composed.png",
+    "sha256": "9563ef529b889bc59e79d26d3ccd997efc1b402d08445a9d53170689f4873882"
+  },
+  "sourceRgbModified": false,
+  "runtimeEligible": false
+}

@@ -1,0 +1,94 @@
+{
+  "schema": "triad.lobby.alpha-component-cleanup.v1",
+  "createdAt": "2026-08-26T10:47:21.419687+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v8_registered.png",
+    "sha256": "05eedbbd6c020ae14fd9d0a1d3d1aae167c0731476bcf6eecce5b4559ac9a56a"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v9_component_clean_candidate.png",
+    "sha256": "f1d744be0bb80da30b433ae1c40252925bd8e9669635e0f7529af500b6a3d521"
+  },
+  "minArea": 1200,
+  "edgeRadius": 1,
+  "componentCount": 9,
+  "keptComponentCount": 1,
+  "removedComponentCount": 8,
+  "largestComponents": [
+    {
+      "id": 1,
+      "area": 494394,
+      "x": 42,
+      "y": 126,
+      "width": 940,
+      "height": 1284
+    },
+    {
+      "id": 5,
+      "area": 10,
+      "x": 211,
+      "y": 424,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": 2,
+      "area": 5,
+      "x": 368,
+      "y": 253,
+      "width": 3,
+      "height": 3
+    },
+    {
+      "id": 7,
+      "area": 4,
+      "x": 160,
+      "y": 473,
+      "width": 3,
+      "height": 3
+    },
+    {
+      "id": 9,
+      "area": 3,
+      "x": 70,
+      "y": 1166,
+      "width": 2,
+      "height": 2
+    },
+    {
+      "id": 6,
+      "area": 2,
+      "x": 198,
+      "y": 447,
+      "width": 2,
+      "height": 2
+    },
+    {
+      "id": 3,
+      "area": 1,
+      "x": 255,
+      "y": 412,
+      "width": 1,
+      "height": 1
+    },
+    {
+      "id": 4,
+      "area": 1,
+      "x": 225,
+      "y": 420,
+      "width": 1,
+      "height": 1
+    },
+    {
+      "id": 8,
+      "area": 1,
+      "x": 210,
+      "y": 585,
+      "width": 1,
+      "height": 1
+    }
+  ],
+  "rgbRegenerated": false,
+  "runtimeEligible": false
+}

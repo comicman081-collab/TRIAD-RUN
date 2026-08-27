@@ -1,0 +1,33 @@
+{
+  "characterId": "TRIAD-CHAR-009",
+  "characterName": "카이아",
+  "costumeId": "KAIA_VOLT_RAILBLADE_V1",
+  "authoritySource": "assets/characters/roster/TRIAD-CHAR-009/source/kaia_authority_gpt_web_v1.png",
+  "authoritySha256": "F3A0B45AE343119563580A668899B89873E048940148F93E92DC483C0F232300",
+  "fingerprint": {
+    "hair": "short silver-blue asymmetric bob",
+    "eyes": "bright cyan",
+    "upperGarment": "structured cobalt-black-silver high-cut combat bodysuit",
+    "lowerGarment": "asymmetric short armored panels with paired thigh straps",
+    "sleevesGloves": "long black armored gloves with cobalt and silver plating",
+    "boots": "black cobalt armored knee-high high-heel boots",
+    "palette": "cobalt blue, black, silver, cyan electricity",
+    "weapon": "single long blue-white electric railblade with prism coil rings",
+    "coverage": "adult non-explicit commercial mobile RPG maximum exposure"
+  },
+  "review": {
+    "authoringRoute": "GPT_WEB",
+    "acceptanceRoute": "LOCAL_DETERMINISTIC_VISUAL",
+    "authorityAdultProportionRead": "PASS",
+    "identityAndHair": "LOCKED",
+    "costumeFingerprint": "LOCKED",
+    "weaponReadability": "PASS",
+    "lobbyAlphaAsset": "assets/characters/roster/TRIAD-CHAR-009/lobby/kaia_lobby_rgba_v2_gpt_web_sam2_tight.png",
+    "lobbyAlphaSha256": "034B02EA11BE3C3677F7884D04FE2DBCB234BEEFDDBA263434A328AD5A738C25",
+    "lobbyAlphaValidated": true,
+    "keyposeReview": "GPT_WEB_SHEET_COSTUME_DRIFT_FAIL; authority-texture atlas substituted",
+    "atlasReview": "LOCAL_DETERMINISTIC_VISUAL_PASS",
+    "derivedAssets": "AUTHORITY_TEXTURE_ATLAS_PASS"
+  },
+  "status": "COSTUME_CONTINUITY_PASS"
+}

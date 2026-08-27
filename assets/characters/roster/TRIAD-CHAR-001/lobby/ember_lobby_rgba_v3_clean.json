@@ -1,0 +1,262 @@
+{
+  "schema": "triad.lobby.alpha-component-cleanup.v1",
+  "createdAt": "2026-08-23T16:42:54.792999+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v2_sam2_orb.png",
+    "sha256": "5cadcf1f34024315c8837c99a6fad71dabd25ba4a5f219c2d8c309b884bd2957"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v3_clean.png",
+    "sha256": "8e1ebf6b335c200d226e3d6a1315f246147f8508a146408d348805303434c019"
+  },
+  "minArea": 1000,
+  "edgeRadius": 1,
+  "componentCount": 76,
+  "keptComponentCount": 1,
+  "removedComponentCount": 75,
+  "largestComponents": [
+    {
+      "id": 1,
+      "area": 165932,
+      "x": 218,
+      "y": 82,
+      "width": 319,
+      "height": 996
+    },
+    {
+      "id": 53,
+      "area": 220,
+      "x": 452,
+      "y": 732,
+      "width": 17,
+      "height": 25
+    },
+    {
+      "id": 51,
+      "area": 195,
+      "x": 477,
+      "y": 724,
+      "width": 16,
+      "height": 24
+    },
+    {
+      "id": 47,
+      "area": 131,
+      "x": 488,
+      "y": 720,
+      "width": 17,
+      "height": 10
+    },
+    {
+      "id": 55,
+      "area": 92,
+      "x": 495,
+      "y": 733,
+      "width": 10,
+      "height": 15
+    },
+    {
+      "id": 46,
+      "area": 58,
+      "x": 451,
+      "y": 719,
+      "width": 7,
+      "height": 11
+    },
+    {
+      "id": 54,
+      "area": 50,
+      "x": 447,
+      "y": 733,
+      "width": 4,
+      "height": 15
+    },
+    {
+      "id": 48,
+      "area": 46,
+      "x": 463,
+      "y": 722,
+      "width": 6,
+      "height": 9
+    },
+    {
+      "id": 11,
+      "area": 41,
+      "x": 234,
+      "y": 614,
+      "width": 6,
+      "height": 9
+    },
+    {
+      "id": 12,
+      "area": 25,
+      "x": 464,
+      "y": 615,
+      "width": 4,
+      "height": 7
+    },
+    {
+      "id": 24,
+      "area": 24,
+      "x": 452,
+      "y": 651,
+      "width": 4,
+      "height": 7
+    },
+    {
+      "id": 69,
+      "area": 24,
+      "x": 218,
+      "y": 804,
+      "width": 5,
+      "height": 6
+    },
+    {
+      "id": 3,
+      "area": 21,
+      "x": 327,
+      "y": 210,
+      "width": 3,
+      "height": 7
+    },
+    {
+      "id": 13,
+      "area": 21,
+      "x": 237,
+      "y": 624,
+      "width": 3,
+      "height": 7
+    },
+    {
+      "id": 18,
+      "area": 21,
+      "x": 464,
+      "y": 633,
+      "width": 4,
+      "height": 6
+    },
+    {
+      "id": 31,
+      "area": 21,
+      "x": 452,
+      "y": 669,
+      "width": 4,
+      "height": 6
+    },
+    {
+      "id": 17,
+      "area": 18,
+      "x": 237,
+      "y": 633,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 30,
+      "area": 18,
+      "x": 447,
+      "y": 669,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 42,
+      "area": 18,
+      "x": 465,
+      "y": 705,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 49,
+      "area": 18,
+      "x": 447,
+      "y": 723,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 57,
+      "area": 18,
+      "x": 447,
+      "y": 750,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 58,
+      "area": 18,
+      "x": 483,
+      "y": 750,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 74,
+      "area": 18,
+      "x": 243,
+      "y": 831,
+      "width": 3,
+      "height": 6
+    },
+    {
+      "id": 6,
+      "area": 15,
+      "x": 435,
+      "y": 553,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 21,
+      "area": 15,
+      "x": 459,
+      "y": 643,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 25,
+      "area": 15,
+      "x": 465,
+      "y": 652,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 32,
+      "area": 15,
+      "x": 465,
+      "y": 670,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 34,
+      "area": 15,
+      "x": 459,
+      "y": 679,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 36,
+      "area": 15,
+      "x": 453,
+      "y": 688,
+      "width": 3,
+      "height": 5
+    },
+    {
+      "id": 37,
+      "area": 15,
+      "x": 465,
+      "y": 688,
+      "width": 3,
+      "height": 5
+    }
+  ],
+  "rgbRegenerated": false,
+  "runtimeEligible": false
+}

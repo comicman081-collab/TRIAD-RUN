@@ -1,0 +1,77 @@
+{
+  "schema": "triad.sd.person-alpha.v1",
+  "createdAt": "2026-08-26T09:51:30.537884+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-011\\source\\sena_authority_gpt_web_v1.png",
+    "sha256": "0621368a4a1210fd718cd54facc1243f5c3f696e2e8e2f03bd77698e7ce9006a"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-011\\lobby\\sena_lobby_rgba_v2_point_staff.png",
+    "sha256": "bb18410895f79fbfdc80e52b025fea0d2a34d2d7c5adbefcf3c7409e74046c8b"
+  },
+  "mask": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-011\\lobby\\sena_lobby_rgba_v2_point_staff_mask.png",
+    "sha256": "f7d74eb4b809715bc51eecee7a5d38efbed4156956f8f067fa65a2000f36566c"
+  },
+  "detection": {
+    "dino_prompt": "person.",
+    "dino_score": 0.6104001402854919,
+    "dino_box_xyxy": [
+      208.892,
+      152.251,
+      904.471,
+      1506.946
+    ],
+    "sam_prompt_box_xyxy": [
+      34.998,
+      16.782,
+      1024.0,
+      1536.0
+    ],
+    "sam_score": 0.6107404828071594,
+    "fraction": 0.22815577189127603,
+    "boxPadding": {
+      "x": 0.25,
+      "top": 0.1,
+      "bottom": 0.04
+    },
+    "positivePoints": [
+      [
+        170.0,
+        240.0
+      ],
+      [
+        220.0,
+        930.0
+      ],
+      [
+        520.0,
+        760.0
+      ],
+      [
+        850.0,
+        420.0
+      ]
+    ],
+    "negativePoints": [
+      [
+        20.0,
+        200.0
+      ],
+      [
+        1000.0,
+        200.0
+      ],
+      [
+        512.0,
+        1480.0
+      ]
+    ],
+    "not_a_clothing_mask": true
+  },
+  "alphaFraction": 0.3192901611328125,
+  "readOnlyExternalApp": "C:\\Users\\AAA\\Documents\\Codex\\반중력 협업 폴더\\Character-Motion-Forge-v4.2.6-work\\local_body_studio",
+  "modelFilesModified": false,
+  "runtimeEligible": false
+}

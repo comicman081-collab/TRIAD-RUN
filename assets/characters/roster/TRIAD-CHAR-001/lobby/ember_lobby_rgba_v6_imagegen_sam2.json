@@ -1,0 +1,34 @@
+{
+  "schema": "triad.sd.person-alpha.v1",
+  "createdAt": "2026-08-23T16:46:41.413901+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v5_imagegen.png",
+    "sha256": "cf1e6c1fc3320f3383895f3b826f1bb3ad59d34402190c46e7a96243857dc6db"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v6_imagegen_sam2.png",
+    "sha256": "f6b0859a76bd8690681f63133e56751abb78a20502be0ccc2ecd89b655c40847"
+  },
+  "mask": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-001\\lobby\\ember_lobby_rgba_v6_imagegen_sam2_mask.png",
+    "sha256": "c2731a9b96e521e39e1c6c90f50c02620f00cbbd1317a70219da75060f08662f"
+  },
+  "detection": {
+    "dino_prompt": "person.",
+    "dino_score": 0.747890293598175,
+    "dino_box_xyxy": [
+      22.234,
+      103.932,
+      1001.101,
+      1442.69
+    ],
+    "sam_score": 0.9499813318252563,
+    "fraction": 0.3072698144371072,
+    "not_a_clothing_mask": true
+  },
+  "alphaFraction": 0.3289189245912649,
+  "readOnlyExternalApp": "C:\\Users\\AAA\\Documents\\Codex\\반중력 협업 폴더\\Character-Motion-Forge-v4.2.6-work\\local_body_studio",
+  "modelFilesModified": false,
+  "runtimeEligible": false
+}

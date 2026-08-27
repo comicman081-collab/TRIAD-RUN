@@ -1,0 +1,15 @@
+{
+  "schema": "triad.artifact.visual-candidate.v1",
+  "policy": "REVIEW_REQUIRED_ONLY",
+  "runtimeActive": false,
+  "entries": [
+    {
+      "assetId": "TRIAD-ART-FIRST_ZERO-V1",
+      "artifactId": "FIRST_ZERO",
+      "status": "REVIEW_REQUIRED",
+      "path": "assets/artifacts/candidates/v1/TRIAD-ART-FIRST_ZERO-V1.svg",
+      "source": "HAND_AUTHORED_VECTOR_CANDIDATE",
+      "purpose": "Artifact visual pilot only; do not activate before independent visual review."
+    }
+  ]
+}

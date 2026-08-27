@@ -1,0 +1,31 @@
+{
+  "schema": "triad.lobby.clipseg-alpha.v1",
+  "createdAt": "2026-08-23T16:32:38.589631+00:00",
+  "status": "ALPHA_CANDIDATE_VISUAL_QA_REQUIRED",
+  "source": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\card_art\\signature\\volt.webp",
+    "sha256": "67dce7e1b13544e6eaaa92088e71d2c95cb7019fb5ab185c4fe080b4e1d7fa74"
+  },
+  "output": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-002\\lobby\\volt_lobby_rgba_v4_clipseg.png",
+    "sha256": "b44bc5fba0b504b913240c602c515301efb53029c93ed6b6af0f40127403eb29"
+  },
+  "mask": {
+    "path": "D:\\AI 종합 폴더\\Games\\TRIAD_RUN\\assets\\characters\\roster\\TRIAD-CHAR-002\\lobby\\volt_lobby_rgba_v4_clipseg_mask.png",
+    "sha256": "249d82c2630efe3712df30f2d5e9a84715bcc586a15368c03529c5b3166ef065"
+  },
+  "model": {
+    "path": "C:\\AI_MODELS\\auto-mask",
+    "sha256": "d00ca85d6b859f9d07b7cfb8ef26fe9771cb275b34c9368f2ecf603139307f55",
+    "license": "Apache-2.0 (local README)",
+    "modified": false
+  },
+  "prompts": [
+    "the central female game character",
+    "the foreground woman",
+    "the woman's body hair clothes and weapon"
+  ],
+  "threshold": 0.34,
+  "alphaFraction": 0.18559434678819445,
+  "runtimeEligible": false
+}

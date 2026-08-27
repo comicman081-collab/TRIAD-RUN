@@ -80,3 +80,16 @@
   global.TRIAD_STAGE_PROGRESSION = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);
+
+// UI extension loader. Kept outside the progression API so the deterministic
+// stage logic remains unchanged while the existing HTML can load the artifact
+// HUD without duplicating the 250 KB single-file runtime.
+(function loadTriadArtifactHud(global) {
+  if (typeof document === 'undefined' || !document.head) return;
+  if (document.querySelector('script[data-triad-artifact-hud]')) return;
+  const script = document.createElement('script');
+  script.src = 'src/triad_relic_hud.js?v=1.0.0-owned-artifact-panel';
+  script.async = true;
+  script.dataset.triadArtifactHud = '1';
+  document.head.appendChild(script);
+})(typeof window !== 'undefined' ? window : globalThis);

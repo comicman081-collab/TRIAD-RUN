@@ -110,7 +110,7 @@ test('cinematic catalog has distinct multi-variant families', () => {
   for (const [key, minimum] of Object.entries(minimums)) assert.ok(SFX.CATALOG[key].length >= minimum, `${key} variants`);
   assert.equal(new Set(Object.values(SFX.CATALOG).flat()).size, 75);
   assert.equal(SFX.ROOT, 'assets/audio/sfx/combat/');
-  assert.equal(SFX.CACHE_VERSION, '1.4.0-public-cc0-cinematic');
+  assert.equal(SFX.CACHE_VERSION, '1.5.0-public-cc0-gain20');
   assert.equal(SFX.REFERENCE_KEYS.length, 14);
 });
 
@@ -280,6 +280,7 @@ test('enemy archetype and skill select heavy, magic, flurry and block layers', (
 });
 
 test('fresh profiles start combat SFX at full volume and sync the visible slider', () => {
+  FakeAudio.instances.length = 0;
   const handlers = {};
   const volumeElement = { value: '100', addEventListener(type, handler) { handlers[type] = handler; } };
   const instance = new SFX.CombatSfxDirector({
@@ -288,6 +289,11 @@ test('fresh profiles start combat SFX at full volume and sync the visible slider
     document: { addEventListener() {} },
   }).initialize({ volumeElement });
   assert.equal(instance.debugState().masterVolume, 1);
+  assert.equal(instance.debugState().outputGainBoost, 1.2);
+  instance.play('rifleFire', { volume: 0.5 });
+  const played = FakeAudio.instances.find(audio => audio.playCount === 1);
+  assert.ok(played);
+  assert.ok(Math.abs(played.volume - 0.6) < 1e-9);
   handlers.input({ target: { value: '65' } });
   assert.equal(instance.debugState().masterVolume, 0.65);
 });
@@ -298,5 +304,5 @@ test('canonical runtime still loads and invokes the combat SFX director', () => 
   assert.match(html, /SFX\.playCard\(card,/);
   assert.match(html, /defeated\}\);/);
   assert.match(html, /SFX\.playEnemy\(\{/);
-  assert.match(html, /triad_combat_sfx\.js\?v=1\.4\.0-public-cc0-cinematic/);
+  assert.match(html, /triad_combat_sfx\.js\?v=1\.5\.0-public-cc0-gain20/);
 });

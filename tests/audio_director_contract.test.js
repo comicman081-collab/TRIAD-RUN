@@ -47,7 +47,7 @@ test('only runtime-referenced selections live in the dedicated music folder', ()
 });
 
 test('screen, meta-tab, ending and mute controls are wired into the canonical runtime', () => {
-  assert.match(html, /src\/triad_audio_director\.js\?v=1\.1\.1-muted-bootstrap-telemetry/);
+  assert.match(html, /src\/triad_audio_director\.js\?v=1\.2\.0-native-autoplay-gain20/);
   assert.match(html, /id="bgmToggle"[^>]+onclick="toggleBgm\(\)"/);
   assert.equal((html.match(/data-meta-tab-button=/g) || []).length, 5);
   assert.equal((html.match(/data-meta-tab-pane=/g) || []).length, 5);
@@ -59,6 +59,8 @@ test('screen, meta-tab, ending and mute controls are wired into the canonical ru
   assert.match(html, /id="bgmVolumeValue"/);
   assert.match(html, /AUDIO\.initialize\(\{toggleElement:document\.getElementById\('bgmToggle'\),volumeElement:document\.getElementById\('bgmVolume'\),volumeLabel:document\.getElementById\('bgmVolumeValue'\)\}\)/);
   assert.match(html, /AUDIO\.playTitleAutoplay\(\)/);
+  assert.match(html, /rel="preload"[^>]+below_the_broken_moon\.mp3[^>]+as="audio"/);
+  assert.ok(html.indexOf('AUDIO.playTitleAutoplay();') < html.indexOf("SFX.initialize({volumeElement:document.getElementById('bgmVolume')});"), 'title autoplay must start before the large combat SFX preload');
 });
 
 test('director switches tracks without recreating players and remembers mute state', () => {
@@ -91,8 +93,47 @@ test('director switches tracks without recreating players and remembers mute sta
   assert.equal(director.players.every(player => player.paused), true);
 });
 
+test('native autoplay is armed and the shared output is twenty percent louder', () => {
+  class FakeAudio {
+    constructor() { this.src = ''; this.volume = 0; this.loop = false; this.preload = ''; this.currentTime = 0; this.paused = true; }
+    play() { this.paused = false; }
+    pause() { this.paused = true; }
+  }
+  const director = new audio.AudioDirector({
+    AudioCtor: FakeAudio,
+    storage: { getItem: () => null, setItem() {} },
+    document: { addEventListener() {} },
+  });
+  assert.equal(audio.OUTPUT_GAIN_BOOST, 1.2);
+  assert.equal(director.players.every(player => player.autoplay === true), true);
+  assert.equal(director.playTitleAutoplay(), true);
+  assert.ok(Math.abs(director.debugState().volume - 0.36) < 1e-9);
+  director.setVolume(0.5);
+  assert.ok(Math.abs(director.debugState().volume - 0.18) < 1e-9);
+});
+
+test('a deliberately silent slider remains a healthy autoplay transport', () => {
+  class FakeAudio {
+    constructor() { this.src = ''; this.volume = 0; this.currentTime = 0; this.paused = true; this.muted = false; }
+    play() { this.paused = false; }
+    pause() { this.paused = true; }
+  }
+  const toggle = { textContent: '', title: '', dataset: {}, setAttribute() {} };
+  const director = new audio.AudioDirector({
+    AudioCtor: FakeAudio,
+    storage: { getItem: key => key === 'triad_bgm_volume' ? '0' : null, setItem() {} },
+    document: { addEventListener() {} },
+  }).initialize({ toggleElement: toggle });
+  director.playTitleAutoplay();
+  assert.equal(director.debugState().paused, false);
+  assert.equal(director.debugState().audible, false);
+  assert.equal(director.debugState().lastError, null);
+  assert.equal(toggle.textContent, '♫ BGM ON');
+});
+
 test('audible title autoplay is attempted immediately and retries after a browser block', async () => {
   let attempts = 0;
+  const timers = [];
   class FlakyAudio {
     constructor() { this.src = ''; this.volume = 0; this.loop = false; this.preload = ''; this.currentTime = 0; this.paused = true; }
     play() {
@@ -118,19 +159,31 @@ test('audible title autoplay is attempted immediately and retries after a browse
     document: { addEventListener: (type, handler, options) => { handlers[type] = { handler, options }; } },
     setInterval: () => 1,
     clearInterval() {},
+    setTimeout(fn, delay) { timers.push({ fn, delay }); return timers.length; },
   }).initialize({ toggleElement: toggle, volumeElement: volume, volumeLabel: label });
 
   assert.equal(director.debugState().masterVolume, 1);
   assert.equal(director.debugState().unlocked, true);
   assert.equal(volume.value, '100');
   assert.equal(label.textContent, '100%');
-  director.play('title');
+  director.playTitleAutoplay();
   assert.equal(attempts, 1, 'title playback must be attempted without a click');
   await new Promise(resolve => setImmediate(resolve));
-  assert.equal(director.debugState().lastError, 'NotAllowedError');
+  assert.equal(attempts, 2, 'a blocked audible attempt must immediately bootstrap the same title track muted');
+  assert.equal(director.debugState().currentKey, 'title');
+  assert.equal(director.debugState().muted, true);
   assert.equal(toggle.textContent, '♫ BGM 시작');
+  const promote = timers.find(timer => timer.delay === 80);
+  assert.ok(promote);
+  promote.fn();
+  director.players[director.activeIndex].paused = true;
+  const verify = timers.find(timer => timer.delay === 260);
+  assert.ok(verify);
+  verify.fn();
+  assert.equal(director.debugState().lastError, 'AUTOPLAY_REQUIRES_USER_GESTURE');
   handlers.pointerdown.handler();
   await new Promise(resolve => setImmediate(resolve));
+  assert.equal(attempts, 3);
   assert.equal(handlers.pointerdown.options.once, undefined);
   assert.equal(director.debugState().currentKey, 'title');
   assert.equal(director.debugState().paused, false);

@@ -4,6 +4,7 @@
   const ROOT = 'sounds/triad_run_music/';
   const STORAGE_KEY = 'triad_bgm_enabled';
   const VOLUME_STORAGE_KEY = 'triad_bgm_volume';
+  const OUTPUT_GAIN_BOOST = 1.2;
   const FADE_MS = 720;
   const TRACKS = Object.freeze({
     title: { name: 'Below the Broken Moon', file: 'title/roguelike_title_07_below_the_broken_moon.mp3', volume: 0.30 },
@@ -87,7 +88,10 @@
     createPlayer() {
       const player = new this.AudioCtor();
       player.preload = 'auto';
-      player.autoplay = false;
+      // Preserve the explicit play() path for telemetry/recovery, while also
+      // giving browsers that allow declarative audible autoplay the earliest
+      // possible opportunity to start the title track without a page click.
+      player.autoplay = true;
       player.playsInline = true;
       player.loop = true;
       player.muted = false;
@@ -126,7 +130,7 @@
       const active = this.players[this.activeIndex];
       if (active && !active.paused && active.muted) {
         active.muted = false;
-        active.volume = this.currentBaseVolume * this.masterVolume;
+        active.volume = this.outputVolume();
         this.lastError = null;
         this.updateToggle();
         if (this.isPlaying()) return true;
@@ -135,8 +139,15 @@
       return this.isPlaying();
     }
 
-    isPlaying() { return this.players.some(player => player && !player.paused && !player.muted && Number(player.volume) > 0); }
+    // A user-selected master volume of 0 is still a healthy, unlocked
+    // transport. Do not misreport it as an autoplay failure or restart it on
+    // every pointer event merely because its current gain is silent.
+    isPlaying() { return this.players.some(player => player && !player.paused && !player.muted); }
     isTransportPlaying() { return this.players.some(player => player && !player.paused); }
+
+    outputVolume(baseVolume = this.currentBaseVolume) {
+      return Math.max(0, Math.min(1, Number(baseVolume || 0) * this.masterVolume * OUTPUT_GAIN_BOOST));
+    }
 
     resolve(key) {
       if (key.startsWith('stage:')) return STAGE_TRACKS[Number(key.split(':')[1])];
@@ -156,6 +167,7 @@
       const nextIndex = 1 - this.activeIndex;
       const next = this.players[nextIndex];
       next.pause();
+      next.autoplay = true;
       next.muted = options.bootstrapMuted === true;
       next.defaultMuted = options.bootstrapMuted === true;
       next.src = ROOT + track.file;
@@ -189,8 +201,13 @@
           });
         } else commitPlayback();
       } catch (error) {
+        next.pause();
+        next.volume = 0;
         this.lastError = error?.name || 'PLAYBACK_FAILED';
         this.updateToggle(track);
+        if (key === 'title' && options.autoplay === true && options.bootstrapMuted !== true) {
+          this.play(key, { force: true, immediate: true, autoplay: true, bootstrapMuted: true });
+        }
         return false;
       }
       return true;
@@ -201,10 +218,10 @@
         if (requestId !== this.playRequestId || this.pendingKey !== key || !this.enabled) return;
         player.muted = false;
         player.defaultMuted = false;
-        player.volume = this.currentBaseVolume * this.masterVolume;
+        player.volume = this.outputVolume();
         const verify = () => {
           if (requestId !== this.playRequestId) return;
-          if (!player.paused && !player.muted && player.volume > 0) this.lastError = null;
+          if (!player.paused && !player.muted) this.lastError = null;
           else this.lastError = 'AUTOPLAY_REQUIRES_USER_GESTURE';
           this.updateToggle(track);
         };
@@ -215,7 +232,7 @@
 
     crossfade(previous, next, immediate) {
       if (this.fadeTimer) this.clearInterval?.(this.fadeTimer);
-      this.fadeTargetVolume = this.currentBaseVolume * this.masterVolume;
+      this.fadeTargetVolume = this.outputVolume();
       if (immediate || !this.setInterval) {
         previous.pause();
         previous.volume = 0;
@@ -290,7 +307,7 @@
 
     setVolume(value) {
       this.masterVolume = Math.max(0, Math.min(1, Number(value) || 0));
-      this.fadeTargetVolume = this.currentBaseVolume * this.masterVolume;
+      this.fadeTargetVolume = this.outputVolume();
       const activePlayer = this.players[this.activeIndex];
       if (activePlayer && !activePlayer.paused && !this.fadeTimer) activePlayer.volume = this.fadeTargetVolume;
       try { this.storage?.setItem(VOLUME_STORAGE_KEY, String(this.masterVolume)); } catch (_) {}
@@ -335,8 +352,10 @@
         activeSrc: activePlayer?.src || '',
         paused: activePlayer?.paused ?? true,
         volume: Number(activePlayer?.volume || 0),
+        audible: Boolean(activePlayer && !activePlayer.paused && !activePlayer.muted && Number(activePlayer.volume) > 0),
         muted: Boolean(activePlayer?.muted),
         masterVolume: this.masterVolume,
+        outputGainBoost: OUTPUT_GAIN_BOOST,
       };
     }
   }
@@ -344,6 +363,7 @@
   const director = new AudioDirector();
   const api = {
     ROOT,
+    OUTPUT_GAIN_BOOST,
     TRACKS,
     STAGE_TRACKS,
     META_TRACK_KEYS,

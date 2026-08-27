@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>TRIAD // RUN V0.8 — Deck Building RPG</title>
 <link rel="preload" href="assets/fonts/NotoSansKR-VF.ttf?v=2.04" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="sounds/triad_run_music/title/roguelike_title_07_below_the_broken_moon.mp3" as="audio" type="audio/mpeg" fetchpriority="high">
 <script src="combat_data.js"></script>
 <script src="card_character_data.js"></script>
 <script src="enemy_animation_data.js?v=1.0.0-active-frame-mvp"></script>
@@ -17,8 +18,8 @@
 <script src="src/triad_meta_progression.js?v=1.1.0-meta-breakthrough"></script>
 <script src="src/triad_stage_progression.js?v=1.0.1-open-ended-overflow-hardening"></script>
 <script src="src/triad_tutorial.js?v=1.0.0-guided-prestage"></script>
-<script src="src/triad_audio_director.js?v=1.1.1-muted-bootstrap-telemetry"></script>
-<script src="src/triad_combat_sfx.js?v=1.4.0-public-cc0-cinematic"></script>
+<script src="src/triad_audio_director.js?v=1.2.0-native-autoplay-gain20"></script>
+<script src="src/triad_combat_sfx.js?v=1.5.0-public-cc0-gain20"></script>
 <script src="assets/characters/roster/triad_character_roster.js?v=1.0.20-gacha-six-complete"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r054_blender_nineclip_manifest/sd_manifest.js?v=54-runtime-final"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r027_blender_nineclip_manifest/sd_manifest.js?v=27-runtime-final"></script>
@@ -2171,9 +2172,10 @@ document.getElementById('toBuildBtn')?.addEventListener('click',buildStartDraft)
 document.getElementById('draftGrid')?.addEventListener('click',event=>{const choice=event.target.closest('[data-draft-id]');if(choice)toggleDraft(choice.dataset.draftId)});
 document.getElementById('startRunBtn')?.addEventListener('click',startRun);
 AUDIO.initialize({toggleElement:document.getElementById('bgmToggle'),volumeElement:document.getElementById('bgmVolume'),volumeLabel:document.getElementById('bgmVolumeValue')});
+AUDIO.playTitleAutoplay();
 SFX.initialize({volumeElement:document.getElementById('bgmVolume')});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('#idleRewardModal')?.classList.contains('open'))closeIdleRewardModal()});
-refreshHome();renderCoreGrid();AUDIO.playTitleAutoplay();
+refreshHome();renderCoreGrid();
 if(new URLSearchParams(location.search).get('qaIdleReward')==='1')setTimeout(()=>showIdleRewardModal({effectiveHours:12.5,capped:false,rewards:{credits:540,signal:13,cardMatrices:13,memory:162}}),180);
 </script>
 </body>

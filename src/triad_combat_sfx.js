@@ -2,7 +2,8 @@
   'use strict';
 
   const ROOT = 'assets/audio/sfx/combat/';
-  const CACHE_VERSION = '1.4.0-public-cc0-cinematic';
+  const CACHE_VERSION = '1.5.0-public-cc0-gain20';
+  const OUTPUT_GAIN_BOOST = 1.2;
   const frozenFiles = (...names) => Object.freeze(names);
   const CATALOG = Object.freeze({
     weaponWhoosh: frozenFiles('weapon_whoosh_01.wav', 'weapon_whoosh_02.wav', 'weapon_whoosh_03.wav'),
@@ -239,7 +240,7 @@
       audio.pause(); audio.currentTime = 0;
       audio.playbackRate = Math.max(0.84, Math.min(1.18, Number(options.rate) || 1));
       const requestedVolume = Number.isFinite(Number(options.volume)) ? Number(options.volume) : 1;
-      audio.volume = Math.max(0, Math.min(1, requestedVolume * this.masterVolume));
+      audio.volume = Math.max(0, Math.min(1, requestedVolume * this.masterVolume * OUTPUT_GAIN_BOOST));
       const event = scheduledEvent || this.remember({ key, delay: Number(options.scheduledDelay) || 0, status: 'requested', at: Date.now() });
       Object.assign(event, { key, file: variant.file, variant: variantIndex, voice: voiceIndex, rate: audio.playbackRate, volume: audio.volume, status: 'requested', playedAt: Date.now() });
       const rootNode = this.document?.documentElement;
@@ -355,6 +356,7 @@
         root: ROOT,
         cacheVersion: CACHE_VERSION,
         masterVolume: this.masterVolume,
+        outputGainBoost: OUTPUT_GAIN_BOOST,
         unlocked: this.unlocked,
         playSuccessCount: this.playSuccessCount,
         playErrorCount: this.playErrorCount,
@@ -367,7 +369,7 @@
 
   const director = new CombatSfxDirector();
   const api = Object.freeze({
-    ROOT, CACHE_VERSION, CATALOG, REFERENCE_KEYS, RHYTHMS, CombatSfxDirector, resolveDamageType, resolveEnemyArchetype, resolveEnemyStyle, hitOffsets, cardFirearmKey,
+    ROOT, CACHE_VERSION, OUTPUT_GAIN_BOOST, CATALOG, REFERENCE_KEYS, RHYTHMS, CombatSfxDirector, resolveDamageType, resolveEnemyArchetype, resolveEnemyStyle, hitOffsets, cardFirearmKey,
     initialize: elements => director.initialize(elements),
     setVolume: value => director.setVolume(value),
     play: (key, options) => director.play(key, options),

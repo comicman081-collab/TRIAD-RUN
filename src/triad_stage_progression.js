@@ -93,3 +93,16 @@
   script.dataset.triadArtifactHud = '1';
   document.head.appendChild(script);
 })(typeof window !== 'undefined' ? window : globalThis);
+
+// Compatibility loader for GACHA lobby art. The runtime still enforces the
+// validated canonical alpha-foreground contract; this patch only permits that
+// same validated lobby image to be aliased as fullArt/portrait.
+(function loadTriadRecruitArtFix(global) {
+  if (typeof document === 'undefined' || !document.head) return;
+  if (document.querySelector('script[data-triad-recruit-art-fix]')) return;
+  const script = document.createElement('script');
+  script.src = 'src/triad_recruit_art_fix.js?v=1.0.0-recruit-lobby-alias';
+  script.async = true;
+  script.dataset.triadRecruitArtFix = '1';
+  document.head.appendChild(script);
+})(typeof window !== 'undefined' ? window : globalThis);

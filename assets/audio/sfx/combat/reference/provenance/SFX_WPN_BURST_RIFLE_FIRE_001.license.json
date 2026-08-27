@@ -1,0 +1,76 @@
+{
+  "sourceType": "PUBLIC_CC0_DERIVATIVE",
+  "licenseName": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "attributionRequired": false,
+  "commercialUseAllowed": true,
+  "redistributionAllowed": true,
+  "externalSources": [
+    {
+      "id": "A",
+      "sourcePack": "The Free Firearm Sound Library — Prepared SFX Library",
+      "sourceAuthor": "Ben Jaszczak, Brian Nelson, Kevin Heras, and Matthew Nanney",
+      "sourcePageUrl": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/Prepared%20SFX%20Library.7z",
+      "sourceArchiveSha256": "cc1ab5a99a0a365105c7c5dd783f4b0b1fe90938114d3ceec53856bfe005f7d6",
+      "sourceFile": "AK-47/C_29P.wav",
+      "sourceFileSha256": "d8731d4c9afce639964fbb5a529677e75c6eb316176aee405d6f634707360987",
+      "sourceSampleRate": 96000,
+      "sourceChannels": 2,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 1.025,
+      "requestedDurationSeconds": 1.55,
+      "modifications": [
+        "trim 1.025s–2.575s",
+        "band-limited resample 96000 Hz to 48000 Hz",
+        "peak normalize to -1.8 dBFS",
+        "150 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "B",
+      "sourcePack": "The Free Firearm Sound Library — Prepared SFX Library",
+      "sourceAuthor": "Ben Jaszczak, Brian Nelson, Kevin Heras, and Matthew Nanney",
+      "sourcePageUrl": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/Prepared%20SFX%20Library.7z",
+      "sourceArchiveSha256": "cc1ab5a99a0a365105c7c5dd783f4b0b1fe90938114d3ceec53856bfe005f7d6",
+      "sourceFile": "Carl Gustav M45/G_33P.wav",
+      "sourceFileSha256": "e31414f6c410634008662424631942a7966181430a6e0fc306f3b4d51d16495e",
+      "sourceSampleRate": 96000,
+      "sourceChannels": 2,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 0.25,
+      "requestedDurationSeconds": 1.65,
+      "modifications": [
+        "trim 0.25s–1.9s",
+        "band-limited resample 96000 Hz to 48000 Hz",
+        "peak normalize to -1.8 dBFS",
+        "150 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "C",
+      "sourcePack": "The Free Firearm Sound Library — Prepared SFX Library",
+      "sourceAuthor": "Ben Jaszczak, Brian Nelson, Kevin Heras, and Matthew Nanney",
+      "sourcePageUrl": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/Prepared%20SFX%20Library.7z",
+      "sourceArchiveSha256": "cc1ab5a99a0a365105c7c5dd783f4b0b1fe90938114d3ceec53856bfe005f7d6",
+      "sourceFile": "PPSh/P_32P.wav",
+      "sourceFileSha256": "68fd99fc973b111d6d4c10aa907e142a21510dea693480ebd5d5ef5abac9fcdf",
+      "sourceSampleRate": 96000,
+      "sourceChannels": 2,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 0.76,
+      "requestedDurationSeconds": 1.45,
+      "modifications": [
+        "trim 0.76s–2.21s",
+        "band-limited resample 96000 Hz to 48000 Hz",
+        "peak normalize to -1.8 dBFS",
+        "150 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    }
+  ]
+}

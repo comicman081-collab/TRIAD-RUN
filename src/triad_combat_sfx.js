@@ -2,6 +2,7 @@
   'use strict';
 
   const ROOT = 'assets/audio/sfx/combat/';
+  const CACHE_VERSION = '1.4.0-public-cc0-cinematic';
   const frozenFiles = (...names) => Object.freeze(names);
   const CATALOG = Object.freeze({
     weaponWhoosh: frozenFiles('weapon_whoosh_01.wav', 'weapon_whoosh_02.wav', 'weapon_whoosh_03.wav'),
@@ -17,7 +18,22 @@
     healWave: frozenFiles('heal_wave_01.wav', 'heal_wave_02.wav'),
     utilityPulse: frozenFiles('utility_pulse_01.wav', 'utility_pulse_02.wav'),
     rewardClaim: frozenFiles('reward_claim_01.wav', 'reward_claim_02.wav'),
+    pistolFire: frozenFiles('reference/SFX_WPN_PISTOL_FIRE_001/SFX_WPN_PISTOL_FIRE_001_A.wav', 'reference/SFX_WPN_PISTOL_FIRE_001/SFX_WPN_PISTOL_FIRE_001_B.wav', 'reference/SFX_WPN_PISTOL_FIRE_001/SFX_WPN_PISTOL_FIRE_001_C.wav'),
+    rifleFire: frozenFiles('reference/SFX_WPN_RIFLE_FIRE_001/SFX_WPN_RIFLE_FIRE_001_A.wav', 'reference/SFX_WPN_RIFLE_FIRE_001/SFX_WPN_RIFLE_FIRE_001_B.wav', 'reference/SFX_WPN_RIFLE_FIRE_001/SFX_WPN_RIFLE_FIRE_001_C.wav'),
+    burstRifleFire: frozenFiles('reference/SFX_WPN_BURST_RIFLE_FIRE_001/SFX_WPN_BURST_RIFLE_FIRE_001_A.wav', 'reference/SFX_WPN_BURST_RIFLE_FIRE_001/SFX_WPN_BURST_RIFLE_FIRE_001_B.wav', 'reference/SFX_WPN_BURST_RIFLE_FIRE_001/SFX_WPN_BURST_RIFLE_FIRE_001_C.wav'),
+    machineGunFire: frozenFiles('reference/SFX_WPN_MACHINEGUN_FIRE_001/SFX_WPN_MACHINEGUN_FIRE_001_A.wav', 'reference/SFX_WPN_MACHINEGUN_FIRE_001/SFX_WPN_MACHINEGUN_FIRE_001_B.wav', 'reference/SFX_WPN_MACHINEGUN_FIRE_001/SFX_WPN_MACHINEGUN_FIRE_001_C.wav'),
+    shotgunFire: frozenFiles('reference/SFX_WPN_SHOTGUN_FIRE_001/SFX_WPN_SHOTGUN_FIRE_001_A.wav', 'reference/SFX_WPN_SHOTGUN_FIRE_001/SFX_WPN_SHOTGUN_FIRE_001_B.wav', 'reference/SFX_WPN_SHOTGUN_FIRE_001/SFX_WPN_SHOTGUN_FIRE_001_C.wav'),
+    heavyCannonFire: frozenFiles('reference/SFX_WPN_HEAVY_CANNON_FIRE_001/SFX_WPN_HEAVY_CANNON_FIRE_001_A.wav', 'reference/SFX_WPN_HEAVY_CANNON_FIRE_001/SFX_WPN_HEAVY_CANNON_FIRE_001_B.wav', 'reference/SFX_WPN_HEAVY_CANNON_FIRE_001/SFX_WPN_HEAVY_CANNON_FIRE_001_C.wav'),
+    bulletFlyby: frozenFiles('reference/SFX_PRJ_BULLET_FLYBY_001/SFX_PRJ_BULLET_FLYBY_001_A.wav', 'reference/SFX_PRJ_BULLET_FLYBY_001/SFX_PRJ_BULLET_FLYBY_001_B.wav', 'reference/SFX_PRJ_BULLET_FLYBY_001/SFX_PRJ_BULLET_FLYBY_001_C.wav'),
+    impactMetalRef: frozenFiles('reference/SFX_IMPACT_METAL_001/SFX_IMPACT_METAL_001_A.wav', 'reference/SFX_IMPACT_METAL_001/SFX_IMPACT_METAL_001_B.wav', 'reference/SFX_IMPACT_METAL_001/SFX_IMPACT_METAL_001_C.wav'),
+    impactHeavyRef: frozenFiles('reference/SFX_IMPACT_HEAVY_001/SFX_IMPACT_HEAVY_001_A.wav', 'reference/SFX_IMPACT_HEAVY_001/SFX_IMPACT_HEAVY_001_B.wav', 'reference/SFX_IMPACT_HEAVY_001/SFX_IMPACT_HEAVY_001_C.wav'),
+    impactArmorRef: frozenFiles('reference/SFX_IMPACT_ARMOR_001/SFX_IMPACT_ARMOR_001_A.wav', 'reference/SFX_IMPACT_ARMOR_001/SFX_IMPACT_ARMOR_001_B.wav', 'reference/SFX_IMPACT_ARMOR_001/SFX_IMPACT_ARMOR_001_C.wav'),
+    impactShieldRef: frozenFiles('reference/SFX_IMPACT_SHIELD_001/SFX_IMPACT_SHIELD_001_A.wav', 'reference/SFX_IMPACT_SHIELD_001/SFX_IMPACT_SHIELD_001_B.wav', 'reference/SFX_IMPACT_SHIELD_001/SFX_IMPACT_SHIELD_001_C.wav'),
+    explosionMedium: frozenFiles('reference/SFX_EXP_MEDIUM_EXPLOSION_001/SFX_EXP_MEDIUM_EXPLOSION_001_A.wav', 'reference/SFX_EXP_MEDIUM_EXPLOSION_001/SFX_EXP_MEDIUM_EXPLOSION_001_B.wav', 'reference/SFX_EXP_MEDIUM_EXPLOSION_001/SFX_EXP_MEDIUM_EXPLOSION_001_C.wav'),
+    explosionLarge: frozenFiles('reference/SFX_EXP_LARGE_EXPLOSION_001/SFX_EXP_LARGE_EXPLOSION_001_A.wav', 'reference/SFX_EXP_LARGE_EXPLOSION_001/SFX_EXP_LARGE_EXPLOSION_001_B.wav', 'reference/SFX_EXP_LARGE_EXPLOSION_001/SFX_EXP_LARGE_EXPLOSION_001_C.wav'),
+    explosionMechanical: frozenFiles('reference/SFX_EXP_MECHANICAL_EXPLOSION_001/SFX_EXP_MECHANICAL_EXPLOSION_001_A.wav', 'reference/SFX_EXP_MECHANICAL_EXPLOSION_001/SFX_EXP_MECHANICAL_EXPLOSION_001_B.wav', 'reference/SFX_EXP_MECHANICAL_EXPLOSION_001/SFX_EXP_MECHANICAL_EXPLOSION_001_C.wav'),
   });
+  const REFERENCE_KEYS = Object.freeze(['pistolFire', 'rifleFire', 'burstRifleFire', 'machineGunFire', 'shotgunFire', 'heavyCannonFire', 'bulletFlyby', 'impactMetalRef', 'impactHeavyRef', 'impactArmorRef', 'impactShieldRef', 'explosionMedium', 'explosionLarge', 'explosionMechanical']);
 
   const RHYTHMS = Object.freeze({
     single: frozenFiles(0),
@@ -34,18 +50,31 @@
   const MAGIC = new Set(['mark', 'dot', 'scale', 'inferno', 'overload']);
   const HEAVY_CARDS = new Set(['heavy', 'execute', 'scale', 'inferno', 'overload']);
   const PROJECTILE_CARDS = new Set(['quick', 'dot', 'burst', 'volley']);
+  const RECORDED_BURST_FAMILIES = new Set(['burstRifleFire', 'machineGunFire']);
   const PHYSICAL_SIGNATURE_OWNERS = new Set(['VOLT', 'AEGIS', 'SHADE']);
   const HEAVY_ARCHETYPES = new Set(['BRUTE', 'SENTINEL', 'COLOSSUS', 'SOVEREIGN']);
   const MAGIC_ARCHETYPES = new Set(['CASTER', 'WEAVER', 'SENTINEL', 'APOSTLE', 'OVERMIND', 'SOVEREIGN']);
   const FLURRY_SKILLS = new Set(['FLURRY', 'SURGE', 'REND', 'FRENZY', 'CROSS', 'SYNAPSE', 'END']);
   const HEAVY_SKILLS = new Set(['BASH', 'CLUB', 'CRUSH', 'FIST', 'QUAKE', 'JUDGMENT', 'COLLAPSE']);
   const MAGIC_SKILLS = new Set(['WAVE', 'BOLT', 'SURGE', 'WEB', 'PULSE', 'EDICT', 'JUDGMENT', 'SYNAPSE', 'DOMINION', 'COLLAPSE']);
+  const FIREARM_SKILLS = new Set(['SHOT', 'VOLLEY']);
   const ARCHETYPE_BY_CATALOG = Object.freeze(['SCOUT', 'HOUND', 'WARDEN', 'CASTER', 'HUNTER', 'BRUTE', 'WEAVER', 'RAVAGER', 'SENTINEL', 'VANGUARD', 'REAPER', 'COLOSSUS', 'APOSTLE', 'OVERMIND', 'SOVEREIGN']);
-  const POOL_VOICES = Object.freeze({ impactLight: 8, playerHitLight: 8, shieldBlock: 6, impactHeavy: 5, playerHitHeavy: 5 });
+  const POOL_VOICES = Object.freeze({ impactLight: 8, playerHitLight: 8, shieldBlock: 6, impactHeavy: 5, playerHitHeavy: 5, pistolFire: 3, rifleFire: 3, burstRifleFire: 3, machineGunFire: 3, shotgunFire: 3, heavyCannonFire: 3, bulletFlyby: 3, impactMetalRef: 5, impactHeavyRef: 4, impactArmorRef: 5, impactShieldRef: 5, explosionMedium: 3, explosionLarge: 2, explosionMechanical: 2 });
   const STORAGE_KEY = 'triad_bgm_volume';
   const SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQQAAAAAgICA';
 
   function normalizeCardKey(card) { return String(card?.pattern?.key || card?.key || '').toLowerCase(); }
+  function assetUrl(file) { return `${ROOT}${file}?v=${CACHE_VERSION}`; }
+
+  function cardFirearmKey(key) {
+    if (key === 'quick' || key === 'ambush') return 'pistolFire';
+    if (key === 'strike' || key === 'combo') return 'rifleFire';
+    if (key === 'burst') return 'machineGunFire';
+    if (key === 'volley') return 'burstRifleFire';
+    if (key === 'heavy') return 'shotgunFire';
+    if (key === 'execute') return 'heavyCannonFire';
+    return '';
+  }
 
   function resolveDamageType(card, context = {}) {
     const explicit = String(context.damageType || '').toLowerCase();
@@ -176,7 +205,7 @@
       const variants = (CATALOG[key] || []).map(file => ({
         file,
         voices: Array.from({ length: count }, () => {
-          const audio = new this.AudioCtor(ROOT + file);
+          const audio = new this.AudioCtor(assetUrl(file));
           audio.preload = 'auto'; audio.playsInline = true;
           if (typeof audio.load === 'function') audio.load();
           return audio;
@@ -261,23 +290,38 @@
       const damageType = resolveDamageType(card, context);
       if (signature) {
         this.play('ultimateCharge', { volume: 0.78, rate: 0.96 });
-        if (Number(context.damage) > 0) this.play('ultimateImpact', { delay, volume: 0.96, rate: 0.98 });
+        if (Number(context.damage) > 0) {
+          this.play('ultimateImpact', { delay, volume: 0.18, rate: 0.99 });
+          this.play('explosionLarge', { delay, volume: 0.52, rate: 0.99 });
+          this.play('impactHeavyRef', { delay, volume: 0.42, rate: 1 });
+          if (context.defeated) this.play('explosionMechanical', { delay: delay + 34, volume: 0.42, rate: 0.99 });
+        }
         const owner = String(card?.owner || '').toUpperCase();
         if (owner === 'BLOOM') this.play('healWave', { delay: delay + 130, volume: 0.48, rate: 0.94 });
         if (owner === 'AEGIS') this.play('shieldRise', { delay: delay + 105, volume: 0.55, rate: 0.91 });
         return true;
       }
 
-      this.play(damageType === 'magic' ? 'magicCast' : 'weaponWhoosh', { volume: damageType === 'magic' ? 0.65 : 0.69, rate: damageType === 'magic' ? 0.98 : 1.01 });
+      const firearmKey = damageType === 'physical' ? cardFirearmKey(key) : '';
+      this.play(damageType === 'magic' ? 'magicCast' : firearmKey || 'weaponWhoosh', { volume: damageType === 'magic' ? 0.42 : firearmKey ? 0.58 : 0.34, rate: damageType === 'magic' ? 0.99 : 1 });
+      if (PROJECTILE_CARDS.has(key)) this.play('bulletFlyby', { volume: damageType === 'physical' ? 0.24 : 0.18, rate: 1 });
       if (Number(context.damage) <= 0) return true;
       const impactKey = HEAVY_CARDS.has(key) ? 'impactHeavy' : 'impactLight';
       const offsets = hitOffsets(key, hits);
-      const baseVolume = impactKey === 'impactHeavy' ? 0.86 : hits >= 4 ? 0.48 : hits >= 2 ? 0.58 : 0.74;
+      if (firearmKey && !RECORDED_BURST_FAMILIES.has(firearmKey) && offsets.length > 1) offsets.slice(1).forEach((offset, index) => this.play(firearmKey, { delay: offset, volume: index === offsets.length - 2 ? 0.46 : 0.38, rate: Math.max(0.97, Math.min(1.03, RATE_PATTERN[(index + 1) % RATE_PATTERN.length])) }));
+      const baseVolume = impactKey === 'impactHeavy' ? 0.11 : hits >= 4 ? 0.05 : hits >= 2 ? 0.07 : 0.09;
       offsets.forEach((offset, index) => this.play(impactKey, {
         delay: delay + offset,
-        volume: Math.min(0.94, baseVolume + (index === offsets.length - 1 && offsets.length > 1 ? 0.09 : 0)),
-        rate: RATE_PATTERN[index % RATE_PATTERN.length],
+        volume: baseVolume,
+        rate: Math.max(0.97, Math.min(1.03, RATE_PATTERN[index % RATE_PATTERN.length])),
       }));
+      offsets.forEach((offset, index) => {
+        const finalHit = index === offsets.length - 1;
+        const referenceKey = HEAVY_CARDS.has(key) ? 'impactHeavyRef' : damageType === 'physical' ? 'impactMetalRef' : 'impactArmorRef';
+        this.play(referenceKey, { delay: delay + offset, volume: HEAVY_CARDS.has(key) ? 0.56 : hits > 2 ? 0.40 : 0.52, rate: Math.max(0.97, Math.min(1.03, RATE_PATTERN[index % RATE_PATTERN.length])) });
+        if (HEAVY_CARDS.has(key) && finalHit) this.play('explosionMedium', { delay: delay + offset + 12, volume: 0.34, rate: 0.99 });
+        if (context.defeated && finalHit) this.play('explosionMechanical', { delay: delay + offset + 34, volume: 0.44, rate: 1 });
+      });
       return true;
     }
 
@@ -285,14 +329,21 @@
       const style = resolveEnemyStyle(context);
       const hits = Math.max(1, Math.min(8, Math.floor(Number(context.hits) || 1)));
       const impactDelay = Number.isFinite(Number(context.impactDelay)) ? Math.max(0, Number(context.impactDelay)) : style.heavy ? 360 : style.magic ? 520 : 420;
-      const attackKey = style.rank === 'boss' ? 'ultimateCharge' : style.magic ? 'magicCast' : 'weaponWhoosh';
-      this.play(attackKey, { volume: style.rank === 'boss' ? 0.72 : style.heavy ? 0.64 : 0.58, rate: style.heavy ? 0.87 : style.magic ? 0.93 : 1.0 });
+      const firearm = FIREARM_SKILLS.has(style.skill) || (style.flurry && !style.magic);
+      const attackKey = style.rank === 'boss' ? 'ultimateCharge' : firearm ? style.skill === 'SHOT' ? 'rifleFire' : 'machineGunFire' : style.magic ? 'magicCast' : 'weaponWhoosh';
+      this.play(attackKey, { volume: style.rank === 'boss' ? 0.60 : firearm ? 0.58 : style.heavy ? 0.38 : 0.34, rate: style.heavy ? 0.97 : style.magic ? 0.99 : 1 });
+      if (firearm) this.play('bulletFlyby', { volume: 0.24, rate: 1 });
       const offsets = hitOffsets(style.flurry ? 'flurry' : '', hits);
       offsets.forEach((offset, index) => {
         const blocked = Number(context.results?.[index]?.blocked) > 0;
         const hitKey = blocked ? 'shieldBlock' : style.heavy ? 'playerHitHeavy' : 'playerHitLight';
-        const baseVolume = blocked ? 0.80 : style.heavy ? 0.86 : hits > 1 ? 0.62 : 0.78;
-        this.play(hitKey, { delay: impactDelay + offset, volume: baseVolume, rate: RATE_PATTERN[index % RATE_PATTERN.length] });
+        const finalHit = index === offsets.length - 1;
+        const baseVolume = blocked ? 0.07 : style.heavy ? 0.10 : 0.07;
+        const rate = Math.max(0.97, Math.min(1.03, RATE_PATTERN[index % RATE_PATTERN.length]));
+        this.play(hitKey, { delay: impactDelay + offset, volume: baseVolume, rate });
+        this.play(blocked ? 'impactShieldRef' : style.heavy ? 'impactHeavyRef' : 'impactArmorRef', { delay: impactDelay + offset, volume: blocked ? 0.60 : style.heavy ? 0.56 : hits > 1 ? 0.42 : 0.54, rate });
+        if (style.heavy && finalHit) this.play('explosionMedium', { delay: impactDelay + offset + 12, volume: 0.32, rate: 0.99 });
+        if (style.rank === 'boss' && finalHit) this.play('explosionLarge', { delay: impactDelay + offset + 20, volume: 0.42, rate: 0.99 });
       });
       return true;
     }
@@ -302,6 +353,7 @@
     debugState() {
       return {
         root: ROOT,
+        cacheVersion: CACHE_VERSION,
         masterVolume: this.masterVolume,
         unlocked: this.unlocked,
         playSuccessCount: this.playSuccessCount,
@@ -315,7 +367,7 @@
 
   const director = new CombatSfxDirector();
   const api = Object.freeze({
-    ROOT, CATALOG, RHYTHMS, CombatSfxDirector, resolveDamageType, resolveEnemyArchetype, resolveEnemyStyle, hitOffsets,
+    ROOT, CACHE_VERSION, CATALOG, REFERENCE_KEYS, RHYTHMS, CombatSfxDirector, resolveDamageType, resolveEnemyArchetype, resolveEnemyStyle, hitOffsets, cardFirearmKey,
     initialize: elements => director.initialize(elements),
     setVolume: value => director.setVolume(value),
     play: (key, options) => director.play(key, options),

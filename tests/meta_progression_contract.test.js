@@ -21,6 +21,11 @@ test('idle rewards pay 24h full rate, 24h half rate, then stop at 48h', () => {
   assert.equal(at48.effectiveHours, 36);
   assert.deepEqual(at48.rewards, at72.rewards);
   assert.equal(at48.capped, true);
+  assert.equal(at24.accrualPhase, 'REDUCED');
+  assert.equal(at24.currentRatePercent, 50);
+  assert.equal(at48.accrualPhase, 'STOPPED');
+  assert.equal(at48.currentRatePercent, 0);
+  assert.equal(at72.elapsedSinceClaimHours, 72);
   assert.equal(at48.rewards.credits, META.IDLE_RATES.credits * 36);
 });
 
@@ -28,6 +33,9 @@ test('negative clock movement never creates idle rewards', () => {
   const profile = META.defaultProfile(10 * H, roster);
   const preview = META.previewIdle(profile, 9 * H);
   assert.equal(preview.effectiveHours, 0);
+  assert.equal(preview.elapsedSinceClaimHours, 0);
+  assert.equal(preview.accrualPhase, 'CLOCK_ROLLBACK');
+  assert.equal(preview.currentRatePercent, 0);
   assert.equal(preview.claimable, false);
 });
 

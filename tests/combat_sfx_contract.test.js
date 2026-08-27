@@ -46,23 +46,34 @@ function director(options = {}) {
 
 function inspectWav(file) {
   const buffer = fs.readFileSync(file);
-  const channels = buffer.readUInt16LE(22);
-  const sampleRate = buffer.readUInt32LE(24);
-  const bitDepth = buffer.readUInt16LE(34);
+  let channels = 0, sampleRate = 0, bitDepth = 0, dataOffset = 0, dataBytes = 0;
+  for (let offset = 12; offset + 8 <= buffer.length;) {
+    const id = buffer.toString('ascii', offset, offset + 4);
+    const size = buffer.readUInt32LE(offset + 4);
+    if (id === 'fmt ') {
+      assert.equal(buffer.readUInt16LE(offset + 8), 1, `${path.basename(file)} PCM format`);
+      channels = buffer.readUInt16LE(offset + 10);
+      sampleRate = buffer.readUInt32LE(offset + 12);
+      bitDepth = buffer.readUInt16LE(offset + 22);
+    }
+    if (id === 'data') { dataOffset = offset + 8; dataBytes = size; break; }
+    offset += 8 + size + (size % 2);
+  }
+  assert.ok(dataOffset > 0 && channels > 0 && sampleRate > 0 && bitDepth > 0, `${path.basename(file)} valid WAV chunks`);
   const bytesPerSample = bitDepth / 8;
-  const frames = buffer.readUInt32LE(40) / (channels * bytesPerSample);
+  const frames = dataBytes / (channels * bytesPerSample);
   const maximum = bitDepth === 24 ? 8388608 : 32768;
   let peak = 0, energy = 0;
   let sumL = 0, sumR = 0, squareL = 0, squareR = 0, product = 0;
   let lowPass = 0, lowEnergy = 0, monoEnergy = 0;
   const lowPassCoefficient = 1 - Math.exp(-2 * Math.PI * 180 / sampleRate);
   for (let frame = 0; frame < frames; frame += 1) {
-    const offset = 44 + frame * channels * bytesPerSample;
+    const offset = dataOffset + frame * channels * bytesPerSample;
     const left = buffer.readIntLE(offset, bytesPerSample) / maximum;
-    const right = buffer.readIntLE(offset + bytesPerSample, bytesPerSample) / maximum;
+    const right = channels > 1 ? buffer.readIntLE(offset + bytesPerSample, bytesPerSample) / maximum : left;
     const mono = (left + right) * 0.5;
     peak = Math.max(peak, Math.abs(left), Math.abs(right));
-    energy += left * left + right * right;
+    energy += left * left + (channels > 1 ? right * right : 0);
     sumL += left; sumR += right;
     squareL += left * left; squareR += right * right; product += left * right;
     lowPass += (mono - lowPass) * lowPassCoefficient;
@@ -91,15 +102,21 @@ test('cinematic catalog has distinct multi-variant families', () => {
     weaponWhoosh: 3, magicCast: 3, impactLight: 4, impactHeavy: 3,
     playerHitLight: 3, playerHitHeavy: 2, shieldRise: 2, shieldBlock: 3,
     ultimateCharge: 2, ultimateImpact: 2, healWave: 2, utilityPulse: 2, rewardClaim: 2,
+    pistolFire: 3, rifleFire: 3, burstRifleFire: 3, machineGunFire: 3, shotgunFire: 3, heavyCannonFire: 3,
+    bulletFlyby: 3, impactMetalRef: 3, impactHeavyRef: 3, impactArmorRef: 3, impactShieldRef: 3,
+    explosionMedium: 3, explosionLarge: 3, explosionMechanical: 3,
   };
   assert.deepEqual(Object.keys(SFX.CATALOG).sort(), Object.keys(minimums).sort());
   for (const [key, minimum] of Object.entries(minimums)) assert.ok(SFX.CATALOG[key].length >= minimum, `${key} variants`);
-  assert.equal(new Set(Object.values(SFX.CATALOG).flat()).size, 33);
+  assert.equal(new Set(Object.values(SFX.CATALOG).flat()).size, 75);
   assert.equal(SFX.ROOT, 'assets/audio/sfx/combat/');
+  assert.equal(SFX.CACHE_VERSION, '1.4.0-public-cc0-cinematic');
+  assert.equal(SFX.REFERENCE_KEYS.length, 14);
 });
 
 test('generated pack is deterministic-quality 48 kHz 24-bit stereo with real width', () => {
-  const files = [...new Set(Object.values(SFX.CATALOG).flat())];
+  const reference = new Set(SFX.REFERENCE_KEYS);
+  const files = [...new Set(Object.entries(SFX.CATALOG).filter(([key]) => !reference.has(key)).flatMap(([, names]) => names))];
   const hashes = new Set();
   for (const name of files) {
     const file = path.join(audioRoot, name);
@@ -118,6 +135,43 @@ test('generated pack is deterministic-quality 48 kHz 24-bit stereo with real wid
     hashes.add(metrics.hash);
   }
   assert.equal(hashes.size, files.length, 'every catalog variant must have unique PCM');
+});
+
+test('public CC0 firearm, metal and explosion derivatives retain verified 48 kHz 24-bit PCM and provenance', () => {
+  const files = SFX.REFERENCE_KEYS.flatMap(key => SFX.CATALOG[key]);
+  assert.equal(files.length, 42);
+  const hashes = new Set();
+  for (const name of files) {
+    const metrics = inspectWav(path.join(audioRoot, name));
+    assert.ok([1, 2].includes(metrics.channels), `${name} channels`);
+    assert.equal(metrics.sampleRate, 48000, `${name} sample rate`);
+    assert.equal(metrics.bitDepth, 24, `${name} bit depth`);
+    assert.ok(metrics.duration >= 0.70 && metrics.duration <= 3.65, `${name} duration ${metrics.duration}`);
+    assert.ok(metrics.peakDb >= -3.1 && metrics.peakDb <= -1.0, `${name} peak ${metrics.peakDb}`);
+    assert.ok(metrics.rmsDb > -36 && metrics.rmsDb < -7, `${name} rms ${metrics.rmsDb}`);
+    const [, assetId, filename] = name.split('/');
+    const manifest = JSON.parse(fs.readFileSync(path.join(audioRoot, 'reference', 'provenance', `${assetId}.manifest.json`), 'utf8'));
+    const license = JSON.parse(fs.readFileSync(path.join(audioRoot, 'reference', 'provenance', `${assetId}.license.json`), 'utf8'));
+    const variant = filename.match(/_([ABC])\.wav$/)?.[1];
+    const manifestVariant = manifest.variants.find(entry => entry.id === variant);
+    const sourceRecord = license.externalSources.find(entry => entry.id === variant);
+    assert.equal(manifestVariant?.sha256, metrics.hash, `${name} output hash`);
+    assert.equal(manifestVariant?.outputSampleRate, 48000, `${name} manifest sample rate`);
+    assert.equal(manifestVariant?.outputBitDepth, 24, `${name} manifest bit depth`);
+    assert.match(manifestVariant?.sourceFile || '', /\.(wav)$/i, `${name} source file`);
+    assert.match(manifestVariant?.sourcePageUrl || '', /^https:\/\/opengameart\.org\/content\//, `${name} source page`);
+    assert.equal(sourceRecord?.sourceArchiveSha256, manifestVariant?.sourceArchiveSha256, `${name} archive hash`);
+    assert.equal(manifest.qaStatus, 'PASS');
+    assert.equal(manifest.sourceType, 'PUBLIC_CC0_DERIVATIVE');
+    assert.equal(manifest.licenseName, 'CC0-1.0');
+    assert.equal(license.licenseName, 'CC0-1.0');
+    assert.equal(license.externalSources.length, 3);
+    assert.equal(license.attributionRequired, false);
+    assert.equal(license.commercialUseAllowed, true);
+    assert.equal(license.redistributionAllowed, true);
+    hashes.add(metrics.hash);
+  }
+  assert.equal(hashes.size, files.length, 'every reference variant must be unique');
 });
 
 test('heavy, ultimate and shield impacts retain cinematic low-frequency body', () => {
@@ -173,6 +227,10 @@ test('multi-hit cards preserve authored pa-pa-pak and ta-ta-tak timing', () => {
   assert.deepEqual(impacts.map(event => event.delay), [500, 596, 714]);
   assert.deepEqual(impacts.map(event => event.status), ['scheduled', 'scheduled', 'scheduled']);
   assert.deepEqual(impacts.map(event => event.rate), [0.97, 1.025, 0.985]);
+  assert.ok(instance.debugState().log.some(event => event.key === 'burstRifleFire' && event.delay === 0));
+  assert.equal(instance.debugState().log.filter(event => event.key === 'burstRifleFire').length, 1, 'recorded burst already contains its authored shots');
+  assert.ok(instance.debugState().log.some(event => event.key === 'bulletFlyby' && event.delay === 0));
+  assert.ok(instance.debugState().log.some(event => event.key === 'impactMetalRef' && event.delay === 500));
 });
 
 test('signature separates charge from delayed cinematic impact', () => {
@@ -183,6 +241,18 @@ test('signature separates charge from delayed cinematic impact', () => {
   assert.equal(log.find(event => event.key === 'ultimateCharge').delay, 0);
   assert.equal(log.find(event => event.key === 'ultimateImpact').delay, 440);
   assert.equal(log.find(event => event.key === 'ultimateImpact').status, 'scheduled');
+  assert.equal(log.find(event => event.key === 'explosionLarge').delay, 440);
+});
+
+test('physical card families choose authored firearm launch layers before impact', () => {
+  assert.equal(SFX.cardFirearmKey('quick'), 'pistolFire');
+  assert.equal(SFX.cardFirearmKey('ambush'), 'pistolFire');
+  assert.equal(SFX.cardFirearmKey('strike'), 'rifleFire');
+  assert.equal(SFX.cardFirearmKey('combo'), 'rifleFire');
+  assert.equal(SFX.cardFirearmKey('burst'), 'machineGunFire');
+  assert.equal(SFX.cardFirearmKey('volley'), 'burstRifleFire');
+  assert.equal(SFX.cardFirearmKey('heavy'), 'shotgunFire');
+  assert.equal(SFX.cardFirearmKey('execute'), 'heavyCannonFire');
 });
 
 test('enemy archetype and skill select heavy, magic, flurry and block layers', () => {
@@ -201,6 +271,10 @@ test('enemy archetype and skill select heavy, magic, flurry and block layers', (
   assert.ok(keys.includes('playerHitHeavy'));
   assert.ok(keys.includes('playerHitLight'));
   assert.ok(keys.includes('shieldBlock'));
+  assert.ok(keys.includes('impactHeavyRef'));
+  assert.ok(keys.includes('impactArmorRef'));
+  assert.ok(keys.includes('impactShieldRef'));
+  assert.ok(keys.includes('explosionMedium'));
   const scoutImpacts = instance.debugState().log.filter(event => ['shieldBlock', 'playerHitLight'].includes(event.key)).slice(-2);
   assert.deepEqual(scoutImpacts.map(event => event.delay), [400, 492]);
 });
@@ -222,5 +296,7 @@ test('canonical runtime still loads and invokes the combat SFX director', () => 
   const html = fs.readFileSync(path.join(root, 'TRIAD_RUN_V0_8_MANEQUIN_ASSEMBLY.html'), 'utf8');
   assert.match(html, /src\/triad_combat_sfx\.js/);
   assert.match(html, /SFX\.playCard\(card,/);
+  assert.match(html, /defeated\}\);/);
   assert.match(html, /SFX\.playEnemy\(\{/);
+  assert.match(html, /triad_combat_sfx\.js\?v=1\.4\.0-public-cc0-cinematic/);
 });

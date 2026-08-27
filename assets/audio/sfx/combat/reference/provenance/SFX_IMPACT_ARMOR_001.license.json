@@ -1,0 +1,76 @@
+{
+  "sourceType": "PUBLIC_CC0_DERIVATIVE",
+  "licenseName": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "attributionRequired": false,
+  "commercialUseAllowed": true,
+  "redistributionAllowed": true,
+  "externalSources": [
+    {
+      "id": "A",
+      "sourcePack": "Medieval sound effects — Weapon impacts (part 1 of 2)",
+      "sourceAuthor": "Ben Jaszczak and Brian Nelson",
+      "sourcePageUrl": "https://opengameart.org/content/medieval-sound-effects-weapon-impacts",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/medieval_sfx_weapon_on_weapon_1_of_2.7z",
+      "sourceArchiveSha256": "27a854442ecfc51102dc023bb3ff462fe1bc6b895b39b2f63a54cccf1e8e6ea9",
+      "sourceFile": "Axe Norse Sword Blade on Blade.wav",
+      "sourceFileSha256": "acd1420ae8a3b9c367629f0e2743015cdf2ca93ae0298b05144bc641efe5d78a",
+      "sourceSampleRate": 192000,
+      "sourceChannels": 1,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 4.03,
+      "requestedDurationSeconds": 0.85,
+      "modifications": [
+        "trim 4.03s–4.88s",
+        "band-limited resample 192000 Hz to 48000 Hz",
+        "peak normalize to -1.7 dBFS",
+        "110 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "B",
+      "sourcePack": "Medieval sound effects — Weapon impacts (part 1 of 2)",
+      "sourceAuthor": "Ben Jaszczak and Brian Nelson",
+      "sourcePageUrl": "https://opengameart.org/content/medieval-sound-effects-weapon-impacts",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/medieval_sfx_weapon_on_weapon_1_of_2.7z",
+      "sourceArchiveSha256": "27a854442ecfc51102dc023bb3ff462fe1bc6b895b39b2f63a54cccf1e8e6ea9",
+      "sourceFile": "Axe Spear Blade on Blade.wav",
+      "sourceFileSha256": "ca912e72c02e1e1d0bbcd9b9b6c7a15a283c49c4666ae1b965429fcc9556bbba",
+      "sourceSampleRate": 192000,
+      "sourceChannels": 1,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 2.5,
+      "requestedDurationSeconds": 0.85,
+      "modifications": [
+        "trim 2.5s–3.35s",
+        "band-limited resample 192000 Hz to 48000 Hz",
+        "peak normalize to -1.7 dBFS",
+        "110 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "C",
+      "sourcePack": "Medieval sound effects — Weapon impacts (part 1 of 2)",
+      "sourceAuthor": "Ben Jaszczak and Brian Nelson",
+      "sourcePageUrl": "https://opengameart.org/content/medieval-sound-effects-weapon-impacts",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/medieval_sfx_weapon_on_weapon_1_of_2.7z",
+      "sourceArchiveSha256": "27a854442ecfc51102dc023bb3ff462fe1bc6b895b39b2f63a54cccf1e8e6ea9",
+      "sourceFile": "Dagger Axe Blade on Blade.wav",
+      "sourceFileSha256": "4e60ddc8d9d937ef2cccf1ea26f17d2b7157442f9cf071a58616e128f6850240",
+      "sourceSampleRate": 192000,
+      "sourceChannels": 1,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 4.295,
+      "requestedDurationSeconds": 0.85,
+      "modifications": [
+        "trim 4.295s–5.145s",
+        "band-limited resample 192000 Hz to 48000 Hz",
+        "peak normalize to -1.7 dBFS",
+        "110 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    }
+  ]
+}

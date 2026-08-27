@@ -1,0 +1,76 @@
+{
+  "sourceType": "PUBLIC_CC0_DERIVATIVE",
+  "licenseName": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "attributionRequired": false,
+  "commercialUseAllowed": true,
+  "redistributionAllowed": true,
+  "externalSources": [
+    {
+      "id": "A",
+      "sourcePack": "Action Game/SHMUP SFX Pack",
+      "sourceAuthor": "RUOK",
+      "sourcePageUrl": "https://opengameart.org/content/action-gameshmup-sfx-pack",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/ruok_sfxpack.zip",
+      "sourceArchiveSha256": "fd0523764e0d644bea12c0839ce5052a8dfcd136f701c30dfc565de72d506aa3",
+      "sourceFile": "Bullets/BigShot1.wav",
+      "sourceFileSha256": "2a10234774c3e3942070913a8dc02187023b0f9951451f6d0b124f8e37d5ce16",
+      "sourceSampleRate": 96000,
+      "sourceChannels": 2,
+      "sourceBitDepth": 16,
+      "sourceStartSeconds": 0,
+      "requestedDurationSeconds": 1.8,
+      "modifications": [
+        "trim 0s–1.8s",
+        "band-limited resample 96000 Hz to 48000 Hz",
+        "peak normalize to -1.5 dBFS",
+        "180 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "B",
+      "sourcePack": "Action Game/SHMUP SFX Pack",
+      "sourceAuthor": "RUOK",
+      "sourcePageUrl": "https://opengameart.org/content/action-gameshmup-sfx-pack",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/ruok_sfxpack.zip",
+      "sourceArchiveSha256": "fd0523764e0d644bea12c0839ce5052a8dfcd136f701c30dfc565de72d506aa3",
+      "sourceFile": "Bullets/BigShot2.wav",
+      "sourceFileSha256": "3e4e91e9f7c14914bf1eb33d7da30663e629e32e3f36a0b377300dfd5d03fdae",
+      "sourceSampleRate": 96000,
+      "sourceChannels": 2,
+      "sourceBitDepth": 16,
+      "sourceStartSeconds": 0,
+      "requestedDurationSeconds": 1.8,
+      "modifications": [
+        "trim 0s–1.8s",
+        "band-limited resample 96000 Hz to 48000 Hz",
+        "peak normalize to -1.5 dBFS",
+        "180 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "C",
+      "sourcePack": "Action Game/SHMUP SFX Pack",
+      "sourceAuthor": "RUOK",
+      "sourcePageUrl": "https://opengameart.org/content/action-gameshmup-sfx-pack",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/ruok_sfxpack.zip",
+      "sourceArchiveSha256": "fd0523764e0d644bea12c0839ce5052a8dfcd136f701c30dfc565de72d506aa3",
+      "sourceFile": "Bullets/BigShot4.wav",
+      "sourceFileSha256": "fdece1b3a3203c05444123a851890bcc7045c3bcec85abb1eba9dfab327f2773",
+      "sourceSampleRate": 96000,
+      "sourceChannels": 2,
+      "sourceBitDepth": 16,
+      "sourceStartSeconds": 0,
+      "requestedDurationSeconds": 1.55,
+      "modifications": [
+        "trim 0s–1.55s",
+        "band-limited resample 96000 Hz to 48000 Hz",
+        "peak normalize to -1.5 dBFS",
+        "160 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    }
+  ]
+}

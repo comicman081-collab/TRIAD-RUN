@@ -18,7 +18,7 @@
 <script src="src/triad_stage_progression.js?v=1.0.1-open-ended-overflow-hardening"></script>
 <script src="src/triad_tutorial.js?v=1.0.0-guided-prestage"></script>
 <script src="src/triad_audio_director.js?v=1.1.1-muted-bootstrap-telemetry"></script>
-<script src="src/triad_combat_sfx.js?v=1.2.0-cinematic-impact-pack"></script>
+<script src="src/triad_combat_sfx.js?v=1.4.0-public-cc0-cinematic"></script>
 <script src="assets/characters/roster/triad_character_roster.js?v=1.0.20-gacha-six-complete"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r054_blender_nineclip_manifest/sd_manifest.js?v=54-runtime-final"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r027_blender_nineclip_manifest/sd_manifest.js?v=27-runtime-final"></script>
@@ -50,7 +50,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:radial-gradient(circle at 20% -20%,#1b2a45 0,#0b0d13 38%,#07090d 100%);color:var(--text);font-family:var(--font-ui);min-height:100%}
 button,input,select{font:inherit}
-button{border:1px solid var(--line);background:linear-gradient(180deg,#222a3e,#171c2a);color:var(--text);border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+button{border:1px solid var(--line);background:linear-gradient(180deg,#222a3e,#171c2a);color:var(--text);border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18);word-break:keep-all;overflow-wrap:normal}
 button:hover{filter:brightness(1.12)}
 button:disabled{opacity:.4;cursor:not-allowed}
 button.primary{background:linear-gradient(180deg,#2d7f94,#1f5566);border-color:#56c7e2}
@@ -188,7 +188,7 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 .combat-panel-v05{padding-bottom:20px}
 .jrpg-topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .jrpg-topbar h2{margin:2px 0 0}
-.battle-title-cluster{display:flex;align-items:center;gap:12px}.auto-battle-toggle{position:relative;min-width:116px;height:48px;padding:6px 13px 6px 12px;display:grid;grid-template-columns:15px 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;border:1px solid #4a5870;border-radius:15px;background:linear-gradient(145deg,rgba(29,35,50,.98),rgba(9,13,22,.98));box-shadow:inset 0 1px rgba(255,255,255,.05),0 8px 24px rgba(0,0,0,.3);overflow:hidden;text-align:left}.auto-battle-toggle:before{content:"";position:absolute;inset:0;background:linear-gradient(112deg,transparent 20%,rgba(255,255,255,.08) 48%,transparent 70%);transform:translateX(-130%);transition:transform .45s}.auto-battle-toggle:hover:before{transform:translateX(130%)}.auto-battle-toggle .auto-led{grid-row:1/3;width:11px;height:11px;border-radius:50%;background:#667086;box-shadow:0 0 0 4px rgba(103,112,134,.12)}.auto-battle-toggle b{font-family:"Bahnschrift SemiCondensed","Arial Narrow",sans-serif;font-size:15px;line-height:1;letter-spacing:.16em}.auto-battle-toggle small{font-family:"Bahnschrift",sans-serif;color:#7f8aa0;font-size:9px;font-weight:800;letter-spacing:.18em}.auto-battle-toggle[aria-pressed="true"]{border-color:#62def4;background:linear-gradient(145deg,rgba(17,69,82,.98),rgba(8,24,34,.98));color:#d9fbff;box-shadow:inset 0 1px rgba(255,255,255,.09),0 0 0 1px rgba(84,220,245,.12),0 0 28px rgba(55,206,236,.2)}.auto-battle-toggle[aria-pressed="true"] .auto-led{background:#7df3ff;box-shadow:0 0 0 4px rgba(125,243,255,.13),0 0 16px #57dcf4;animation:autoLedPulse 1.25s ease-in-out infinite}.auto-battle-toggle[aria-pressed="true"] small{color:#91edff}@keyframes autoLedPulse{50%{opacity:.55;transform:scale(.82)}}
+.battle-title-cluster{display:flex;align-items:center;gap:12px}.auto-battle-toggle{position:relative;min-width:116px;height:48px;padding:6px 13px 6px 12px;display:grid;grid-template-columns:15px 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;border:1px solid #4a5870;border-radius:15px;background:linear-gradient(145deg,rgba(29,35,50,.98),rgba(9,13,22,.98));box-shadow:inset 0 1px rgba(255,255,255,.05),0 8px 24px rgba(0,0,0,.3);overflow:hidden;text-align:left}.auto-battle-toggle:before{content:"";position:absolute;inset:0;background:linear-gradient(112deg,transparent 20%,rgba(255,255,255,.08) 48%,transparent 70%);transform:translateX(-130%);transition:transform .45s}.auto-battle-toggle:hover:before{transform:translateX(130%)}.auto-battle-toggle .auto-led{grid-row:1/3;width:11px;height:11px;border-radius:50%;background:#667086;box-shadow:0 0 0 4px rgba(103,112,134,.12)}.auto-battle-toggle b{font-family:"Bahnschrift SemiCondensed","Arial Narrow",sans-serif;font-size:15px;line-height:1;letter-spacing:.16em}.auto-battle-toggle small{font-family:"Bahnschrift",sans-serif;color:#7f8aa0;font-size:9px;font-weight:800;letter-spacing:.12em;white-space:nowrap}.auto-battle-toggle[aria-pressed="true"]{border-color:#62def4;background:linear-gradient(145deg,rgba(17,69,82,.98),rgba(8,24,34,.98));color:#d9fbff;box-shadow:inset 0 1px rgba(255,255,255,.09),0 0 0 1px rgba(84,220,245,.12),0 0 28px rgba(55,206,236,.2)}.auto-battle-toggle[aria-pressed="true"] .auto-led{background:#7df3ff;box-shadow:0 0 0 4px rgba(125,243,255,.13),0 0 16px #57dcf4;animation:autoLedPulse 1.25s ease-in-out infinite}.auto-battle-toggle[aria-pressed="true"] small{color:#91edff}.auto-battle-toggle:disabled{opacity:.82;border-color:#665e4d;background:linear-gradient(145deg,rgba(34,31,27,.98),rgba(12,13,17,.98));filter:none}.auto-battle-toggle:disabled .auto-led{background:#d9ad5a;box-shadow:0 0 0 4px rgba(217,173,90,.1)}.auto-battle-toggle:disabled small{color:#d7b36b}@keyframes autoLedPulse{50%{opacity:.55;transform:scale(.82)}}
 .jrpg-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .jrpg-meta .resource{padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:#0d1220;font-size:12px}
 .battle-stage{
@@ -294,8 +294,8 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 .lobby-command{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:clamp(22px,4vw,54px);background:rgba(8,12,20,.28);backdrop-filter:blur(2px)}
 .lobby-command h1{margin:0;font-size:clamp(42px,7vw,82px);line-height:.85;letter-spacing:-.08em}.lobby-command h1 span{color:var(--accent)}
 .profile-wallet{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.wallet-chip{padding:10px 8px;border:1px solid #40506c;border-radius:12px;background:rgba(9,14,24,.82);text-align:center}.wallet-chip b{display:block;font-size:18px;color:#fff}.wallet-chip small{display:flex;align-items:flex-start;justify-content:center;gap:4px;min-height:2.7em;line-height:1.35;color:#aab7ce}.wallet-icon{flex:0 0 auto}.wallet-label{min-width:0;word-break:keep-all;overflow-wrap:normal;text-align:center}
-.lobby-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.lobby-actions button{min-height:48px}
-.idle-panel{padding:13px;border:1px solid #4b5c78;border-radius:15px;background:rgba(8,13,23,.86)}.idle-panel strong{color:#dff8ff}.idle-reward-line{margin-top:7px;color:#c4d0e4;font-size:12px;line-height:1.55}
+.lobby-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.lobby-actions button{min-height:48px;word-break:keep-all;overflow-wrap:normal;text-wrap:balance}
+.idle-panel{padding:13px;border:1px solid #4b5c78;border-radius:15px;background:linear-gradient(135deg,rgba(12,22,36,.94),rgba(6,12,22,.9));box-shadow:inset 0 1px rgba(255,255,255,.035)}.idle-preview-head,.idle-preview-meta{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}.idle-preview-head strong{color:#dff8ff}.idle-rate-badge{padding:4px 8px;border:1px solid #4dcce4;border-radius:999px;background:rgba(36,145,170,.12);color:#8beeff;font-size:10px;font-weight:850;white-space:nowrap}.idle-panel[data-phase="REDUCED"] .idle-rate-badge{border-color:#f5b85d;background:rgba(197,124,31,.13);color:#ffd18b}.idle-panel[data-phase="STOPPED"] .idle-rate-badge,.idle-panel[data-phase="CLOCK_ROLLBACK"] .idle-rate-badge{border-color:#df6b7b;background:rgba(154,41,59,.15);color:#ff9dac}.idle-preview-meta{margin-top:7px;color:#aebdd1;font-size:11px;font-variant-numeric:tabular-nums}.idle-rate-meter{height:4px;margin-top:9px;overflow:hidden;border-radius:999px;background:#202b3d}.idle-rate-meter i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#45d5f0,#8ff6ff);box-shadow:0 0 11px #54dff2;transition:width .3s ease}.idle-panel[data-phase="REDUCED"] .idle-rate-meter i{background:linear-gradient(90deg,#d88931,#ffd47d);box-shadow:0 0 10px #e9a74e}.idle-panel[data-phase="STOPPED"] .idle-rate-meter i,.idle-panel[data-phase="CLOCK_ROLLBACK"] .idle-rate-meter i{box-shadow:none}.idle-reward-line{display:flex;gap:5px 10px;flex-wrap:wrap;margin-top:9px;color:#c4d0e4;font-size:11px;line-height:1.5}.idle-reward-line span{white-space:nowrap}
 .idle-reward-modal{position:fixed;z-index:120;inset:0;display:none;place-items:center;padding:22px;background:radial-gradient(circle at 50% 44%,rgba(19,63,83,.28),rgba(1,4,10,.9) 58%);backdrop-filter:blur(10px)}.idle-reward-modal.open{display:grid}.idle-reward-card{position:relative;width:min(680px,94vw);overflow:hidden;border:1px solid rgba(120,225,255,.65);border-radius:28px;padding:34px;background:linear-gradient(148deg,rgba(18,31,48,.985),rgba(7,11,20,.99) 60%,rgba(15,31,43,.99));box-shadow:0 32px 90px rgba(0,0,0,.68),0 0 0 1px rgba(255,255,255,.04),0 0 70px rgba(72,211,241,.16);font-family:"Bahnschrift","Pretendard Variable","Noto Sans KR","Malgun Gothic",sans-serif;animation:idleRewardArrive .48s cubic-bezier(.16,.86,.22,1)}.idle-reward-card:before{content:"";position:absolute;inset:-60% 18% 58%;background:conic-gradient(from 180deg,transparent,#5ce6ff55,transparent 32%,#ffe59b44,transparent 66%);filter:blur(22px);animation:rewardHalo 5s linear infinite}.idle-reward-card:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 24%,rgba(255,255,255,.07) 45%,transparent 66%);transform:translateX(-120%);animation:rewardSweep 1.15s .18s ease-out forwards}.idle-reward-kicker{position:relative;color:#87eaff;font-size:11px;font-weight:800;letter-spacing:.28em;text-transform:uppercase}.idle-reward-title{position:relative;margin:8px 0 5px;font-size:clamp(31px,5vw,48px);font-weight:900;letter-spacing:-.045em;text-shadow:0 0 26px rgba(105,226,255,.18)}.idle-reward-subtitle{position:relative;margin:0;color:#9cadc5;font-size:14px}.idle-reward-grid{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:27px 0 24px}.idle-reward-item{min-width:0;padding:17px 10px 15px;border:1px solid rgba(102,146,180,.36);border-radius:17px;background:linear-gradient(180deg,rgba(29,45,67,.78),rgba(10,16,27,.9));box-shadow:inset 0 1px rgba(255,255,255,.04);text-align:center}.idle-reward-item .reward-icon{display:grid;place-items:center;width:37px;height:37px;margin:0 auto 10px;border:1px solid rgba(120,226,255,.35);border-radius:12px;background:rgba(61,162,191,.1);color:#a9f4ff;font-size:18px}.idle-reward-item b{display:block;color:#fff6cb;font-size:23px;font-variant-numeric:tabular-nums}.idle-reward-item small{display:block;margin-top:5px;color:#9aabc2;font-size:10px;letter-spacing:.02em}.idle-reward-confirm{position:relative;width:100%;border-color:#70dcf0;background:linear-gradient(180deg,#2a8398,#195365);box-shadow:0 10px 28px rgba(31,157,185,.22);font-weight:900;letter-spacing:.08em}@keyframes idleRewardArrive{0%{opacity:0;transform:translateY(24px) scale(.94)}100%{opacity:1;transform:none}}@keyframes rewardHalo{to{transform:rotate(1turn)}}@keyframes rewardSweep{to{transform:translateX(130%)}}@media(max-width:620px){.idle-reward-card{padding:26px 20px}.idle-reward-grid{grid-template-columns:repeat(2,1fr)}.battle-title-cluster{align-items:flex-start}.auto-battle-toggle{min-width:104px}}
 
 /* PRE-STAGE 0 · guided onboarding */
@@ -363,6 +363,8 @@ p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-br
 .tutorial-check{font-size:11px;line-height:1.2}
 .wallet-chip small{font-size:11.5px;line-height:1.45}
 .wallet-label{white-space:nowrap}
+.tag,.badge{white-space:nowrap;word-break:keep-all;overflow-wrap:normal}
+.tutorial-card-chip b,.owned-card-row strong,.history-card strong,.route-card strong{word-break:keep-all;overflow-wrap:normal}
 .idle-reward-card{font-weight:500}
 .idle-reward-subtitle{color:#b6c4d8;font-size:14px;line-height:1.55}
 .idle-reward-item small{color:#acbbcf;font-size:11px;line-height:1.35}
@@ -371,7 +373,11 @@ p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-br
 .toast{font-weight:700;line-height:1.4;box-shadow:0 14px 36px rgba(0,0,0,.46)}
 .section-title{flex-wrap:wrap}
 @media(min-width:851px){.lobby-actions{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:851px){.lobby-command .wallet-chip{padding-inline:3px}.lobby-command .wallet-chip small{gap:1px}}
+@media(min-width:851px) and (max-width:1100px){.profile-wallet,.lobby-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:851px) and (max-height:900px){.lobby-command{padding-block:40px}}
+@media(max-width:560px){.history-card{grid-template-columns:1fr}.history-card>.row{justify-content:flex-start}}
+@media(max-width:340px){.card-list{grid-template-columns:1fr}}
 .combat-panel-v05{position:relative}
 .hand-jrpg{justify-content:safe center;overscroll-behavior-inline:contain;scrollbar-gutter:stable both-edges}
 .hand-jrpg .hand-card{scroll-snap-align:center}
@@ -862,18 +868,30 @@ function lobbyCharacterAsset(record){
 }
 function metaCharacterThumbnail(record){return lobbyCharacterAsset(record)?.path||''}
 function idleDurationLabel(hours){const totalMinutes=Math.max(0,Math.floor(Number(hours||0)*60)),h=Math.floor(totalMinutes/60),m=totalMinutes%60;return`${h}시간 ${m}분`}
+let idlePreviewTimer=null;
+function stopIdlePreviewRefresh(){if(idlePreviewTimer){clearTimeout(idlePreviewTimer);idlePreviewTimer=null}}
+function scheduleIdlePreviewRefresh(now=Date.now()){
+  stopIdlePreviewRefresh();if(!$('#home')?.classList.contains('active'))return false;
+  const elapsedMs=Math.max(0,now-Number(profile?.idle?.lastClaimAt||now)),delay=Math.max(1000,60025-(elapsedMs%60000));
+  idlePreviewTimer=setTimeout(()=>{renderIdlePreview(Date.now());scheduleIdlePreviewRefresh(Date.now())},delay);return true
+}
+function renderIdlePreview(now=Date.now()){
+  const preview=META.previewIdle(profile,now),idle=$('#idlePanel'),claim=$('#idleClaimBtn');if(!idle)return preview;
+  const phaseCopy={FULL:`현재 적립률 ${preview.currentRatePercent}%`,REDUCED:`현재 적립률 ${preview.currentRatePercent}%`,STOPPED:'적립 정지 · 0%',CLOCK_ROLLBACK:'기기 시간 확인 · 0%'};
+  idle.dataset.phase=preview.accrualPhase;
+  idle.innerHTML=`<div class="idle-preview-head"><strong>방치 보상</strong><span class="idle-rate-badge">${phaseCopy[preview.accrualPhase]||'현재 적립률 0%'}</span></div><div class="idle-preview-meta"><span>경과 ${idleDurationLabel(preview.elapsedSinceClaimHours)}</span><span>적립 환산 ${idleDurationLabel(preview.effectiveHours)}</span></div><div class="idle-rate-meter" role="meter" aria-label="현재 방치 보상 적립률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${preview.currentRatePercent}"><i style="width:${preview.currentRatePercent}%"></i></div><div class="idle-reward-line"><span>◆ ${preview.rewards.credits.toLocaleString()}</span><span>✦ ${preview.rewards.signal.toLocaleString()}</span><span>▣ ${preview.rewards.cardMatrices.toLocaleString()}</span><span>◈ ${preview.rewards.memory.toLocaleString()}</span></div>`;
+  if(claim)claim.disabled=!preview.claimable;return preview
+}
 function renderLobby(){
-  profile=META.normalizeProfile(profile,Date.now(),profileRosterIds());
+  const now=Date.now();profile=META.normalizeProfile(profile,now,profileRosterIds());
   const background=lobbyBackgroundRecord(),shell=$('#lobbyShell');if(shell)shell.style.backgroundImage=`url("${background.path}")`;
   const wallet=$('#profileWallet');if(wallet)wallet.innerHTML=walletMarkup();
-  const preview=META.previewIdle(profile,Date.now()),idle=$('#idlePanel');
-  if(idle)idle.innerHTML=`<strong>방치 보상 · 유효 ${idleDurationLabel(preview.effectiveHours)}</strong><div class="idle-reward-line">크레딧 ${preview.rewards.credits.toLocaleString()} · 모집 신호 ${preview.rewards.signal.toLocaleString()} · 강화 매트릭스 ${preview.rewards.cardMatrices.toLocaleString()} · 성장 데이터 ${preview.rewards.memory.toLocaleString()}${preview.capped?' · 48시간 한도 도달':''}</div>`;
-  const claim=$('#idleClaimBtn');if(claim)claim.disabled=!preview.claimable;
+  renderIdlePreview(now);
   const progress=$('#lobbyProgress');if(progress)progress.innerHTML=`<span class="tag">최고 STAGE ${profile.maxStageCleared}</span><span class="tag">누적 클리어 ${profile.totalStagesCleared}</span><span class="tag">기본 에너지 ${3+profile.baseEnergyBonus}</span><span class="tag">배경 ${profile.unlockedLobbyBackgroundIds.length}/${META.LOBBY_BACKGROUNDS.length}</span>`;
   const record=lobbyCharacterRecord(),visual=$('#lobbyCharacterVisual'),name=$('#lobbyCharacterName'),asset=lobbyCharacterAsset(record);
   if(visual){visual.className=asset?'':'lobby-character-missing';visual.innerHTML=asset?`<img class="lobby-character-art" src="${asset.path}" alt="${esc(record.name)} 로비 캐릭터">`:`<b>${esc(record?.name||'캐릭터')} 로비 일러스트 준비 중</b><span>현재 전투 참여는 가능하며, 로비 전용 일러스트는 다음 업데이트에서 제공됩니다.</span>`}
   if(name)name.innerHTML=`<b>${esc(record?.name||'미선택')}</b><small>${esc(record?.coreId||'')} · ${esc(record?.role||'')}</small>`;
-  persistProfile(profile)
+  persistProfile(profile);scheduleIdlePreviewRefresh(now)
 }
 let metaInputFenceUntil=0;
 function takeMetaInputFence(durationMs=650){const now=Date.now();if(now<metaInputFenceUntil)return false;metaInputFenceUntil=now+durationMs;return true}
@@ -883,7 +901,8 @@ function showIdleRewardModal(preview){
   const rewards=preview.rewards||{},items=[
     ['◆','크레딧',rewards.credits],['✦','모집 신호',rewards.signal],['▣','강화 매트릭스',rewards.cardMatrices],['◈','성장 데이터',rewards.memory]
   ];
-  subtitle.textContent=`${idleDurationLabel(preview.effectiveHours)} 동안 누적된 자원을 정산했습니다${preview.capped?' · 48시간 적립 한도 적용':''}.`;
+  const actual=preview.elapsedSinceClaimHours??preview.elapsedHours??preview.effectiveHours,phase=preview.capped?' · 48시간 적립 한도 적용':'';
+  subtitle.textContent=`실제 경과 ${idleDurationLabel(actual)} · 적립 환산 ${idleDurationLabel(preview.effectiveHours)}${phase}. 처음 24시간은 100%, 다음 24시간은 50%로 계산됩니다.`;
   grid.innerHTML=items.map(([icon,label,value])=>`<div class="idle-reward-item"><span class="reward-icon">${icon}</span><b>+${Number(value||0).toLocaleString()}</b><small>${label}</small></div>`).join('');
   modal.classList.add('open');modal.setAttribute('aria-hidden','false');SFX.reward();setTimeout(()=>$('#idleRewardConfirm')?.focus(),80);return true
 }
@@ -995,7 +1014,7 @@ function renderTutorialCombatCoach(){
 }
 
 function rngSeed(){return TRIAD_ARCH.seedFromEntropy()}
-function showScreen(id){if(id!=='combat'){if(typeof cancelCombatPresentation==='function')cancelCombatPresentation();if(typeof cancelAutoBattleStep==='function')cancelAutoBattleStep()}$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo(0,0);AUDIO.playScreen(id,{stage:run?.stage||1,metaTab:metaShopTabId})}
+function showScreen(id){if(id!=='combat'){if(typeof cancelCombatPresentation==='function')cancelCombatPresentation();if(typeof cancelAutoBattleStep==='function')cancelAutoBattleStep()}if(id!=='home')stopIdlePreviewRefresh();$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');if(id==='home')scheduleIdlePreviewRefresh();window.scrollTo(0,0);AUDIO.playScreen(id,{stage:run?.stage||1,metaTab:metaShopTabId})}
 function toggleBgm(){const before=AUDIO.debugState(),enabled=AUDIO.toggle();toast(!enabled?'BGM을 껐습니다':before.enabled?'BGM 재생을 다시 시도합니다':'BGM을 켰습니다');return enabled}
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
 function goHome(){showScreen('home');refreshHome()}
@@ -1523,19 +1542,22 @@ function takeUiInputFence(durationMs=350){
   return true
 }
 const AUTO_BATTLE_PREF_KEY='triad_auto_battle_enabled';
+const AUTO_BATTLE_UNLOCK_STAGE=4;
 let autoBattleEnabled=(()=>{try{return localStorage.getItem(AUTO_BATTLE_PREF_KEY)==='1'}catch(_){return false}})();
 let autoBattleTimer=null;
 let autoBattleGeneration=0;
 function cancelAutoBattleStep(){if(autoBattleTimer){clearTimeout(autoBattleTimer);autoBattleTimer=null}autoBattleGeneration++}
+function autoBattleAvailable(){return Boolean(run?.combat)&&run.combat.type!=='tutorial'&&Number(run.stage)>=AUTO_BATTLE_UNLOCK_STAGE}
 function renderAutoBattleControl(){
   const button=$('#autoBattleToggle');if(!button)return;
-  const tutorial=run?.combat?.type==='tutorial';button.disabled=tutorial;
-  button.setAttribute('aria-pressed',!tutorial&&autoBattleEnabled?'true':'false');
-  const state=button.querySelector('small');if(state)state.textContent=tutorial?'GUIDE':autoBattleEnabled?'ACTIVE':'OFF';
-  button.title=tutorial?'튜토리얼에서는 직접 카드를 사용합니다':autoBattleEnabled?'전략 자동 전투 사용 중 · 눌러서 끄기':'전략 자동 전투 켜기'
+  const tutorial=run?.combat?.type==='tutorial',available=autoBattleAvailable();button.disabled=!available;
+  button.setAttribute('aria-pressed',available&&autoBattleEnabled?'true':'false');
+  const state=button.querySelector('small');if(state)state.textContent=tutorial?'GUIDE':!available?'STAGE 4':autoBattleEnabled?'ACTIVE':'OFF';
+  button.title=tutorial?'튜토리얼에서는 직접 카드를 사용합니다':!available?'STAGE 3 클리어 후, STAGE 4부터 AUTO 전투가 해금됩니다':autoBattleEnabled?'전략 자동 전투 사용 중 · 눌러서 끄기':'전략 자동 전투 켜기'
 }
 function toggleAutoBattle(){
   if(run?.combat?.type==='tutorial')return toast('튜토리얼에서는 직접 카드를 사용해 주세요');
+  if(!autoBattleAvailable())return toast('AUTO 전투는 STAGE 3 클리어 후, STAGE 4부터 사용할 수 있습니다');
   autoBattleEnabled=!autoBattleEnabled;
   try{localStorage.setItem(AUTO_BATTLE_PREF_KEY,autoBattleEnabled?'1':'0')}catch(_){}
   cancelAutoBattleStep();renderAutoBattleControl();toast(autoBattleEnabled?'AUTO 전투를 시작합니다':'AUTO 전투를 중지했습니다');
@@ -1580,13 +1602,13 @@ function chooseAutoBattleCard(){
   return c.hand.map((state,index)=>{const card=ALL_CARDS[state.id];if(!card||!isPlayableOwner(card.owner))return null;const cost=c.firstCard&&hasArtifact('firstZero')?0:card.cost;if(cost>c.energy)return null;return autoCardScore(card,state,index)}).filter(Boolean).sort((a,b)=>b.score-a.score)[0]||null
 }
 function scheduleAutoBattle(delay=720){
-  if(!autoBattleEnabled||run?.combat?.type==='tutorial')return false;
+  if(!autoBattleEnabled||!autoBattleAvailable())return false;
   if(autoBattleTimer)clearTimeout(autoBattleTimer);
   const generation=++autoBattleGeneration;
   autoBattleTimer=setTimeout(()=>{autoBattleTimer=null;if(generation===autoBattleGeneration)autoBattleStep()},Math.max(180,delay));return true
 }
 function autoBattleStep(){
-  const c=run?.combat;if(!autoBattleEnabled||!c||!$('#combat')?.classList.contains('active'))return false;
+  const c=run?.combat;if(!autoBattleEnabled||!autoBattleAvailable()||!c||!$('#combat')?.classList.contains('active'))return false;
   if(c.phase!=='PLAYER'||c.inputLocked){scheduleAutoBattle(260);return false}
   c.autoActionsThisTurn=Math.max(0,Number(c.autoActionsThisTurn)||0);
   const choice=c.autoActionsThisTurn<12?chooseAutoBattleCard():null;
@@ -1664,7 +1686,7 @@ function playCardAuthoritative(idx,expectedCardId,expectedToken){
   settleResolvedCard(c,state,card,exhaust);c.activeCard=null;c.firstCard=false;enforceKoCardInvariant();if(c.type==='tutorial')run.tutorial=TUTORIAL.recordCard(run.tutorial,card);
   const damageDealt=Math.max(0,enemyHpBefore-c.enemy.hp),defeated=c.enemy.hp<=0,hits=hitResults.length||cardHitCount(card,state);
   const damageType=CARD_DATA.damageType(card.pattern.key,card.owner),cardVfxEvent=combatCardVfxEvent(card),cardImpactDelay=combatCardImpactDelay(cardVfxEvent,card.pattern.key),hitOffsets=combatHitOffsets(card.pattern.key,hits),presentationGeneration=beginCombatPresentation();
-  renderCombat();if(hitResults.length)renderEnemyHpPresentation(hitResults[0].hpBefore,c.enemy.maxHp);presentCombatVfxSequence(cardVfxEvent,hitResults.length?hitOffsets:[0],presentationGeneration);SFX.playCard(card,{damage:damageDealt,hits,damageType,impactDelay:cardImpactDelay});
+  renderCombat();if(hitResults.length)renderEnemyHpPresentation(hitResults[0].hpBefore,c.enemy.maxHp);presentCombatVfxSequence(cardVfxEvent,hitResults.length?hitOffsets:[0],presentationGeneration);SFX.playCard(card,{damage:damageDealt,hits,damageType,impactDelay:cardImpactDelay,enemy:c.enemy.data,defeated});
   hitResults.forEach((result,index)=>scheduleCombatPresentation(()=>{renderEnemyHpPresentation(result.hpAfter,c.enemy.maxHp);pulseBattleImpact('enemy');setEnemyVisualState(defeated&&index===hitResults.length-1?'DEFEAT':'HIT')},cardImpactDelay+(hitOffsets[index]||0),presentationGeneration));
   const presentationEnd=Math.max(360,hitResults.length?cardImpactDelay+(hitOffsets[hitResults.length-1]||0)+90:220);
   const finalizeCardPresentation=()=>{if(defeated){winCombat();return}c.inputLocked=false;renderCombat();saveRun();scheduleAutoBattle(760)};registerCombatPresentationFinalizer(presentationGeneration,finalizeCardPresentation);scheduleCombatPresentation(()=>runCombatPresentationFinalizer(presentationGeneration),presentationEnd,presentationGeneration);return true

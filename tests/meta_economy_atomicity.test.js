@@ -78,19 +78,22 @@ test('idle reward boundary contract is exact from negative time through 72 hours
   const start = 10_000;
   const profile = META.defaultProfile(start, roster);
   const cases = [
-    { delta: -H, effective: 0, credits: 0 },
-    { delta: 0, effective: 0, credits: 0 },
-    { delta: 24 * H - 1_000, effective: 24 - 1 / 3_600, credits: 959 },
-    { delta: 24 * H, effective: 24, credits: 960 },
-    { delta: 36 * H, effective: 30, credits: 1_200 },
-    { delta: 48 * H, effective: 36, credits: 1_440 },
-    { delta: 72 * H, effective: 36, credits: 1_440 }
+    { delta: -1, actual: 0, effective: 0, credits: 0, phase: 'CLOCK_ROLLBACK', percent: 0 },
+    { delta: 0, actual: 0, effective: 0, credits: 0, phase: 'FULL', percent: 100 },
+    { delta: 24 * H - 1, actual: 24 - 1 / H, effective: 24 - 1 / H, credits: 959, phase: 'FULL', percent: 100 },
+    { delta: 24 * H, actual: 24, effective: 24, credits: 960, phase: 'REDUCED', percent: 50 },
+    { delta: 48 * H - 1, actual: 48 - 1 / H, effective: 36 - 0.5 / H, credits: 1_439, phase: 'REDUCED', percent: 50 },
+    { delta: 48 * H, actual: 48, effective: 36, credits: 1_440, phase: 'STOPPED', percent: 0 },
+    { delta: 72 * H, actual: 72, effective: 36, credits: 1_440, phase: 'STOPPED', percent: 0 }
   ];
 
   for (const entry of cases) {
     const preview = META.previewIdle(profile, start + entry.delta);
+    assert.ok(Math.abs(preview.elapsedSinceClaimHours - entry.actual) < 1e-9);
     assert.ok(Math.abs(preview.effectiveHours - entry.effective) < 1e-9);
     assert.equal(preview.rewards.credits, entry.credits);
+    assert.equal(preview.accrualPhase, entry.phase);
+    assert.equal(preview.currentRatePercent, entry.percent);
   }
 });
 
@@ -106,6 +109,9 @@ test('idle claim is exactly-once across click, reload, and retry injection', () 
   const retryFromOldStorage = META.claimIdle(reload(original), now, roster, transactionId);
   assert.equal(retryFromOldStorage.claimed, true);
   assert.equal(retryFromOldStorage.profile.wallet.credits, 1_200);
+  assert.equal(retryFromOldStorage.preview.elapsedSinceClaimHours, 36);
+  assert.equal(retryFromOldStorage.preview.accrualPhase, 'REDUCED');
+  assert.equal(retryFromOldStorage.preview.currentRatePercent, 50);
 
   const persisted = reload(retryFromOldStorage.profile);
   const duplicateAfterWrite = META.claimIdle(persisted, now, roster, transactionId);
@@ -113,6 +119,11 @@ test('idle claim is exactly-once across click, reload, and retry injection', () 
   assert.equal(duplicateAfterWrite.reason, 'DUPLICATE');
   assert.equal(duplicateAfterWrite.profile.wallet.credits, 1_200);
   assert.equal(duplicateAfterWrite.profile.idle.lastClaimAt, now);
+  const immediatelyAfter = META.previewIdle(duplicateAfterWrite.profile, now);
+  assert.equal(immediatelyAfter.elapsedSinceClaimHours, 0);
+  assert.equal(immediatelyAfter.accrualPhase, 'FULL');
+  assert.equal(immediatelyAfter.currentRatePercent, 100);
+  assert.equal(immediatelyAfter.claimable, false);
 });
 
 test('daily offers are stable for ten reloads and rotate once at Korea midnight', () => {

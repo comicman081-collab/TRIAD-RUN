@@ -1,0 +1,76 @@
+{
+  "sourceType": "PUBLIC_CC0_DERIVATIVE",
+  "licenseName": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "attributionRequired": false,
+  "commercialUseAllowed": true,
+  "redistributionAllowed": true,
+  "externalSources": [
+    {
+      "id": "A",
+      "sourcePack": "Medieval sound effects — Weapon impacts (part 1 of 2)",
+      "sourceAuthor": "Ben Jaszczak and Brian Nelson",
+      "sourcePageUrl": "https://opengameart.org/content/medieval-sound-effects-weapon-impacts",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/medieval_sfx_weapon_on_weapon_1_of_2.7z",
+      "sourceArchiveSha256": "27a854442ecfc51102dc023bb3ff462fe1bc6b895b39b2f63a54cccf1e8e6ea9",
+      "sourceFile": "Axe Sabre Blade on Hilt.wav",
+      "sourceFileSha256": "742272d3a95bbfb6fa85365e1d081300b370075d3d5e7e32446c5e6cb52ec8ac",
+      "sourceSampleRate": 192000,
+      "sourceChannels": 1,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 1.05,
+      "requestedDurationSeconds": 0.9,
+      "modifications": [
+        "trim 1.05s–1.95s",
+        "band-limited resample 192000 Hz to 48000 Hz",
+        "peak normalize to -1.6 dBFS",
+        "120 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "B",
+      "sourcePack": "Medieval sound effects — Weapon impacts (part 1 of 2)",
+      "sourceAuthor": "Ben Jaszczak and Brian Nelson",
+      "sourcePageUrl": "https://opengameart.org/content/medieval-sound-effects-weapon-impacts",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/medieval_sfx_weapon_on_weapon_1_of_2.7z",
+      "sourceArchiveSha256": "27a854442ecfc51102dc023bb3ff462fe1bc6b895b39b2f63a54cccf1e8e6ea9",
+      "sourceFile": "Axe Sabre Haft on Blade.wav",
+      "sourceFileSha256": "507f35a48a6aa81dc8341de26d40cfb458e088e6c8f56d759e261c43b33ac859",
+      "sourceSampleRate": 192000,
+      "sourceChannels": 1,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 0.64,
+      "requestedDurationSeconds": 0.9,
+      "modifications": [
+        "trim 0.64s–1.54s",
+        "band-limited resample 192000 Hz to 48000 Hz",
+        "peak normalize to -1.6 dBFS",
+        "120 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    },
+    {
+      "id": "C",
+      "sourcePack": "Medieval sound effects — Weapon impacts (part 1 of 2)",
+      "sourceAuthor": "Ben Jaszczak and Brian Nelson",
+      "sourcePageUrl": "https://opengameart.org/content/medieval-sound-effects-weapon-impacts",
+      "sourceDownloadUrl": "https://opengameart.org/sites/default/files/medieval_sfx_weapon_on_weapon_1_of_2.7z",
+      "sourceArchiveSha256": "27a854442ecfc51102dc023bb3ff462fe1bc6b895b39b2f63a54cccf1e8e6ea9",
+      "sourceFile": "Mace Spear Haft.wav",
+      "sourceFileSha256": "61104a0c4c06667ba47a0efaae9657f57455b7138420fdb5ac02afaca203cb9f",
+      "sourceSampleRate": 192000,
+      "sourceChannels": 1,
+      "sourceBitDepth": 24,
+      "sourceStartSeconds": 2.97,
+      "requestedDurationSeconds": 0.9,
+      "modifications": [
+        "trim 2.97s–3.87s",
+        "band-limited resample 192000 Hz to 48000 Hz",
+        "peak normalize to -1.6 dBFS",
+        "120 ms fade-out",
+        "encode 24-bit PCM"
+      ]
+    }
+  ]
+}

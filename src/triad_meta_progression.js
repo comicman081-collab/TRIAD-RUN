@@ -124,10 +124,33 @@
   }
 
   function effectiveIdleHours(lastClaimAt, now = Date.now()) {
-    const elapsedHours = Math.max(0, Math.min(IDLE_MAX_HOURS, (Number(now) - Number(lastClaimAt)) / HOUR_MS));
+    const rawDeltaMs = Number(now) - Number(lastClaimAt);
+    const clockRollback = rawDeltaMs < 0;
+    const elapsedSinceClaimHours = Math.max(0, rawDeltaMs / HOUR_MS);
+    const elapsedHours = Math.min(IDLE_MAX_HOURS, elapsedSinceClaimHours);
     const full = Math.min(IDLE_FULL_RATE_HOURS, elapsedHours);
     const reduced = Math.min(IDLE_REDUCED_RATE_HOURS, Math.max(0, elapsedHours - IDLE_FULL_RATE_HOURS));
-    return { elapsedHours, fullRateHours: full, reducedRateHours: reduced, effectiveHours: full + reduced * 0.5, capped: elapsedHours >= IDLE_MAX_HOURS };
+    const capped = elapsedSinceClaimHours >= IDLE_MAX_HOURS;
+    const accrualPhase = clockRollback
+      ? 'CLOCK_ROLLBACK'
+      : capped
+        ? 'STOPPED'
+        : elapsedSinceClaimHours >= IDLE_FULL_RATE_HOURS
+          ? 'REDUCED'
+          : 'FULL';
+    const accrualRate = accrualPhase === 'FULL' ? 1 : accrualPhase === 'REDUCED' ? 0.5 : 0;
+    return {
+      elapsedSinceClaimHours,
+      elapsedHours,
+      fullRateHours: full,
+      reducedRateHours: reduced,
+      effectiveHours: full + reduced * 0.5,
+      accrualRate,
+      currentRatePercent: accrualRate * 100,
+      accrualPhase,
+      clockRollback,
+      capped
+    };
   }
 
   function previewIdle(profile, now = Date.now()) {

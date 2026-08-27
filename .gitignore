@@ -1,5 +1,6 @@
 # Local runtime state
 .triad_runtime_profile/
+.triad_runtime_state.json
 .tmp/
 
 # Historical imports, backups, audits, and production source archives

@@ -4,6 +4,7 @@ $triadGameRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $triadPort = 8766
 $triadEntry = 'TRIAD_RUN_V0_8_MANEQUIN_ASSEMBLY.html'
 $triadProfile = Join-Path $triadGameRoot '.triad_runtime_profile'
+$triadStatePath = Join-Path $triadGameRoot '.triad_runtime_state.json'
 $triadServer = $null
 
 function Find-TriadBrowser {
@@ -43,10 +44,26 @@ try {
     "--user-data-dir=$triadProfile",
     '--autoplay-policy=no-user-gesture-required',
     '--disable-background-media-suspend',
+    '--disable-background-mode',
     '--no-first-run',
     '--disable-default-apps'
   ) -PassThru
-  Wait-Process -Id $triadBrowserProcess.Id
+  @{
+    serverPid = $triadServer.Id
+    browserPid = $triadBrowserProcess.Id
+    port = $triadPort
+    profile = $triadProfile
+  } | ConvertTo-Json | Set-Content -LiteralPath $triadStatePath -Encoding UTF8
+
+  while ($true) {
+    $triadProfileEscaped = [regex]::Escape($triadProfile)
+    $triadBrowserAlive = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+      $_.Name -match '^(msedge|chrome)\.exe$' -and $_.CommandLine -match $triadProfileEscaped
+    } | Select-Object -First 1
+    if (-not $triadBrowserAlive) { break }
+    Start-Sleep -Milliseconds 500
+  }
 } finally {
   if ($triadServer -and -not $triadServer.HasExited) { Stop-Process -Id $triadServer.Id -Force }
+  Remove-Item -LiteralPath $triadStatePath -Force -ErrorAction SilentlyContinue
 }

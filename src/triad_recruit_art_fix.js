@@ -46,9 +46,9 @@
   }
 
   function validateRecruitableRoster() {
-    const roster = global.TRIAD_CHARACTER_ROSTER && global.TRIAD_CHARACTER_ROSTER.characters;
+    const roster = global.TRIAD_CHARACTER_ROSTER && global.TRIAD_CHARACTER_ROSTER.records;
     if (!Array.isArray(roster)) return { checked: 0, valid: 0, invalid: [] };
-    const recruits = roster.filter(record => record && record.source === 'GACHA');
+    const recruits = roster.filter(record => record && record.acquisition === 'GACHA' && record.gachaEligible === true);
     const invalid = recruits.filter(record => !validatedLobbyAsset(record)).map(record => record.id || record.name || 'UNKNOWN');
     return { checked: recruits.length, valid: recruits.length - invalid.length, invalid };
   }

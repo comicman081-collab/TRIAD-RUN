@@ -1357,11 +1357,16 @@ function tutorialEnemyForBattle(){
   const data={...source,name:'훈련용 강철 정찰체',maxHp:72,skills:(source.skills||[]).map((skill,index)=>({...skill,medianDamage:index?26:24,hits:1,target:'single'}))};
   return{data,id:data.id,name:data.name,elementId:data.elementId,maxHp:data.maxHp,hp:data.maxHp,baseDmg:data.skills[0].medianDamage,burn:0,shock:0,mark:0,boss:false,elite:false,icon:'🎯',skills:data.skills}
 }
+function tutorialTrainingCardStates(){
+  return TUTORIAL.trainingCardPlan(partyCoreIds()).map(step=>{
+    const card=makeCards(step.owner).find(candidate=>candidate.pattern.key===step.key);
+    return card?{id:card.id,level:accountCardLevel(card.id),tutorial:true}:null
+  }).filter(Boolean)
+}
 function tutorialDrawPile(){
-  const ids=TUTORIAL.trainingCardIds(partyCoreIds()),initialIds=ids.slice(0,4),nextTurnIds=ids.slice(4),reserved=new Set(ids);
+  const scripted=tutorialTrainingCardStates(),initialCards=scripted.slice(0,4),nextTurnCards=scripted.slice(4),reserved=new Set(scripted.map(state=>state.id));
   const remainder=run.deck.filter(state=>!reserved.has(state.id)).map(state=>({...state}));
-  const stateFor=id=>({id,level:accountCardLevel(id),tutorial:true});
-  return[...remainder,...nextTurnIds.map(stateFor),...initialIds.map(stateFor).reverse()]
+  return[...remainder,...nextTurnCards,...initialCards.reverse()]
 }
 function startCombat(type){
   cancelCombatPresentation();
@@ -1652,7 +1657,26 @@ function newTurnAuthoritative(initial=false){
   applyEnemyDots();if(c.enemy.hp<=0){setEnemyVisualState('DEFEAT');winCombat();return false}
   drawCards(4+(initial&&hasArtifact('drawPlus')?1:0));c.intent=COMBAT_DATA.buildIntent(c.enemy.data,c.turn);enforceKoCardInvariant();
   run.battleSpriteState=run.battleSpriteState||{};if(!initial)run.party.forEach(member=>{run.battleSpriteState[member.id]=member.hp>0?'idle':'ko'});
-  c.phase='PLAYER';c.inputLocked=false;return true
+  c.phase='PLAYER';ensureTutorialRequiredCard(c);c.inputLocked=false;return true
+}
+function ensureTutorialRequiredCard(c=run?.combat){
+  if(!c||c.type!=='tutorial'||c.phase!=='PLAYER')return false;
+  const requirement=TUTORIAL.requirement(run?.tutorial);
+  if(!['ATTACK','SHIELD','HEAL'].includes(requirement))return false;
+  const usable=state=>{
+    const card=ALL_CARDS[state?.id];
+    return Boolean(card&&isPlayableOwner(card.owner)&&TUTORIAL.checkCard(run.tutorial,card).allowed);
+  };
+  if(c.hand.some(usable))return false;
+  const desired=TUTORIAL.trainingCardPlan(partyCoreIds()).find(step=>TUTORIAL.cardCategory({pattern:{key:step.key}})===requirement);
+  const card=desired&&makeCards(desired.owner).find(candidate=>candidate.pattern.key===desired.key);
+  if(!card)return false;
+  for(const pileName of ['draw','discard','exhaust']){
+    const pile=Array.isArray(c[pileName])?c[pileName]:[];
+    c[pileName]=pile.filter(state=>state.id!==card.id);
+  }
+  c.hand.unshift({id:card.id,level:accountCardLevel(card.id),tutorial:true});
+  return true
 }
 function playCardAuthoritative(idx,expectedCardId,expectedToken){
   const c=run?.combat;if(!c||c.phase!=='PLAYER'||c.inputLocked||c.enemy.hp<=0)return false;
@@ -2011,6 +2035,7 @@ function syncEnemyBattleActor(enemy){
 }
 function renderCombat(){
   if(!run.combat)return;
+  ensureTutorialRequiredCard(run.combat);
   primeVisualUrls(run.party.map(p=>p.visual).filter(Boolean));
   const c=run.combat,e=c.enemy,tutorial=c.type==='tutorial';
   const qaEnemyVisualId=new URLSearchParams(location.search).get('qaEnemyVisual');

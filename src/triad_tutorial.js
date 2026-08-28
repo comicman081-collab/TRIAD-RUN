@@ -98,11 +98,26 @@
     return { ...state, lessonIndex: Math.min(LESSONS.length, state.lessonIndex + 1) };
   }
 
-  function trainingCardIds(coreIds) {
+  // Keep the guided deck tied to semantic card effects.  Numeric card suffixes
+  // are retained below for legacy callers only; the runtime resolves this plan
+  // against the active card catalogue so a reordered card list cannot strand
+  // the HEAL lesson with no playable recovery card.
+  function trainingCardPlan(coreIds) {
     const cores = (Array.isArray(coreIds) ? coreIds : []).map(String).filter(Boolean);
     if (!cores.length) return [];
     const owner = index => cores[index] || cores[0];
-    return [`${owner(0)}_01`, `${owner(1)}_02`, `${owner(0)}_03`, `${owner(1)}_04`, `${owner(2)}_10`];
+    return [
+      { owner: owner(0), key: 'strike' },
+      { owner: owner(1), key: 'guard' },
+      { owner: owner(0), key: 'quick' },
+      { owner: owner(1), key: 'heavy' },
+      { owner: owner(2), key: 'heal' },
+    ];
+  }
+
+  function trainingCardIds(coreIds) {
+    const legacySlots = { strike: '01', guard: '02', quick: '03', heavy: '04', heal: '10' };
+    return trainingCardPlan(coreIds).map(step => `${step.owner}_${legacySlots[step.key]}`);
   }
 
   const api = Object.freeze({
@@ -118,6 +133,7 @@
     recordCard,
     checkEndTurn,
     recordEndTurn,
+    trainingCardPlan,
     trainingCardIds,
   });
 

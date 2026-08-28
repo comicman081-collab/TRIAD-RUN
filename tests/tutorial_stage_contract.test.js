@@ -120,6 +120,14 @@ test('attack, shield, end-turn, and heal are hard-gated in that order', () => {
 });
 
 test('tutorial loadout always supplies real attack, party-shield, and heal cards', () => {
+  const plan = TUTORIAL.trainingCardPlan(['EMBER', 'AEGIS', 'BLOOM']);
+  assert.deepEqual(plan, [
+    { owner: 'EMBER', key: 'strike' },
+    { owner: 'AEGIS', key: 'guard' },
+    { owner: 'EMBER', key: 'quick' },
+    { owner: 'AEGIS', key: 'heavy' },
+    { owner: 'BLOOM', key: 'heal' },
+  ]);
   const ids = TUTORIAL.trainingCardIds(['EMBER', 'AEGIS', 'BLOOM']);
   assert.deepEqual(ids, ['EMBER_01', 'AEGIS_02', 'EMBER_03', 'AEGIS_04', 'BLOOM_10']);
   assert.equal(TUTORIAL.cardCategory(card('strike')), 'ATTACK');
@@ -127,9 +135,14 @@ test('tutorial loadout always supplies real attack, party-shield, and heal cards
   assert.equal(TUTORIAL.cardCategory(card('heal')), 'HEAL');
 
   const draw = section('tutorialDrawPile', 'startCombat');
-  assert.match(draw, /TUTORIAL\.trainingCardIds\(partyCoreIds\(\)\)/);
-  assert.match(draw, /initialIds\.map\(stateFor\)\.reverse\(\)/, 'pop-based draw pile must yield attack then shield');
+  assert.match(draw, /tutorialTrainingCardStates\(\)/);
+  assert.match(draw, /initialCards\.reverse\(\)/, 'pop-based draw pile must yield attack then shield');
   assert.doesNotMatch(draw, /shuffle\(|TRIAD_ARCH\.random/, 'tutorial deck construction must not consume the run RNG');
+
+  const ensure = section('ensureTutorialRequiredCard', 'playCardAuthoritative');
+  assert.match(ensure, /TUTORIAL\.trainingCardPlan\(partyCoreIds\(\)\)/);
+  assert.match(ensure, /c\.hand\.unshift\(\{id:card\.id/);
+  assert.match(ensure, /for\(const pileName of \['draw','discard','exhaust'\]\)/);
 
   const enemy = section('tutorialEnemyForBattle', 'tutorialDrawPile');
   assert.doesNotMatch(enemy, /shuffle\(|choice\(|TRIAD_ARCH\.random/, 'tutorial enemy selection must be deterministic');

@@ -10,6 +10,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'TRIAD_RUN_V0_8_MANEQUIN_ASSEMBLY.html'), 'utf8');
 const source = fs.readFileSync(path.join(root, 'combat_vfx_data.js'), 'utf8');
+const v2Source = fs.readFileSync(path.join(root, 'combat_vfx_pipeline_v2.js'), 'utf8');
 const window = {
   TRIAD_COMBAT_VISUAL_DATA: {
     resolveCard(key, owner) {
@@ -23,6 +24,7 @@ const window = {
   TRIAD_COMBAT_DATA: { ARCHETYPES: [{ key: 'SCOUT' }] },
 };
 vm.runInNewContext(source, { window }, { filename: 'combat_vfx_data.js' });
+vm.runInNewContext(v2Source, { window }, { filename: 'combat_vfx_pipeline_v2.js' });
 const vfx = window.TRIAD_COMBAT_VFX;
 
 test('heal and shield presentation covers the full allied formation', () => {
@@ -50,8 +52,8 @@ test('thrown player and enemy skills travel actor-to-actor and finish on the bod
   assert.equal(enemy.impactAsset, vfx.ASSETS.IMPACT);
   assert.match(html, /data-core-id="\$\{esc\(p\.id\|\|core\?\.id\|\|'\'\)\}"/);
   assert.match(html, /node\.dataset\.coreId===owner\|\|node\.dataset\.characterId===owner/);
-  assert.match(html, /asset\.motion==='TRAVEL'&&event\.impactAsset/);
-  assert.match(html, /appendCombatVfxParticle\(\{\.\.\.event,scope:'SINGLE'/);
+  assert.match(html, /triggerCombatVfxImpact\(event,event\.impactAsset\|\|asset,target,stage\)/);
+  assert.match(html, /appendCombatVfxParticle\(impactEvent,asset,target,target,null,'IMPACT'\)/);
 });
 
 test('travel impact VFX, cinematic SFX, and battle shake share one collision delay', () => {
@@ -62,4 +64,30 @@ test('travel impact VFX, cinematic SFX, and battle shake share one collision del
   assert.match(html, /renderEnemyHpPresentation\(result\.hpAfter,c\.enemy\.maxHp\);pulseBattleImpact\('enemy'\).*?cardImpactDelay\+\(hitOffsets\[index\]\|\|0\)/s);
   assert.match(html, /combatEnemyVfxEvent\(c\.enemy,result\.targetId\).*?presentPartyImpact\(result\);pulseBattleImpact\('player'\).*?enemyImpactDelay\+offset/s);
   assert.match(html, /const presentationEnd=Math\.max\(360,hitResults\.length\?cardImpactDelay\+\(hitOffsets\[hitResults\.length-1\]\|\|0\)\+90:220\)/);
+});
+
+test('every offensive skill gets a directional projectile, collision blast, and fragments', () => {
+  for (const card of [
+    { pattern: { key: 'quick' }, owner: 'EMBER' },
+    { pattern: { key: 'dot' }, owner: 'AEGIS' },
+    { pattern: { key: 'volley' }, owner: 'BLOOM' },
+  ]) {
+    const event = vfx.card(card);
+    assert.equal(event.asset.motion, 'TRAVEL');
+    assert.equal(event.impactAsset, vfx.ASSETS.IMPACT);
+  }
+  const heavy = vfx.card({ pattern: { key: 'heavy' }, owner: 'AEGIS' });
+  assert.equal(heavy.pipeline, 'HEAVY_IMPACT');
+  assert.equal(heavy.asset, vfx.ASSETS.IMPACT);
+  const enemy = vfx.enemy({ data: { catalogNo: 1, rank: 'normal', elementId: 'EMBER' } });
+  assert.equal(enemy.asset.motion, 'TRAVEL');
+  assert.equal(enemy.impactAsset, vfx.ASSETS.IMPACT);
+  assert.match(html, /function appendCombatVfxImpactBurst\(event,target\)/);
+  assert.match(html, /battle-vfx-fragment/);
+  assert.match(html, /--vfx-rotation/);
+  assert.match(html, /source\.x>target\.x\?180:0/);
+  assert.match(html, /\.battle-vfx\[data-motion="TRAVEL"\]\{width:clamp\(230px,31vw,520px\)/);
+  assert.match(html, /appendCombatVfxCharge\(event,source,150,7\);appendCombatVfxWake\(event,source,target,primary\.duration\)/);
+  assert.doesNotMatch(html, /function spawnSdProjectile\(/);
+  assert.equal(vfx.VERSION, '2.0.0-authored-cinematic-pipelines');
 });

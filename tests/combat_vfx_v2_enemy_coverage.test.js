@@ -30,11 +30,12 @@ function enemy(archetype, rank = 'normal') {
 }
 
 test('normal monster projectile archetypes use their own directional projectile profiles', () => {
+  const expectedImpactAsset = { SCOUT: 'SHOCK', CASTER: 'MARK', HUNTER: 'IMPACT' };
   for (const archetype of ['SCOUT', 'CASTER', 'HUNTER']) {
     const event = enemy(archetype);
     assert.equal(event.pipeline, 'PROJECTILE', archetype);
     assert.equal(event.asset, vfx.ASSETS.PROJECTILE, archetype);
-    assert.equal(event.impactAsset, vfx.ASSETS.IMPACT, archetype);
+    assert.equal(event.impactAsset, vfx.ASSETS[expectedImpactAsset[archetype]], archetype);
     assert.equal(event.contactMs < event.duration, true, archetype);
   }
   assert.notEqual(enemy('SCOUT').particleProfile, enemy('CASTER').particleProfile);
@@ -42,10 +43,12 @@ test('normal monster projectile archetypes use their own directional projectile 
 });
 
 test('normal and elite melee monsters use high-impact source art rather than a fake projectile', () => {
+  const expectedProfiles = { HOUND: 'maul-sweep', WARDEN: 'guard-break', BRUTE: 'crater', WEAVER: 'thread-collapse', RAVAGER: 'ember-plume', SENTINEL: 'ion-burst' };
   for (const archetype of ['HOUND', 'WARDEN', 'BRUTE', 'WEAVER', 'RAVAGER', 'SENTINEL']) {
     const event = enemy(archetype);
     assert.equal(event.pipeline, 'HEAVY_IMPACT', archetype);
-    assert.equal(event.impactAsset, vfx.ASSETS.IMPACT, archetype);
+    assert.equal(event.impactAsset, event.asset, archetype);
+    assert.equal(event.impactProfile, expectedProfiles[archetype], archetype);
     assert.notEqual(event.asset.motion, 'TRAVEL', archetype);
   }
   for (const archetype of ['REAPER', 'COLOSSUS']) {
@@ -75,7 +78,9 @@ test('monster and boss VFX have bounded debris with deterministic cleanup and ac
   assert.match(html, /const BATTLE_VFX_FRAGMENT_CAP=160;/);
   assert.match(html, /battleVfxFragmentsLive\+=count/);
   assert.match(html, /battleVfxFragmentsLive=Math\.max\(0,battleVfxFragmentsLive-count\)/);
-  assert.match(html, /requested=boss\|\|signature\?76:event\?\.pipeline==='PROJECTILE'\?46:event\?\.kind==='ENEMY'\?36:40/);
+  assert.match(html, /const COMBAT_VFX_RUPTURE_PROFILES=Object\.freeze/);
+  assert.match(html, /function combatVfxFragmentVector\(profile,event,index,count,seed\)/);
+  assert.match(html, /fragment\.dataset\.vector=profile\.vector/);
   assert.match(html, /source\.x>target\.x\?180:0/);
   assert.match(html, /appendCombatVfxCharge\(event,source,150,7\)/);
   assert.match(html, /appendCombatVfxImpactBurst\(event,target\)/);

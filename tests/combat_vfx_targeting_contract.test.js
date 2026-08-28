@@ -47,9 +47,10 @@ test('thrown player and enemy skills travel actor-to-actor and finish on the bod
   const card = vfx.card({ pattern: { key: 'quick' }, owner: 'VOLT' });
   const enemy = vfx.enemy({ data: { catalogNo: 1, rank: 'normal', elementId: 'RIFT' } });
   assert.equal(card.asset.motion, 'TRAVEL');
-  assert.equal(card.impactAsset, vfx.ASSETS.IMPACT);
+  assert.equal(card.impactAsset, vfx.ASSETS.SHOCK);
+  assert.equal(card.impactProfile, 'ion-burst');
   assert.equal(enemy.asset.motion, 'TRAVEL');
-  assert.equal(enemy.impactAsset, vfx.ASSETS.IMPACT);
+  assert.equal(enemy.impactAsset, vfx.ASSETS.SHOCK);
   assert.match(html, /data-core-id="\$\{esc\(p\.id\|\|core\?\.id\|\|'\'\)\}"/);
   assert.match(html, /node\.dataset\.coreId===owner\|\|node\.dataset\.characterId===owner/);
   assert.match(html, /triggerCombatVfxImpact\(event,event\.impactAsset\|\|asset,target,stage\)/);
@@ -66,7 +67,8 @@ test('travel impact VFX, cinematic SFX, and battle shake share one collision del
   assert.match(html, /const presentationEnd=Math\.max\(360,hitResults\.length\?cardImpactDelay\+\(hitOffsets\[hitResults\.length-1\]\|\|0\)\+90:220\)/);
 });
 
-test('every offensive skill gets a directional projectile, collision blast, and fragments', () => {
+test('every offensive skill gets a directional projectile, a non-generic collision source, and fragments', () => {
+  const expectedImpactAsset = { quick: 'SHOCK', dot: 'BURN', volley: 'SHOCK' };
   for (const card of [
     { pattern: { key: 'quick' }, owner: 'EMBER' },
     { pattern: { key: 'dot' }, owner: 'AEGIS' },
@@ -74,14 +76,15 @@ test('every offensive skill gets a directional projectile, collision blast, and 
   ]) {
     const event = vfx.card(card);
     assert.equal(event.asset.motion, 'TRAVEL');
-    assert.equal(event.impactAsset, vfx.ASSETS.IMPACT);
+    assert.equal(event.impactAsset, vfx.ASSETS[expectedImpactAsset[card.pattern.key]]);
+    assert.notEqual(event.impactProfile, 'arc-cleave');
   }
   const heavy = vfx.card({ pattern: { key: 'heavy' }, owner: 'AEGIS' });
   assert.equal(heavy.pipeline, 'HEAVY_IMPACT');
   assert.equal(heavy.asset, vfx.ASSETS.IMPACT);
   const enemy = vfx.enemy({ data: { catalogNo: 1, rank: 'normal', elementId: 'EMBER' } });
   assert.equal(enemy.asset.motion, 'TRAVEL');
-  assert.equal(enemy.impactAsset, vfx.ASSETS.IMPACT);
+  assert.equal(enemy.impactAsset, vfx.ASSETS.SHOCK);
   assert.match(html, /function appendCombatVfxImpactBurst\(event,target\)/);
   assert.match(html, /battle-vfx-fragment/);
   assert.match(html, /--vfx-rotation/);
@@ -89,5 +92,5 @@ test('every offensive skill gets a directional projectile, collision blast, and 
   assert.match(html, /\.battle-vfx\[data-motion="TRAVEL"\]\{width:clamp\(230px,31vw,520px\)/);
   assert.match(html, /appendCombatVfxCharge\(event,source,150,7\);appendCombatVfxWake\(event,source,target,primary\.duration\)/);
   assert.doesNotMatch(html, /function spawnSdProjectile\(/);
-  assert.equal(vfx.VERSION, '2.0.0-authored-cinematic-pipelines');
+  assert.equal(vfx.VERSION, '2.1.0-diverse-authored-ruptures');
 });

@@ -63,13 +63,14 @@
   function checkCard(input, card) {
     const required = requirement(input);
     const actual = cardCategory(card);
-    if (!required || required === actual) return { allowed: true, required, actual, message: '' };
+    if (!required || required === actual) return { allowed: true, recommended: true, required, actual, message: '' };
     const labels = { ATTACK: '공격', SHIELD: '보호막', END_TURN: '턴 종료', HEAL: '회복' };
     return {
-      allowed: false,
+      allowed: true,
+      recommended: false,
       required,
       actual,
-      message: `튜토리얼: 먼저 ${labels[required]} 카드를 선택하세요.`,
+      message: `튜토리얼 안내: ${labels[required]} 카드를 사용해 보면 좋습니다.`,
     };
   }
 
@@ -87,9 +88,9 @@
 
   function checkEndTurn(input) {
     const required = requirement(input);
-    if (!required || required === 'END_TURN') return { allowed: true, required, message: '' };
+    if (!required || required === 'END_TURN') return { allowed: true, recommended: true, required, message: '' };
     const labels = { ATTACK: '공격', SHIELD: '보호막', HEAL: '회복' };
-    return { allowed: false, required, message: `튜토리얼: 먼저 ${labels[required] || '지정된'} 카드를 사용하세요.` };
+    return { allowed: true, recommended: false, required, message: `튜토리얼 안내: ${labels[required] || '추천된'} 카드를 사용해 보면 좋습니다.` };
   }
 
   function recordEndTurn(input) {

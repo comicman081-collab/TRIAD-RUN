@@ -1015,7 +1015,7 @@ function showTutorialStage(){if(!run)return false;const state=normalizeRunTutori
 function startTutorialCombat(){if(!run)return false;const current=normalizeRunTutorial();if(current.completed)return showRoute();run.tutorial={...TUTORIAL.defaultState(),status:'COMBAT',baseline:captureTutorialBaseline()};saveRun();startCombat('tutorial');return true}
 function skipTutorialStage(){if(!run)return false;restoreTutorialBaseline();run.tutorial={...TUTORIAL.normalize(run.tutorial),status:'COMPLETE',completed:true,skipped:true,baseline:null};saveRun();showRoute();return true}
 function completeTutorialStage(){if(!run)return false;restoreTutorialBaseline();run.tutorial={...TUTORIAL.normalize(run.tutorial),status:'COMPLETE',completed:true,baseline:null};saveRun();showRoute();return true}
-function tutorialRequirementCopy(requirement){return({ATTACK:['공격 카드를 선택하세요','공격 카드는 적의 HP를 직접 감소시킵니다.'],SHIELD:['보호막 카드를 선택하세요','보호막은 살아 있는 아군 전체에 적용되고 다음 피격을 먼저 흡수합니다.'],END_TURN:['이제 턴을 종료하세요','남은 손패를 버리고 적 행동을 확인하면 다음 턴 AP가 다시 충전됩니다.'],HEAL:['회복 카드를 선택하세요','방금 피해를 받은 아군 중 HP가 가장 낮은 대상을 회복합니다.']}[requirement]||['자유 전투','배운 내용을 활용해 훈련 표적을 마무리하세요.'])}
+function tutorialRequirementCopy(requirement){return({ATTACK:['공격 카드를 사용해 보세요','공격 카드는 적의 HP를 직접 감소시킵니다. 다른 카드도 언제든 사용할 수 있습니다.'],SHIELD:['보호막 카드를 사용해 보세요','보호막은 살아 있는 아군 전체에 적용되고 다음 피격을 먼저 흡수합니다. 원하면 다른 행동을 먼저 해도 됩니다.'],END_TURN:['원하면 턴을 종료해 보세요','남은 손패를 버리고 적 행동을 확인하면 다음 턴 AP가 다시 충전됩니다.'],HEAL:['회복 카드를 사용해 보세요','방금 피해를 받은 아군 중 HP가 가장 낮은 대상을 회복합니다. 원하는 카드와 턴 종료는 항상 사용할 수 있습니다.']}[requirement]||['자유 전투','배운 내용을 활용해 훈련 표적을 마무리하세요.'])}
 function renderTutorialCombatCoach(){
   const coach=$('#tutorialCombatCoach'),panel=$('.combat-panel-v05'),energy=$('#energyLabel')?.closest('.resource'),active=run?.combat?.type==='tutorial';if(!coach)return;
   panel?.classList.toggle('tutorial-battle',active);energy?.classList.toggle('tutorial-focus-ap',active);
@@ -1657,33 +1657,13 @@ function newTurnAuthoritative(initial=false){
   applyEnemyDots();if(c.enemy.hp<=0){setEnemyVisualState('DEFEAT');winCombat();return false}
   drawCards(4+(initial&&hasArtifact('drawPlus')?1:0));c.intent=COMBAT_DATA.buildIntent(c.enemy.data,c.turn);enforceKoCardInvariant();
   run.battleSpriteState=run.battleSpriteState||{};if(!initial)run.party.forEach(member=>{run.battleSpriteState[member.id]=member.hp>0?'idle':'ko'});
-  c.phase='PLAYER';ensureTutorialRequiredCard(c);c.inputLocked=false;return true
-}
-function ensureTutorialRequiredCard(c=run?.combat){
-  if(!c||c.type!=='tutorial'||c.phase!=='PLAYER')return false;
-  const requirement=TUTORIAL.requirement(run?.tutorial);
-  if(!['ATTACK','SHIELD','HEAL'].includes(requirement))return false;
-  const usable=state=>{
-    const card=ALL_CARDS[state?.id];
-    return Boolean(card&&isPlayableOwner(card.owner)&&TUTORIAL.checkCard(run.tutorial,card).allowed);
-  };
-  if(c.hand.some(usable))return false;
-  const desired=TUTORIAL.trainingCardPlan(partyCoreIds()).find(step=>TUTORIAL.cardCategory({pattern:{key:step.key}})===requirement);
-  const card=desired&&makeCards(desired.owner).find(candidate=>candidate.pattern.key===desired.key);
-  if(!card)return false;
-  for(const pileName of ['draw','discard','exhaust']){
-    const pile=Array.isArray(c[pileName])?c[pileName]:[];
-    c[pileName]=pile.filter(state=>state.id!==card.id);
-  }
-  c.hand.unshift({id:card.id,level:accountCardLevel(card.id),tutorial:true});
-  return true
+  c.phase='PLAYER';c.inputLocked=false;return true
 }
 function playCardAuthoritative(idx,expectedCardId,expectedToken){
   const c=run?.combat;if(!c||c.phase!=='PLAYER'||c.inputLocked||c.enemy.hp<=0)return false;
   const enemyHpBefore=c.enemy.hp;
   const state=c.hand[idx];if(!state||state.id!==expectedCardId||c.actionToken!==expectedToken)return false;
   const card=ALL_CARDS[state.id];if(!card)return false;
-  if(c.type==='tutorial'){const gate=TUTORIAL.checkCard(run.tutorial,card);if(!gate.allowed){toast(gate.message);renderTutorialCombatCoach();return false}}
   const owner=run.party.find(p=>p.id===card.owner);
   if(!owner||owner.hp<=0){c.actionToken++;retireKoOwnerCards(card.owner);renderCombat();saveRun();toast(`${owner?.name||card.owner} is KO`);return false}
   let cost=card.cost;if(c.firstCard&&hasArtifact('firstZero'))cost=0;if(cost>c.energy)return toast('Not enough energy');
@@ -1728,7 +1708,6 @@ function playCardAuthoritative(idx,expectedCardId,expectedToken){
 }
 function endTurnAuthoritative(expectedToken){
   const c=run?.combat;if(!c||c.phase!=='PLAYER'||c.inputLocked||c.actionToken!==expectedToken)return false;
-  if(c.type==='tutorial'){const gate=TUTORIAL.checkEndTurn(run.tutorial);if(!gate.allowed){toast(gate.message);renderTutorialCombatCoach();return false}}
   if(!takeUiInputFence())return false;
   cancelAutoBattleStep();c.inputLocked=true;c.phase='ENEMY';c.actionToken++;
   const enemyActionSkillId=c.intent?.skillId;
@@ -2035,7 +2014,6 @@ function syncEnemyBattleActor(enemy){
 }
 function renderCombat(){
   if(!run.combat)return;
-  ensureTutorialRequiredCard(run.combat);
   primeVisualUrls(run.party.map(p=>p.visual).filter(Boolean));
   const c=run.combat,e=c.enemy,tutorial=c.type==='tutorial';
   const qaEnemyVisualId=new URLSearchParams(location.search).get('qaEnemyVisual');
@@ -2070,13 +2048,13 @@ function renderCombat(){
 
   $('#partyCombat').innerHTML=run.party.map(p=>partyStatusCard(p)).join('');
   const inputOpen=c.phase==='PLAYER'&&!c.inputLocked&&e.hp>0;
-  const endTurnOpen=inputOpen&&(!tutorial||TUTORIAL.checkEndTurn(run.tutorial).allowed);
-  $('#endTurnControl').innerHTML=`<button class="primary ${tutorial&&TUTORIAL.requirement(run.tutorial)==='END_TURN'?'tutorial-focus-ap':''}" ${endTurnOpen?'':'disabled'} onclick="endTurnAuthoritative(${c.actionToken})">턴 종료</button>`;
+  const endTurnOpen=inputOpen,endTurnHint=tutorial?TUTORIAL.checkEndTurn(run.tutorial):{recommended:false};
+  $('#endTurnControl').innerHTML=`<button class="primary ${endTurnHint.recommended&&TUTORIAL.requirement(run.tutorial)==='END_TURN'?'tutorial-focus-ap':''}" ${endTurnOpen?'':'disabled'} onclick="endTurnAuthoritative(${c.actionToken})">턴 종료</button>`;
 
   $('#hand').innerHTML=c.hand.map((state,i)=>{
     const card=ALL_CARDS[state.id];
     let cost=card.cost;if(c.firstCard&&hasArtifact('firstZero'))cost=0;
-    const tutorialGate=tutorial?TUTORIAL.checkCard(run.tutorial,card):{allowed:true},ownerAlive=isPlayableOwner(card.owner),playable=inputOpen&&ownerAlive&&cost<=c.energy&&tutorialGate.allowed,tutorialFocus=tutorial&&tutorialGate.allowed&&Boolean(TUTORIAL.requirement(run.tutorial));
+    const tutorialHint=tutorial?TUTORIAL.checkCard(run.tutorial,card):{recommended:false},ownerAlive=isPlayableOwner(card.owner),playable=inputOpen&&ownerAlive&&cost<=c.energy,tutorialFocus=tutorial&&tutorialHint.recommended&&Boolean(TUTORIAL.requirement(run.tutorial));
     const footer=`<div class="small muted" style="margin-top:6px">${ownerAlive?`Lv.${state.level}`:'전투불능 · 카드 비활성'}</div>`;
     return `<div class="hand-card ${playable?'playable':'unplayable'} ${ownerAlive?'':'owner-ko'} ${tutorialFocus?'tutorial-focus-ap':''}" data-card-owner="${esc(card.owner)}"${playable?` onclick="playCardAuthoritative(${i},'${esc(state.id)}',${c.actionToken})"`:''} aria-disabled="${playable?'false':'true'}">${cardHtml(card,state.level,footer)}</div>`
   }).join('');

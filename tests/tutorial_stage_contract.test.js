@@ -73,34 +73,42 @@ test('every newly-created run enters the pre-stage tutorial before route generat
   assert.match(html, /스테이지 클리어와 방치 보상으로 모집·돌파 재화/);
 });
 
-test('attack, shield, end-turn, and heal are hard-gated in that order', () => {
+test('attack, shield, end-turn, and heal are suggested in order without blocking player input', () => {
   let state = { ...TUTORIAL.defaultState(), status: 'COMBAT' };
 
   assert.equal(TUTORIAL.requirement(state), 'ATTACK');
-  assert.equal(TUTORIAL.checkCard(state, card('guard')).allowed, false);
-  assert.equal(TUTORIAL.checkEndTurn(state).allowed, false);
+  assert.equal(TUTORIAL.checkCard(state, card('guard')).allowed, true);
+  assert.equal(TUTORIAL.checkCard(state, card('guard')).recommended, false);
+  assert.equal(TUTORIAL.checkEndTurn(state).allowed, true);
+  assert.equal(TUTORIAL.checkEndTurn(state).recommended, false);
   assert.equal(TUTORIAL.checkCard(state, card('strike')).allowed, true);
+  assert.equal(TUTORIAL.checkCard(state, card('strike')).recommended, true);
   state = TUTORIAL.recordCard(state, card('strike'));
   assert.equal(state.lessonIndex, 1);
   assert.equal(state.lessons.attack, true);
 
   assert.equal(TUTORIAL.requirement(state), 'SHIELD');
-  assert.equal(TUTORIAL.checkCard(state, card('heavy')).allowed, false);
+  assert.equal(TUTORIAL.checkCard(state, card('heavy')).allowed, true);
+  assert.equal(TUTORIAL.checkCard(state, card('heavy')).recommended, false);
   assert.equal(TUTORIAL.checkCard(state, card('guard')).allowed, true);
   state = TUTORIAL.recordCard(state, card('guard'));
   assert.equal(state.lessonIndex, 2);
   assert.equal(state.lessons.shield, true);
 
   assert.equal(TUTORIAL.requirement(state), 'END_TURN');
-  assert.equal(TUTORIAL.checkCard(state, card('heal')).allowed, false);
+  assert.equal(TUTORIAL.checkCard(state, card('heal')).allowed, true);
   assert.equal(TUTORIAL.checkEndTurn(state).allowed, true);
+  assert.equal(TUTORIAL.checkEndTurn(state).recommended, true);
   state = TUTORIAL.recordEndTurn(state);
   assert.equal(state.lessonIndex, 3);
 
   assert.equal(TUTORIAL.requirement(state), 'HEAL');
-  assert.equal(TUTORIAL.checkCard(state, card('strike')).allowed, false);
-  assert.equal(TUTORIAL.checkEndTurn(state).allowed, false);
+  assert.equal(TUTORIAL.checkCard(state, card('strike')).allowed, true);
+  assert.equal(TUTORIAL.checkCard(state, card('strike')).recommended, false);
+  assert.equal(TUTORIAL.checkEndTurn(state).allowed, true);
+  assert.equal(TUTORIAL.checkEndTurn(state).recommended, false);
   assert.equal(TUTORIAL.checkCard(state, card('heal')).allowed, true);
+  assert.equal(TUTORIAL.checkCard(state, card('heal')).recommended, true);
   state = TUTORIAL.recordCard(state, card('heal'));
   assert.equal(state.lessonIndex, 4);
   assert.equal(state.lessons.heal, true);
@@ -111,12 +119,13 @@ test('attack, shield, end-turn, and heal are hard-gated in that order', () => {
   const play = section('playCardAuthoritative', 'endTurnAuthoritative');
   const endTurn = section('endTurnAuthoritative', 'svgDataUri');
   const render = section('renderCombat', 'renderMap');
-  assert.ok(play.indexOf('TUTORIAL.checkCard') < play.indexOf('c.inputLocked=true'), 'card gate must run before state mutation');
   assert.match(play, /TUTORIAL\.recordCard\(run\.tutorial,card\)/);
-  assert.ok(endTurn.indexOf('TUTORIAL.checkEndTurn') < endTurn.indexOf('takeUiInputFence'), 'end-turn gate must run before state mutation');
   assert.ok(endTurn.indexOf('enemyTurn()') < endTurn.indexOf('TUTORIAL.recordEndTurn'), 'enemy action must be observed before the heal lesson');
-  assert.match(render, /playable=inputOpen&&ownerAlive&&cost<=c\.energy&&tutorialGate\.allowed/);
-  assert.match(render, /endTurnOpen=inputOpen&&\(!tutorial\|\|TUTORIAL\.checkEndTurn\(run\.tutorial\)\.allowed\)/);
+  assert.doesNotMatch(play, /TUTORIAL\.checkCard/);
+  assert.doesNotMatch(endTurn, /TUTORIAL\.checkEndTurn/);
+  assert.match(render, /playable=inputOpen&&ownerAlive&&cost<=c\.energy/);
+  assert.match(render, /const endTurnOpen=inputOpen,endTurnHint=/);
+  assert.match(render, /tutorialHint\.recommended/);
 });
 
 test('tutorial loadout always supplies real attack, party-shield, and heal cards', () => {
@@ -139,10 +148,7 @@ test('tutorial loadout always supplies real attack, party-shield, and heal cards
   assert.match(draw, /initialCards\.reverse\(\)/, 'pop-based draw pile must yield attack then shield');
   assert.doesNotMatch(draw, /shuffle\(|TRIAD_ARCH\.random/, 'tutorial deck construction must not consume the run RNG');
 
-  const ensure = section('ensureTutorialRequiredCard', 'playCardAuthoritative');
-  assert.match(ensure, /TUTORIAL\.trainingCardPlan\(partyCoreIds\(\)\)/);
-  assert.match(ensure, /c\.hand\.unshift\(\{id:card\.id/);
-  assert.match(ensure, /for\(const pileName of \['draw','discard','exhaust'\]\)/);
+  assert.doesNotMatch(html, /function ensureTutorialRequiredCard\(/);
 
   const enemy = section('tutorialEnemyForBattle', 'tutorialDrawPile');
   assert.doesNotMatch(enemy, /shuffle\(|choice\(|TRIAD_ARCH\.random/, 'tutorial enemy selection must be deterministic');

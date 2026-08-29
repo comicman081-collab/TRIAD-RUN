@@ -69,6 +69,7 @@ node_modules/
 *.log
 qa_artifacts/combat_vfx_v3/random_samples/
 qa_artifacts/combat_vfx_v4_mask_preview/
+qa_artifacts/enemy_facing_audit/
 .DS_Store
 Thumbs.db
 desktop.ini

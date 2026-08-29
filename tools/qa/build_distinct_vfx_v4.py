@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Build visually distinct V4 VFX composites for every immutable skill ID.
+"""Build versioned, visually distinct VFX composites for immutable skill IDs.
 
 No image model is used. Existing authored transparent VFX remain the only
 visual authority. V4 separates card, normal-monster, elite and boss silhouette
-grammars, then composes multiple authored sources into a unique identity for
-each skill instead of making one-source crop/rotation variants.
+grammars; V5 keeps approved cards and promotes enemies into separate spectrum,
+source and rupture grammars instead of making one-source crop/rotation variants.
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ from __future__ import annotations
 from hashlib import sha256
 from functools import lru_cache
 from pathlib import Path
+import argparse
 import json
 import math
 import random
@@ -52,6 +53,65 @@ LAYOUTS = {
     "MONSTER_ELITE": ("halberd", "crossclaw", "siege", "mantis", "crown", "breaker"),
     "MONSTER_BOSS": ("cathedral", "singularity", "dominion", "idol", "eclipse", "throne"),
 }
+
+# V5 is deliberately an enemy-only visual vocabulary rebuild. Cards retain
+# their previously approved V4 assets; each hostile archetype receives a
+# separate authored-source recipe, spectrum palette and rupture grammar.
+V5_ENEMY_LAYOUTS = {
+    "MONSTER_NORMAL": ("spike-rain", "jaw-gate", "coil-spiral", "scatter-cone", "spore-orbit", "ground-rip"),
+    "MONSTER_ELITE": ("hammer-fall", "twin-sickle", "prism-wall", "shock-ring", "rail-break", "cyclone-core"),
+    "MONSTER_BOSS": ("void-maw", "crown-vortex", "cathedral-rain", "eclipse-disc", "throne-gate", "singularity-core"),
+}
+V5_ENEMY_SPECTRA = (
+    ((52, 7, 4), (255, 96, 24), (255, 231, 164)),       # furnace
+    ((7, 46, 25), (108, 235, 72), (233, 255, 173)),     # venom
+    ((3, 30, 74), (31, 177, 255), (221, 251, 255)),     # ion
+    ((48, 5, 68), (237, 53, 214), (221, 194, 255)),     # orchid
+    ((68, 20, 2), (255, 160, 34), (255, 244, 191)),     # rust
+    ((0, 52, 53), (58, 232, 208), (212, 255, 246)),     # tideglass
+    ((23, 11, 70), (111, 114, 255), (230, 225, 255)),   # indigo
+    ((43, 2, 28), (255, 50, 153), (255, 216, 246)),     # neon rose
+    ((32, 38, 6), (202, 244, 36), (249, 255, 201)),     # pollen
+    ((6, 51, 76), (35, 220, 255), (219, 252, 255)),     # abyssal cyan
+    ((76, 9, 20), (255, 45, 66), (255, 212, 173)),      # crimson
+    ((44, 44, 49), (199, 217, 234), (255, 255, 255)),   # steel
+    ((57, 26, 69), (195, 102, 255), (253, 226, 255)),   # royal violet
+    ((3, 58, 46), (44, 229, 147), (228, 255, 211)),     # verdant
+    ((64, 32, 0), (255, 199, 35), (255, 249, 201)),     # auric
+    ((3, 11, 31), (100, 62, 255), (196, 244, 255)),     # void cobalt
+)
+V5_ARCHETYPE_SOURCES = {
+    "SCOUT": ("vfx_projectile.png", "vfx_shock.png", "vfx_mark.png", "vfx_signature_volt.png"),
+    "HOUND": ("vfx_burn.png", "vfx_impact.png", "vfx_elite_reaper.png", "vfx_signature_ember.png"),
+    "WARDEN": ("vfx_shield.png", "vfx_signature_aegis.png", "vfx_impact.png", "vfx_ultimate.png"),
+    "CASTER": ("vfx_signature_rift.png", "vfx_shock.png", "vfx_projectile.png", "vfx_boss_overmind.png"),
+    "HUNTER": ("vfx_signature_shade.png", "vfx_projectile.png", "vfx_elite_vanguard.png", "vfx_mark.png"),
+    "BRUTE": ("vfx_elite_colossus.png", "vfx_impact.png", "vfx_burn.png", "vfx_signature_ember.png"),
+    "WEAVER": ("vfx_mark.png", "vfx_signature_bloom.png", "vfx_signature_rift.png", "vfx_shield.png"),
+    "RAVAGER": ("vfx_elite_reaper.png", "vfx_burn.png", "vfx_signature_shade.png", "vfx_impact.png"),
+    "SENTINEL": ("vfx_elite_vanguard.png", "vfx_signature_aegis.png", "vfx_shock.png", "vfx_projectile.png"),
+    "VANGUARD": ("vfx_elite_vanguard.png", "vfx_signature_volt.png", "vfx_impact.png", "vfx_shield.png"),
+    "REAPER": ("vfx_elite_reaper.png", "vfx_signature_shade.png", "vfx_mark.png", "vfx_burn.png"),
+    "COLOSSUS": ("vfx_elite_colossus.png", "vfx_boss_sovereign.png", "vfx_impact.png", "vfx_shock.png"),
+    "APOSTLE": ("vfx_boss_apostle.png", "vfx_signature_aegis.png", "vfx_ultimate.png", "vfx_shield.png"),
+    "OVERMIND": ("vfx_boss_overmind.png", "vfx_signature_rift.png", "vfx_shock.png", "vfx_mark.png"),
+    "SOVEREIGN": ("vfx_boss_sovereign.png", "vfx_signature_shade.png", "vfx_ultimate.png", "vfx_burn.png"),
+}
+
+
+def hex_color(color: tuple[int, int, int]) -> str:
+    return "#" + "".join(f"{channel:02x}" for channel in color)
+
+
+def v5_enemy_palette(record: dict, seed: int, phase: str) -> tuple[tuple[tuple[int, int, int], ...], str]:
+    archetype = str(record.get("archetype") or record.get("archetypeKey") or "SCOUT").upper()
+    spectrum_index = (sum(ord(letter) for letter in archetype) + (seed >> 9) + (13 if phase == "impact" else 0)) % len(V5_ENEMY_SPECTRA)
+    spectrum = V5_ENEMY_SPECTRA[spectrum_index]
+    element = PALETTES.get(str(record.get("elementId", "RIFT")).upper(), PALETTES["RIFT"])
+    # Keep a narrow thematic trace of the element in the brightest edge, while
+    # making the mass, core and particles visibly archetype-specific.
+    bright = tuple(round(spectrum[2][index] * .72 + element[2][index] * .28) for index in range(3))
+    return (spectrum[0], spectrum[1], bright), f"{archetype.lower()}-{spectrum_index:02d}-{phase}"
 
 
 def safe_id(value: str) -> str:
@@ -142,14 +202,14 @@ def dissolve_crop_edges(image: Image.Image, seed: int) -> Image.Image:
     return crop_alpha(result)
 
 
-def source_piece(name: str, rng: random.Random, palette, width: int, angle: float, mirror: bool, opacity_value: float, crop_bias: int) -> Image.Image:
+def source_piece(name: str, rng: random.Random, palette, width: int, angle: float, mirror: bool, opacity_value: float, crop_bias: int, tint_min: float = .36, tint_max: float = .82) -> Image.Image:
     source = load_authored(name)
     # Preserve the authored transparent outline. Selected components receive
     # an irregular alpha lobe mask, never a rectangular crop boundary.
     piece = source.copy() if crop_bias % 4 == 0 else dissolve_crop_edges(source, crop_bias)
     target_h = max(24, round(piece.height * width / max(1, piece.width) * rng.uniform(.68, 1.28)))
     piece = piece.resize((max(24, width), target_h), RESAMPLE)
-    piece = tint(piece, palette, rng.uniform(.36, .82))
+    piece = tint(piece, palette, rng.uniform(tint_min, tint_max))
     piece = band_displace(piece, crop_bias * 7919 + width, rng.randint(2, 10), vertical=bool(crop_bias & 1))
     if mirror:
         piece = ImageOps.mirror(piece)
@@ -169,8 +229,22 @@ def element_for(group: str, record: dict) -> str:
     return str(record.get("coreId") if group == "cards" else record.get("elementId", "RIFT"))
 
 
-def recipe_sources(record: dict, tier: str, seed: int, phase: str) -> list[str]:
+def recipe_sources(record: dict, tier: str, seed: int, phase: str, revision: int = 4) -> list[str]:
     primary = Path(record["sourceImpact" if phase == "impact" else "sourceLaunch"]).name
+    if revision >= 5 and tier != "CARD":
+        archetype = str(record.get("archetype") or record.get("archetypeKey") or "SCOUT").upper()
+        source_family = V5_ARCHETYPE_SOURCES.get(archetype, V5_ARCHETYPE_SOURCES["SCOUT"])
+        count = {"MONSTER_NORMAL": 4, "MONSTER_ELITE": 5, "MONSTER_BOSS": 6}[tier]
+        phase_offset = 2 if phase == "impact" else 0
+        rotation = (seed + phase_offset + sum(ord(letter) for letter in archetype)) % len(source_family)
+        result = [primary]
+        for offset in range(len(source_family) * 2):
+            candidate = source_family[(rotation + offset) % len(source_family)]
+            if candidate not in result:
+                result.append(candidate)
+            if len(result) == count:
+                return result
+        return result
     domain_offset = {"CARD": 3, "MONSTER_NORMAL": 7, "MONSTER_ELITE": 11, "MONSTER_BOSS": 15}[tier]
     phase_offset = 9 if phase == "impact" else 0
     start = (seed ^ (domain_offset * 0x45D9F3B) ^ (phase_offset * 0x27D4EB2D)) % len(AUTHORED)
@@ -214,10 +288,29 @@ def layout_positions(layout: str, count: int, spread: float, phase: str, seed: i
             depth = index // 2 + 1
             x, y = cx + side * spread * (.35 + depth * .18), cy + (depth - 1) * spread * .19
             rotation = side * (24 + depth * 13)
-        elif layout in {"siege", "breaker", "dominion", "idol", "throne", "crown"}:
+        elif layout in {"siege", "breaker", "dominion", "idol", "throne", "crown", "hammer-fall", "prism-wall", "rail-break", "cathedral-rain", "throne-gate"}:
             x = cx + math.sin(index * 2.1) * spread * .56
             y = cy + (u - .5) * spread * 1.55
             rotation = rng.uniform(-22, 22) + (90 if index & 1 else 0)
+        elif layout in {"spike-rain", "ground-rip"}:
+            x = cx + (u - .5) * spread * 1.82
+            y = cy + (1 if layout == "ground-rip" else -1) * spread * (.22 + .34 * (index % 3))
+            rotation = (180 if layout == "spike-rain" else 0) + rng.uniform(-24, 24)
+        elif layout in {"jaw-gate", "twin-sickle", "void-maw"}:
+            side = -1 if index % 2 == 0 else 1
+            depth = index // 2 + 1
+            x = cx + side * spread * (.36 + depth * .15)
+            y = cy - spread * (.14 + depth * .08) + (index % 3) * spread * .11
+            rotation = side * (38 + depth * 24)
+        elif layout in {"coil-spiral", "spore-orbit", "shock-ring", "cyclone-core", "crown-vortex", "singularity-core", "eclipse-disc"}:
+            angle = u * math.tau * (1.15 if layout in {"coil-spiral", "cyclone-core", "crown-vortex"} else 1) + (seed % 360) * math.pi / 180
+            radius = spread * (.26 + .68 * u)
+            x, y = cx + math.cos(angle) * radius, cy + math.sin(angle) * radius * (.72 if layout == "eclipse-disc" else 1)
+            rotation = math.degrees(angle) + (180 if layout in {"coil-spiral", "crown-vortex"} else 90)
+        elif layout in {"scatter-cone"}:
+            x = cx + spread * (.15 + .95 * u)
+            y = cy + (u - .5) * spread * 1.26
+            rotation = rng.uniform(-62, 62)
         else:
             angle = u * math.tau
             x, y = cx + math.cos(angle) * spread, cy + math.sin(angle) * spread
@@ -227,16 +320,22 @@ def layout_positions(layout: str, count: int, spread: float, phase: str, seed: i
     return positions
 
 
-def compose(record: dict, group: str, ordinal: int, phase: str) -> tuple[Image.Image, dict]:
+def compose(record: dict, group: str, ordinal: int, phase: str, revision: int = 4) -> tuple[Image.Image, dict]:
     seed = int(record["seed"]) ^ (ordinal * 0x9E3779B1) ^ (0xD1B54A35 if phase == "impact" else 0)
     rng = random.Random(seed)
     tier = tier_for(group, record)
     element = element_for(group, record)
-    palette = PALETTES.get(element, PALETTES["RIFT"])
-    layouts = LAYOUTS[tier]
+    if revision >= 5 and group == "enemies":
+        palette, palette_name = v5_enemy_palette(record, seed, phase)
+        layouts = V5_ENEMY_LAYOUTS[tier]
+        tint_min, tint_max = .72, .98
+    else:
+        palette, palette_name = PALETTES.get(element, PALETTES["RIFT"]), f"{element.lower()}-base"
+        layouts = LAYOUTS[tier]
+        tint_min, tint_max = .36, .82
     pipeline_bias = {"PROJECTILE": 0, "HEAVY_IMPACT": 2, "SUPPORT": 4, "ULTIMATE": 5}.get(record["pipeline"], 0)
     layout = layouts[(ordinal + pipeline_bias + (2 if phase == "impact" else 0)) % len(layouts)]
-    sources = recipe_sources(record, tier, seed, phase)
+    sources = recipe_sources(record, tier, seed, phase, revision)
     canvas = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
     impact = phase == "impact"
     spread = rng.uniform(78, 155) * (1.22 if impact else .82)
@@ -247,7 +346,7 @@ def compose(record: dict, group: str, ordinal: int, phase: str) -> tuple[Image.I
         base_width = ({"CARD": 310, "MONSTER_NORMAL": 285, "MONSTER_ELITE": 330, "MONSTER_BOSS": 370}[tier])
         width = round(base_width * scale * rng.uniform(.82, 1.17))
         crop_bias = ordinal * 17 + index * 31 + (101 if impact else 0)
-        piece = source_piece(name, rng, palette, width, angle + rng.uniform(-12, 12), bool((ordinal + index) & 1), rng.uniform(.48, .9) if index else .96, crop_bias)
+        piece = source_piece(name, rng, palette, width, angle + rng.uniform(-12, 12), bool((ordinal + index) & 1), rng.uniform(.48, .9) if index else .96, crop_bias, tint_min, tint_max)
         place(canvas, piece, x, y)
         piece_codes.append({"source": name, "x": round(x), "y": round(y), "angle": round(angle, 2), "width": width, "crop": crop_bias})
 
@@ -255,7 +354,7 @@ def compose(record: dict, group: str, ordinal: int, phase: str) -> tuple[Image.I
     # an abstract collection of procedural shapes.
     focal_name = sources[(ordinal + (1 if impact else 0)) % len(sources)]
     focal_width = rng.randint(285, 420) * (1.18 if impact else .92)
-    focal = source_piece(focal_name, rng, palette, round(focal_width), rng.uniform(-28, 28), bool(seed & 1), .92, ordinal * 59 + (211 if impact else 7))
+    focal = source_piece(focal_name, rng, palette, round(focal_width), rng.uniform(-28, 28), bool(seed & 1), .92, ordinal * 59 + (211 if impact else 7), tint_min, tint_max)
     focal = band_displace(focal, seed ^ 0xC2B2AE35, rng.randint(4, 14) if impact else rng.randint(2, 8), vertical=bool(seed & 2))
     place(canvas, focal, CANVAS / 2 + rng.randint(-32, 32), CANVAS / 2 + rng.randint(-34, 34))
 
@@ -272,6 +371,9 @@ def compose(record: dict, group: str, ordinal: int, phase: str) -> tuple[Image.I
         "layout": layout,
         "phase": phase,
         "element": element,
+        "paletteName": palette_name,
+        "runtimeColor": hex_color(palette[1]),
+        "runtimeAccent": hex_color(palette[2]),
         "sources": sources,
         "pieces": piece_codes,
         "recipeId": f"{tier.lower()}-{record['id'].lower()}-{phase}-{seed:08x}",
@@ -279,7 +381,7 @@ def compose(record: dict, group: str, ordinal: int, phase: str) -> tuple[Image.I
     return result, recipe
 
 
-def profile(seed: int, identifier: str, tier: str, ordinal: int) -> dict:
+def profile(seed: int, identifier: str, tier: str, ordinal: int, revision: int = 4) -> dict:
     rng = random.Random(seed ^ ordinal * 0x85EBCA6B)
     vectors_by_tier = {
         "CARD": ["fan", "cone", "radial", "implode", "halo", "plume"],
@@ -287,6 +389,12 @@ def profile(seed: int, identifier: str, tier: str, ordinal: int) -> dict:
         "MONSTER_ELITE": ["siege", "cross", "shardstorm", "ground", "spiral", "breaker"],
         "MONSTER_BOSS": ["cathedral", "singularity", "dominion", "eclipse", "collapse", "ritual"],
     }
+    if revision >= 5 and tier != "CARD":
+        vectors_by_tier = {
+            "MONSTER_NORMAL": ["acid", "thorns", "drone", "fang", "pounce", "scatter", "seismic", "vortex"],
+            "MONSTER_ELITE": ["rail", "fracture", "cyclone", "piston", "shrapnel", "prism", "breakwave", "sentry"],
+            "MONSTER_BOSS": ["soulwell", "throne", "eclipse", "cathedral", "coronas", "singularity", "dominion", "ritual"],
+        }
     vectors = vectors_by_tier[tier]
     shape_sets = {
         "CARD": [["plasma", "crest", "mote"], ["petal", "arc", "lump"]],
@@ -294,6 +402,12 @@ def profile(seed: int, identifier: str, tier: str, ordinal: int) -> dict:
         "MONSTER_ELITE": [["plate", "shard", "core"], ["blade", "debris", "ember"]],
         "MONSTER_BOSS": [["relic", "void", "sigil"], ["mass", "crown", "fragment"]],
     }[tier]
+    if revision >= 5 and tier != "CARD":
+        shape_sets = {
+            "MONSTER_NORMAL": [["glob", "spore", "fang"], ["lump", "scrap", "mote"], ["chunk", "claw", "blob"]],
+            "MONSTER_ELITE": [["plate", "shard", "core"], ["blade", "debris", "ember"], ["prism", "piston", "splinter"]],
+            "MONSTER_BOSS": [["relic", "void", "sigil"], ["mass", "crown", "fragment"], ["halo", "obelisk", "starshard"]],
+        }[tier]
     return {
         "id": identifier,
         "seed": seed,
@@ -305,7 +419,7 @@ def profile(seed: int, identifier: str, tier: str, ordinal: int) -> dict:
             "wakeCount": rng.randint(5, 16),
         },
         "rupture": {
-            "requested": rng.randint(34, 96), "duration": rng.randint(620, 1160),
+            "requested": rng.randint(42, 104) if revision >= 5 and tier != "CARD" else rng.randint(34, 96), "duration": rng.randint(720, 1280) if revision >= 5 and tier != "CARD" else rng.randint(620, 1160),
             "spread": rng.randint(94, 208), "vector": vectors[ordinal % len(vectors)],
             "arc": round(rng.uniform(1.1, 6.2), 3), "shapes": shape_sets[ordinal % len(shape_sets)],
             "afterglowMotes": rng.randint(7, 25),
@@ -313,7 +427,7 @@ def profile(seed: int, identifier: str, tier: str, ordinal: int) -> dict:
     }
 
 
-def sequence_profile(seed: int, identifier: str, tier: str, ordinal: int) -> dict:
+def sequence_profile(seed: int, identifier: str, tier: str, ordinal: int, revision: int = 4) -> dict:
     """A five-phase choreography identity, not merely a palette variation."""
     rng = random.Random(seed ^ ordinal * 0x27D4EB2D ^ 0x165667B1)
     charge_styles = ["inward-orbit", "folding-crest", "spiral-condense", "split-converge", "vertical-forge", "pulse-bloom", "fracture-assemble"]
@@ -325,6 +439,16 @@ def sequence_profile(seed: int, identifier: str, tier: str, ordinal: int) -> dic
         "MONSTER_ELITE": ["armor-break", "siege-cone", "blade-storm", "plate-collapse", "cross-rend", "core-detonate", "shard-wall"],
         "MONSTER_BOSS": ["ritual-collapse", "dominion-wave", "cathedral-break", "void-inversion", "eclipse-rupture", "throne-fall", "singularity-tear"],
     }
+    if revision >= 5 and tier != "CARD":
+        charge_styles = ["predator-coil", "acid-pressurize", "drone-prime", "bone-spike-rise", "piston-draw", "void-inhale", "crown-assemble", "sigil-hatch"]
+        travel_styles = ["sine-lunge", "corkscrew-dive", "shard-hop", "ground-skim", "predator-pounce", "rail-snap", "orbit-hunt", "falling-meteor", "serpent-weave", "drone-strafe"]
+        contact_styles = ["jaw-clamp", "ground-slam", "core-overload", "needle-pierce", "armor-crumple", "field-collapse", "claw-rake", "mass-invert"]
+        rupture_by_tier = {
+            "MONSTER_NORMAL": ["acid-splash", "thorn-bloom", "drone-spark", "fang-pop", "pounce-crater", "spore-erupt", "seismic-rip", "vortex-shed"],
+            "MONSTER_ELITE": ["rail-fracture", "prism-break", "cyclone-shear", "piston-burst", "shrapnel-fan", "sentry-flare", "breakwave", "armor-eject"],
+            "MONSTER_BOSS": ["soulwell-collapse", "throne-judgment", "eclipse-shatter", "cathedral-rain", "corona-rift", "singularity-tear", "dominion-fall", "ritual-unmake"],
+        }
+        decay_styles = ["toxic-settle", "coil-unwind", "shard-sink", "ash-spiral", "void-retract", "ground-scars", "crown-fade", "ion-drip", "smoke-curl"]
     decay_styles = ["ash-fall", "vapor-rise", "orbital-fade", "reverse-suction", "ground-embers", "shard-drift", "pulse-extinguish", "mist-unwind"]
     charge_index = ordinal % len(charge_styles)
     travel_index = (ordinal // len(charge_styles)) % len(travel_styles)
@@ -343,42 +467,58 @@ def sequence_profile(seed: int, identifier: str, tier: str, ordinal: int) -> dic
     }
 
 
-def build_entry(group: str, record: dict, ordinal: int) -> dict:
+def build_entry(group: str, record: dict, ordinal: int, output_root: Path = OUTPUT_ROOT, revision: int = 4) -> dict:
     identifier = safe_id(record["id"])
-    directory = OUTPUT_ROOT / group
+    directory = output_root / group
     directory.mkdir(parents=True, exist_ok=True)
     launch_path = directory / f"{identifier}_launch.webp"
     impact_path = directory / f"{identifier}_impact.webp"
-    launch, launch_recipe = compose(record, group, ordinal, "launch")
-    impact, impact_recipe = compose(record, group, ordinal, "impact")
+    launch, launch_recipe = compose(record, group, ordinal, "launch", revision)
+    impact, impact_recipe = compose(record, group, ordinal, "impact", revision)
     launch.save(launch_path, "WEBP", quality=91, method=1, exact=True)
     impact.save(impact_path, "WEBP", quality=91, method=1, exact=True)
     tier = tier_for(group, record)
-    unique = profile(int(record["seed"]), f"{group[:-1]}-{identifier}", tier, ordinal)
-    unique["sequence"] = sequence_profile(int(record["seed"]), identifier, tier, ordinal)
+    unique = profile(int(record["seed"]), f"{group[:-1]}-{identifier}", tier, ordinal, revision)
+    unique["sequence"] = sequence_profile(int(record["seed"]), identifier, tier, ordinal, revision)
     unique.update({
         "launch": launch_path.relative_to(ROOT).as_posix(), "impact": impact_path.relative_to(ROOT).as_posix(),
         "launchSha256": sha(launch_path), "impactSha256": sha(impact_path),
         "impactFamily": f"{tier.lower()}-{record['impactFamily']}-{identifier}",
-        "visualIdentity": {"domain": tier, "launch": launch_recipe, "impact": impact_recipe},
+        "visualIdentity": {"domain": tier, "launch": launch_recipe, "impact": impact_recipe, "runtimeColor": launch_recipe["runtimeColor"], "runtimeAccent": impact_recipe["runtimeAccent"], "paletteName": launch_recipe["paletteName"]},
         "legacySources": [record["sourceLaunch"], record["sourceImpact"]],
     })
     return unique
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Build immutable VFX derivatives without replacing prior revisions.")
+    parser.add_argument("--version", type=int, choices=(4, 5), default=4)
+    args = parser.parse_args()
+    version = args.version
+    output_root = ROOT / f"assets/vfx/derived_v{version}"
+    manifest_json = output_root / "manifest.json"
+    manifest_js = ROOT / f"combat_vfx_skill_assets_v{version}.js"
     plan = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
-    cards = {record["id"]: build_entry("cards", record, index) for index, record in enumerate(plan["cards"])}
-    enemies = {record["id"]: build_entry("enemies", record, index + len(cards)) for index, record in enumerate(plan["enemies"])}
-    manifest = {"version": "4.0.0-distinct-visual-grammar", "cards": cards, "enemies": enemies}
-    MANIFEST_JSON.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if version == 5:
+        # V5 is a hostile-side palette/grammar promotion. Do not rebuild or
+        # overwrite approved card assets; reference their immutable V4 files.
+        cards = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))["cards"]
+        enemies = {record["id"]: build_entry("enemies", record, index + len(cards), output_root, revision=5) for index, record in enumerate(plan["enemies"])}
+        version_name = "5.0.0-enemy-spectrum-grammar"
+    else:
+        cards = {record["id"]: build_entry("cards", record, index, output_root, revision=4) for index, record in enumerate(plan["cards"])}
+        enemies = {record["id"]: build_entry("enemies", record, index + len(cards), output_root, revision=4) for index, record in enumerate(plan["enemies"])}
+        version_name = "4.0.0-distinct-visual-grammar"
+    manifest = {"version": version_name, "cards": cards, "enemies": enemies}
+    output_root.mkdir(parents=True, exist_ok=True)
+    manifest_json.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     compact = json.dumps(manifest, ensure_ascii=False, separators=(",", ":"))
-    MANIFEST_JS.write_text("(function(global){'use strict';const manifest=" + compact + ";global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V4=Object.freeze(manifest)})(window);\n", encoding="utf-8")
+    manifest_js.write_text("(function(global){'use strict';const manifest=" + compact + f";global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V{version}=Object.freeze(manifest)}})(window);\n", encoding="utf-8")
     entries = list(cards.values()) + list(enemies.values())
     hashes = [entry[key] for entry in entries for key in ("launchSha256", "impactSha256")]
     recipes = [entry["visualIdentity"][phase]["recipeId"] for entry in entries for phase in ("launch", "impact")]
     result = "PASS" if len(hashes) == 612 and len(set(hashes)) == 612 and len(set(recipes)) == 612 else "FAIL"
-    print(json.dumps({"result": result, "skills": len(entries), "assets": len(hashes), "uniqueHashes": len(set(hashes)), "uniqueRecipes": len(set(recipes)), "manifest": MANIFEST_JS.relative_to(ROOT).as_posix()}))
+    print(json.dumps({"result": result, "version": version, "skills": len(entries), "assets": len(hashes), "uniqueHashes": len(set(hashes)), "uniqueRecipes": len(set(recipes)), "manifest": manifest_js.relative_to(ROOT).as_posix()}))
     if result != "PASS":
         raise SystemExit(1)
 

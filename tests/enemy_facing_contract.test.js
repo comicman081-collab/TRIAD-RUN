@@ -55,4 +55,9 @@ assert.ok(html.includes('enemy_animation_authority.js?v=1.2.0-per-actor-player-f
 assert.match(html, /data-direction-contract="PASS"\]\[data-facing="LEFT"\]\[data-runtime-mirror="true"\][^{]*\{transform:scaleX\(-1\)!important\}/);
 assert.match(html, /data-direction-mode="FRONTAL_LEFT_BIAS"\][^{]*\{[^}]*transform:perspective\(720px\) translateX\(-16px\) rotateY\(-16deg\) rotate\(-1\.5deg\)!important\}/);
 
+const reviewRenderer = read('tools/qa/render_random_unique_vfx_samples.py');
+assert.match(reviewRenderer, /def enemy_runtime_mirror\(monster_id: str\) -> bool:/);
+assert.match(reviewRenderer, /mirror=enemy_runtime_mirror\(entry\["monsterId"\]\)/);
+assert.ok(!reviewRenderer.includes('entry["monsterId"]), 390, 247, 115, 175, mirror=True'), 'review GIF must not blindly flip every enemy source');
+
 console.log('[PASS] all 90 enemy actors preserve source-aware left targeting toward the player lane');

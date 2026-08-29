@@ -1,0 +1,189 @@
+{
+  "generatedAt": "2026-08-29T11:40:41.670260+09:00",
+  "cards": [
+    {
+      "index": 1,
+      "id": "EMBER_11",
+      "core": "EMBER",
+      "cardKey": "combo",
+      "pipeline": "HEAVY_IMPACT",
+      "impactFamily": "card-ion-burst-ember_11",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/01_ember_11.gif"
+    },
+    {
+      "index": 2,
+      "id": "EMBER_15",
+      "core": "EMBER",
+      "cardKey": "signature",
+      "pipeline": "ULTIMATE",
+      "impactFamily": "card-ember-plume-ember_15",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/02_ember_15.gif"
+    },
+    {
+      "index": 3,
+      "id": "VOLT_15",
+      "core": "VOLT",
+      "cardKey": "signature",
+      "pipeline": "ULTIMATE",
+      "impactFamily": "card-ion-burst-volt_15",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/03_volt_15.gif"
+    },
+    {
+      "index": 4,
+      "id": "AEGIS_10",
+      "core": "AEGIS",
+      "cardKey": "heal",
+      "pipeline": "SUPPORT",
+      "impactFamily": "card-arc-cleave-aegis_10",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/04_aegis_10.gif"
+    },
+    {
+      "index": 5,
+      "id": "EMBER_09",
+      "core": "EMBER",
+      "cardKey": "burst",
+      "pipeline": "HEAVY_IMPACT",
+      "impactFamily": "card-scatter-volley-ember_09",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/05_ember_09.gif"
+    },
+    {
+      "index": 6,
+      "id": "EMBER_17",
+      "core": "EMBER",
+      "cardKey": "volley",
+      "pipeline": "PROJECTILE",
+      "impactFamily": "card-scatter-volley-ember_17",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/06_ember_17.gif"
+    },
+    {
+      "index": 7,
+      "id": "SHADE_11",
+      "core": "SHADE",
+      "cardKey": "combo",
+      "pipeline": "HEAVY_IMPACT",
+      "impactFamily": "card-ion-burst-shade_11",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/07_shade_11.gif"
+    },
+    {
+      "index": 8,
+      "id": "BLOOM_05",
+      "core": "BLOOM",
+      "cardKey": "focus",
+      "pipeline": "SUPPORT",
+      "impactFamily": "card-arc-cleave-bloom_05",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/08_bloom_05.gif"
+    },
+    {
+      "index": 9,
+      "id": "VOLT_17",
+      "core": "VOLT",
+      "cardKey": "volley",
+      "pipeline": "PROJECTILE",
+      "impactFamily": "card-scatter-volley-volt_17",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/09_volt_17.gif"
+    },
+    {
+      "index": 10,
+      "id": "RIFT_08",
+      "core": "RIFT",
+      "cardKey": "dot",
+      "pipeline": "PROJECTILE",
+      "impactFamily": "card-ember-plume-rift_08",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/cards/10_rift_08.gif"
+    }
+  ],
+  "enemies": [
+    {
+      "index": 1,
+      "id": "RIFT_APOSTLE_JUDGMENT",
+      "monsterId": "RIFT_M13",
+      "rank": "boss",
+      "pipeline": "ULTIMATE",
+      "impactFamily": "monster_boss-boss-ritual-rift_apostle_judgment",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/01_rift_apostle_judgment.gif"
+    },
+    {
+      "index": 2,
+      "id": "EMBER_REAPER_REAP",
+      "monsterId": "EMBER_M11",
+      "rank": "elite",
+      "pipeline": "PROJECTILE",
+      "impactFamily": "monster_elite-void-seal-ember_reaper_reap",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/02_ember_reaper_reap.gif"
+    },
+    {
+      "index": 3,
+      "id": "RIFT_HOUND_BITE",
+      "monsterId": "RIFT_M02",
+      "rank": "normal",
+      "pipeline": "HEAVY_IMPACT",
+      "impactFamily": "monster_normal-maul-sweep-rift_hound_bite",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/03_rift_hound_bite.gif"
+    },
+    {
+      "index": 4,
+      "id": "AEGIS_RAVAGER_FRENZY",
+      "monsterId": "AEGIS_M08",
+      "rank": "normal",
+      "pipeline": "HEAVY_IMPACT",
+      "impactFamily": "monster_normal-ember-plume-aegis_ravager_frenzy",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/04_aegis_ravager_frenzy.gif"
+    },
+    {
+      "index": 5,
+      "id": "BLOOM_OVERMIND_DOMINION",
+      "monsterId": "BLOOM_M14",
+      "rank": "boss",
+      "pipeline": "ULTIMATE",
+      "impactFamily": "monster_boss-boss-psychic-bloom_overmind_dominion",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/05_bloom_overmind_dominion.gif"
+    },
+    {
+      "index": 6,
+      "id": "EMBER_OVERMIND_DOMINION",
+      "monsterId": "EMBER_M14",
+      "rank": "boss",
+      "pipeline": "ULTIMATE",
+      "impactFamily": "monster_boss-boss-psychic-ember_overmind_dominion",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/06_ember_overmind_dominion.gif"
+    },
+    {
+      "index": 7,
+      "id": "BLOOM_CASTER_BOLT",
+      "monsterId": "BLOOM_M04",
+      "rank": "normal",
+      "pipeline": "PROJECTILE",
+      "impactFamily": "monster_normal-void-seal-bloom_caster_bolt",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/07_bloom_caster_bolt.gif"
+    },
+    {
+      "index": 8,
+      "id": "VOLT_COLOSSUS_QUAKE",
+      "monsterId": "VOLT_M12",
+      "rank": "elite",
+      "pipeline": "HEAVY_IMPACT",
+      "impactFamily": "monster_elite-siege-shock-volt_colossus_quake",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/08_volt_colossus_quake.gif"
+    },
+    {
+      "index": 9,
+      "id": "RIFT_HUNTER_SHOT",
+      "monsterId": "RIFT_M05",
+      "rank": "normal",
+      "pipeline": "PROJECTILE",
+      "impactFamily": "monster_normal-pierce-shards-rift_hunter_shot",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/09_rift_hunter_shot.gif"
+    },
+    {
+      "index": 10,
+      "id": "EMBER_CASTER_BOLT",
+      "monsterId": "EMBER_M04",
+      "rank": "normal",
+      "pipeline": "PROJECTILE",
+      "impactFamily": "monster_normal-void-seal-ember_caster_bolt",
+      "gif": "qa_artifacts/combat_vfx_v5/random_samples/enemies/10_ember_caster_bolt.gif"
+    }
+  ],
+  "cardReel": "qa_artifacts/combat_vfx_v5/random_samples/card_random_10_reel.gif",
+  "enemyReel": "qa_artifacts/combat_vfx_v5/random_samples/monster_random_10_reel.gif"
+}

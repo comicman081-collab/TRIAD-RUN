@@ -6,8 +6,8 @@
   const BASE=global.TRIAD_COMBAT_VFX;
   if(!BASE)throw new Error('TRIAD combat VFX V2 requires the V1 asset authority');
 
-  const VERSION='4.0.0-distinct-visual-grammar';
-  const UNIQUE=global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V4||global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3||{cards:{},enemies:{}};
+  const VERSION='5.0.0-enemy-spectrum-grammar';
+  const UNIQUE=global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V5||global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V4||global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3||{cards:{},enemies:{}};
   const PIPELINES=Object.freeze({PROJECTILE:'PROJECTILE',HEAVY:'HEAVY_IMPACT',ULTIMATE:'ULTIMATE',SUPPORT:'SUPPORT'});
   const RANGED_CARDS=new Set(['quick','dot','volley','ambush','mark']);
   const HEAVY_CARDS=new Set(['strike','heavy','combo','scale','execute','burst','inferno','overload']);

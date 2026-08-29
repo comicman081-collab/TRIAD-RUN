@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
-"""Verify V4 asset, visual-grammar and five-phase choreography uniqueness."""
+"""Verify versioned asset, visual-grammar and five-phase choreography uniqueness."""
 
 from __future__ import annotations
 
 from hashlib import sha256
 from pathlib import Path
+import argparse
 import json
 
 from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST_PATH = ROOT / "assets/vfx/derived_v4/manifest.json"
-REPORT_PATH = ROOT / "qa_artifacts/combat_vfx_v4/distinct_vfx_audit.json"
 
 
 def digest(path: Path) -> str:
@@ -35,7 +34,12 @@ def perceptual_signature(path: Path) -> int:
 
 
 def main() -> None:
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    parser = argparse.ArgumentParser(description="Verify an immutable TRIAD VFX manifest revision.")
+    parser.add_argument("--version", type=int, choices=(4, 5), default=4)
+    args = parser.parse_args()
+    manifest_path = ROOT / f"assets/vfx/derived_v{args.version}/manifest.json"
+    report_path = ROOT / f"qa_artifacts/combat_vfx_v{args.version}/distinct_vfx_audit.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     failures: list[str] = []
     rows = []
     hashes: list[str] = []
@@ -131,8 +135,8 @@ def main() -> None:
         if checks[key] != value:
             failures.append(f"{key}:{checks[key]}!={value}")
     report = {"result": "PASS" if not failures else "FAIL", "version": manifest.get("version"), "checks": checks, "failures": failures, "records": rows}
-    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_PATH.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"result": report["result"], **checks, "failureCount": len(failures)}, ensure_ascii=False))
     if failures:
         raise SystemExit(1)

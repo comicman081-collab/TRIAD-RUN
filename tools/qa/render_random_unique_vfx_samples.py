@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Render random V3 card/enemy VFX review GIFs from the runtime manifest.
+"""Render random V5 card/enemy VFX review GIFs from the runtime manifest.
 
 This is a deterministic-presentation QA renderer. It does not generate new
 source art: every visible energy mass and fragment is cut from the authored
-V3 launch/impact WebPs used by the game runtime.
+launch/impact WebPs used by the game runtime. Enemy actor orientation follows
+the same per-source direction authority as the playable battle renderer.
 """
 
 from __future__ import annotations
@@ -21,12 +22,12 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "qa_artifacts" / "combat_vfx_v4" / "random_samples"
+OUT = ROOT / "qa_artifacts" / "combat_vfx_v5" / "random_samples"
 SIZE = (480, 270)
 FRAMES = 30
 FRAME_MS = 45
 RESAMPLE = Image.Resampling.LANCZOS
-MANIFEST = json.loads((ROOT / "assets/vfx/derived_v4/manifest.json").read_text(encoding="utf-8"))
+MANIFEST = json.loads((ROOT / "assets/vfx/derived_v5/manifest.json").read_text(encoding="utf-8"))
 PLAN = json.loads((ROOT / "qa_artifacts/combat_vfx_v3/unique_vfx_plan.json").read_text(encoding="utf-8"))
 
 
@@ -110,6 +111,12 @@ def enemy_actor(monster_id: str) -> Image.Image:
     return crop_alpha(atlas.crop((frame * fw, row * fh, (frame + 1) * fw, (row + 1) * fh)))
 
 
+def enemy_runtime_mirror(monster_id: str) -> bool:
+    """Mirror only right-facing catalog sources, exactly like the app."""
+    match = re.fullmatch(r"[A-Z]+_M(\d+)", monster_id)
+    return bool(match and int(match.group(1)) == 2)
+
+
 def actor(canvas: Image.Image, image: Image.Image, x: float, ground: float, width: int, height: int, mirror: bool = False, kick: float = 0.0) -> None:
     sprite = fit(ImageOps.mirror(image) if mirror else image, width, height)
     canvas.alpha_composite(sprite, (round(x - sprite.width / 2 + kick), round(ground - sprite.height)))
@@ -153,14 +160,24 @@ def fragment_plan(seed: int, count: int, vector: str, arc: float, enemy_cast: bo
     direction = pi if enemy_cast else 0.0
     items: list[Fragment] = []
     for index in range(min(72, count)):
-        if vector in {"cone", "fan", "plume"}:
+        if vector in {"cone", "fan", "plume", "acid"}:
             angle = direction + rng.uniform(-arc * 0.32, arc * 0.32)
-        elif vector == "ground":
+        elif vector in {"ground", "seismic", "breakwave"}:
             angle = rng.choice((0.0, pi)) + rng.uniform(-0.32, 0.32)
-        elif vector == "implode":
+        elif vector in {"implode", "soulwell", "singularity"}:
             angle = rng.uniform(-pi, pi) + pi
-        elif vector == "spiral":
+        elif vector in {"spiral", "vortex", "cyclone"}:
             angle = index * 0.63 + rng.uniform(-0.25, 0.25)
+        elif vector in {"rail", "piston"}:
+            angle = direction + rng.uniform(-.36, .36)
+        elif vector in {"thorns", "fang", "pounce"}:
+            angle = direction + rng.choice((-1, 1)) * rng.uniform(.14, .95)
+        elif vector in {"drone", "sentry", "prism"}:
+            angle = (index % (4 if vector != "prism" else 6)) * (pi / (2 if vector != "prism" else 3)) + rng.uniform(-.12, .12)
+        elif vector in {"cathedral", "throne"}:
+            angle = -pi * .5 + rng.uniform(-.46, .46)
+        elif vector == "coronas":
+            angle = index / max(1, count) * pi * 2 + rng.uniform(-.08, .08)
         else:
             angle = rng.uniform(-pi, pi)
         items.append(Fragment(angle, rng.uniform(38, 155), rng.randint(4, 13), rng.uniform(0, .28), rng.uniform(-190, 190), rng.uniform(-.8, .8)))
@@ -209,10 +226,10 @@ def render(entry: dict, profile: dict, frame: int, kind: str, index: int) -> Ima
     kick = 7 * max(0.0, 1 - abs((t - .63) / .07))
     if enemy_cast:
         actor(canvas, player_actor(), 92, 247, 88, 160, mirror=False, kick=-kick)
-        actor(canvas, enemy_actor(entry["monsterId"]), 390, 247, 115, 175, mirror=True)
+        actor(canvas, enemy_actor(entry["monsterId"]), 390, 247, 115, 175, mirror=enemy_runtime_mirror(entry["monsterId"]))
     else:
         actor(canvas, player_actor(), 91, 247, 92, 164, mirror=False)
-        actor(canvas, enemy_actor("RIFT_M03"), 390, 247, 112, 174, mirror=True, kick=kick)
+        actor(canvas, enemy_actor("RIFT_M03"), 390, 247, 112, 174, mirror=enemy_runtime_mirror("RIFT_M03"), kick=kick)
 
     if pipeline == "SUPPORT":
         center = source
@@ -248,7 +265,13 @@ def render(entry: dict, profile: dict, frame: int, kind: str, index: int) -> Ima
             travel_style = str(travel_sequence.get("style", "ballistic-arc"))
             lateral = float(travel_sequence.get("lateral", 0))
             wave = sin(p * pi * 2 * max(1, int(travel_sequence.get("oscillations", 1))))
-            path_bias = wave * lateral if travel_style in {"serpentine", "zigzag", "wave-drift", "spiral-bore"} else lateral * sin(p * pi)
+            path_bias = wave * lateral if travel_style in {"serpentine", "zigzag", "wave-drift", "spiral-bore", "serpent-weave", "sine-lunge", "drone-strafe"} else lateral * sin(p * pi)
+            if travel_style in {"corkscrew-dive", "orbit-hunt"}:
+                path_bias = lateral * cos(p * pi * 2)
+            elif travel_style in {"ground-skim", "rail-snap"}:
+                path_bias = abs(lateral) * .18
+            elif travel_style in {"predator-pounce", "falling-meteor"}:
+                path_bias = -abs(lateral) * sin(p * pi)
             y = source[1] + motion["curve"] * 0.45 * sin(p * pi) + path_bias
             squeeze = float(contact_sequence.get("squeezeX", .7)) if t >= contact else 1 + .09 * sin(t * 35)
             glow(canvas, (x, y), 18 if pipeline == "PROJECTILE" else 28, color, 76)

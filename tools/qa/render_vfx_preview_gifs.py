@@ -270,7 +270,14 @@ def player_vs_enemy(frame: int, player: str, enemy: str, player_shift: float = 0
     return canvas
 
 
-def render_projectile(frame: int, enemy_to_player: bool = False) -> Image.Image:
+def render_projectile(
+    frame: int,
+    enemy_to_player: bool = False,
+    launch_key: str = "projectile",
+    impact_key: str = "shock",
+    launch_width: int = 205,
+    travel_scale_y: float = .92,
+) -> Image.Image:
     t = frame / (FRAME_COUNT - 1)
     contact_t = 0.63
     direction = -1 if enemy_to_player else 1
@@ -279,43 +286,45 @@ def render_projectile(frame: int, enemy_to_player: bool = False) -> Image.Image:
     canvas = player_vs_enemy(frame, "volt", "caster", player_shift, enemy_shift)
     source = (580, 226) if enemy_to_player else (214, 226)
     target = (218, 226) if enemy_to_player else (550, 226)
+    launch = ASSETS[launch_key]
+    color = (255, 122, 61) if launch_key == "burn" else (195, 104, 255) if launch_key in {"ultimate", "mark"} else (86, 222, 255)
     if t < 0.18:
         charge = ease_out(t / 0.18)
-        glow(canvas, source, 20 + 24 * charge, (81, 221, 255), 100)
-        asset = transform_asset(ASSETS["projectile"], 85 + 55 * charge, opacity=0.55 + charge * 0.45, scale_y=0.70)
+        glow(canvas, source, 20 + 24 * charge, color, 100)
+        asset = transform_asset(launch, int(launch_width * (.42 + .24 * charge)), opacity=0.55 + charge * 0.45, scale_y=.70)
         paste_center(canvas, asset, source)
         for index in range(10):
             angle = index * 2 * pi / 10 + frame * 0.19
             radius = 42 * (1 - charge) + 8
             x = source[0] + cos(angle) * radius
             y = source[1] + sin(angle) * radius
-            draw_particles(canvas, [Particle(angle, 0, 2.4, 0, 0, 0, 0)], 0.1, (x, y), (86, 222, 255), direction)
+            draw_particles(canvas, [Particle(angle, 0, 2.4, 0, 0, 0, 0)], 0.1, (x, y), color, direction)
     elif t < contact_t + 0.06:
         travel = ease_in_out((t - 0.18) / (contact_t - 0.18))
         x = source[0] + (target[0] - source[0]) * travel
         y = source[1] - sin(travel * pi) * 7
         squeeze = 0.74 if t >= contact_t else 1.0 + 0.08 * sin(t * 26)
-        asset = transform_asset(ASSETS["projectile"], 205, opacity=1.0, scale_x=squeeze, scale_y=1.12 if t >= contact_t else 0.92, mirrored=enemy_to_player)
-        glow(canvas, (x, y), 30, (58, 198, 255), 78)
+        asset = transform_asset(launch, launch_width, opacity=1.0, scale_x=squeeze, scale_y=1.12 if t >= contact_t else travel_scale_y, mirrored=enemy_to_player)
+        glow(canvas, (x, y), 30, color, 78)
         paste_center(canvas, asset, (x, y))
         wake = particles(222 if enemy_to_player else 102, 13, 0 if enemy_to_player else pi)
-        draw_particles(canvas, wake, travel, (x - direction * 52, y + 3), (100, 187, 255), direction)
+        draw_particles(canvas, wake, travel, (x - direction * 52, y + 3), color, direction)
     if t >= contact_t - 0.015:
         rupture = min(1.0, (t - contact_t + 0.015) / 0.34)
         white_hot_contact(canvas, target, min(1.0, rupture * 4))
         if rupture < 0.72:
-            impact_source = ASSETS["mark"] if enemy_to_player else ASSETS["shock"]
+            impact_source = ASSETS[impact_key]
             impact = transform_asset(impact_source, int(175 + 188 * ease_out(rupture)), opacity=(1 - rupture) ** 0.72, angle=-10 * direction)
             paste_center(canvas, impact, target)
-        draw_particles(canvas, particles(73 if enemy_to_player else 37, 44, 0 if enemy_to_player else pi), rupture, target, (107, 201, 255), direction)
+        draw_particles(canvas, particles(73 if enemy_to_player else 37, 44, 0 if enemy_to_player else pi), rupture, target, color, direction)
         if rupture > 0.48:
-            glow(canvas, target, 38 * (1 - rupture) + 10, (84, 195, 255), int(72 * (1 - rupture)))
+            glow(canvas, target, 38 * (1 - rupture) + 10, color, int(72 * (1 - rupture)))
     draw_hud(
         canvas,
-        "MONSTER CASTER • ORB SHOT" if enemy_to_player else "CARD QUICK • PROJECTILE",
+        "MONSTER CASTER • ARCANE ORB" if enemy_to_player else "CARD DOT • FIRE PLUME",
         "charge → release → travel → rupture",
-        "VOLT" if enemy_to_player else "VOLT / QUICK",
-        "CASTER",
+        "CASTER" if enemy_to_player else "EMBER / DOT",
+        "TRIAD PARTY" if enemy_to_player else "CASTER",
     )
     return canvas
 
@@ -363,7 +372,7 @@ def render_card_ultimate(frame: int) -> Image.Image:
         travel = ease_in_out((t - .20) / .37)
         x = 228 + (target[0] - 228) * travel
         squash = .76 if t >= .545 else 1.0 + .06 * sin(t * 28)
-        asset = transform_asset(ASSETS["projectile"], int(118 + 34 * travel), opacity=1.0, scale_x=squash, scale_y=.82)
+        asset = transform_asset(ASSETS["sig_ember"], int(110 + 28 * travel), opacity=1.0, scale_x=squash, scale_y=.92)
         glow(canvas, (x, 216), 24, (255, 93, 68), 92)
         paste_center(canvas, asset, (x, 216))
         draw_particles(canvas, particles(508, 18, pi), travel, (x - 23, 216), (255, 144, 82), 1)
@@ -404,7 +413,7 @@ def render_boss_ultimate(frame: int) -> Image.Image:
         x = origin[0] + (target[0] - origin[0]) * attack
         y = origin[1] + sin(attack * pi) * 16
         squash = .70 if t >= .535 else 1.0 + .06 * sin(t * 30)
-        asset = transform_asset(ASSETS["projectile"], int(128 + 36 * attack), opacity=1.0, scale_x=squash, scale_y=.86, mirrored=True)
+        asset = transform_asset(ASSETS["boss_sovereign"], int(158 + 34 * attack), opacity=1.0, scale_x=squash, scale_y=.82, mirrored=True)
         glow(canvas, (x, y), 29, (211, 101, 255), 94)
         paste_center(canvas, asset, (x, y))
         draw_particles(canvas, particles(904, 26, 0), attack, (x + 26, y), (219, 115, 255), -1)
@@ -434,10 +443,10 @@ def save_gif(name: str, renderer) -> Path:
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     clips = (
-        ("01_card_quick_projectile.gif", lambda frame: render_projectile(frame, enemy_to_player=False)),
+        ("01_card_quick_projectile.gif", lambda frame: render_projectile(frame, enemy_to_player=False, launch_key="burn", impact_key="burn", launch_width=132, travel_scale_y=1.12)),
         ("02_card_inferno_heavy_impact.gif", render_heavy),
         ("03_card_signature_ultimate.gif", render_card_ultimate),
-        ("04_monster_caster_projectile.gif", lambda frame: render_projectile(frame, enemy_to_player=True)),
+        ("04_monster_caster_projectile.gif", lambda frame: render_projectile(frame, enemy_to_player=True, launch_key="ultimate", impact_key="mark", launch_width=146, travel_scale_y=.92)),
         ("05_boss_sovereign_finisher.gif", render_boss_ultimate),
     )
     for name, renderer in clips:

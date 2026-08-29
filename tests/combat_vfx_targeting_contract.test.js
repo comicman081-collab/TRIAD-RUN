@@ -92,18 +92,43 @@ test('every offensive skill gets a directional projectile, a non-generic collisi
   assert.match(html, /\.battle-vfx\[data-motion="TRAVEL"\]\{width:clamp\(230px,31vw,520px\)/);
   assert.match(html, /appendCombatVfxCharge\(event,source,150,7\);appendCombatVfxWake\(event,source,target,primary\.duration\)/);
   assert.doesNotMatch(html, /function spawnSdProjectile\(/);
-  assert.equal(vfx.VERSION, '2.2.0-ultimate-launch-ruptures');
+  assert.equal(vfx.VERSION, '2.3.0-authored-projectile-language');
 });
 
-test('offensive signature cards launch compact authored energy before their unique rupture', () => {
+test('every projectile card uses a distinct authored launch silhouette', () => {
+  const expected = {
+    quick: { launch: 'PROJECTILE', travel: 'dart' },
+    dot: { launch: 'BURN', travel: 'plume' },
+    volley: { launch: 'SHOCK', travel: 'orb' },
+    ambush: { launch: 'ELITE_REAPER', travel: 'crescent' },
+    mark: { launch: 'MARK', travel: 'seal' },
+  };
+  const launchPaths = new Set();
+  for (const [key, profile] of Object.entries(expected)) {
+    const event = vfx.card({ pattern: { key }, owner: 'EMBER' });
+    assert.equal(event.pipeline, 'PROJECTILE', key);
+    assert.equal(event.asset.path, vfx.ASSETS[profile.launch].path, key);
+    assert.equal(event.asset.motion, 'TRAVEL', key);
+    assert.equal(event.travelProfile, profile.travel, key);
+    launchPaths.add(event.asset.path);
+  }
+  assert.equal(launchPaths.size, 5);
+});
+
+test('offensive signature cards launch compact but distinct authored energy before their unique rupture', () => {
+  const launchPaths = new Set();
   for (const owner of ['EMBER', 'VOLT', 'SHADE', 'RIFT']) {
     const event = vfx.card({ pattern: { key: 'signature' }, owner });
     assert.equal(event.pipeline, 'ULTIMATE', owner);
-    assert.equal(event.launchAsset, vfx.ASSETS.PROJECTILE, owner);
     assert.equal(event.launchAsset.motion, 'TRAVEL', owner);
-    assert.notEqual(event.impactAsset, event.launchAsset, owner);
+    assert.equal(event.launchAsset.path, vfx.ASSETS[vfx.SIGNATURE_LAUNCH_PROFILES[owner].assetKey].path, owner);
+    assert.equal(event.travelProfile, vfx.SIGNATURE_LAUNCH_PROFILES[owner].travelProfile, owner);
+    assert.notEqual(event.impactAsset.motion, 'TRAVEL', owner);
     assert.equal(event.launchDuration > event.contactMs, true, owner);
+    launchPaths.add(event.launchAsset.path);
   }
+  assert.equal(launchPaths.size, 4);
   assert.match(html, /pipeline==='ULTIMATE'&&event\.launchAsset\?\.path/);
   assert.match(html, /appendCombatVfxWake\(launchEvent,source,target,launch\.duration\)/);
+  assert.match(html, /particle\.dataset\.travelProfile=String\(event\.travelProfile\|\|'dart'\)/);
 });

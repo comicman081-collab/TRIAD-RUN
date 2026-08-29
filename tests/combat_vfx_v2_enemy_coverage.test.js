@@ -30,14 +30,23 @@ function enemy(archetype, rank = 'normal') {
 }
 
 test('normal monster projectile archetypes use their own directional projectile profiles', () => {
-  const expectedImpactAsset = { SCOUT: 'SHOCK', CASTER: 'MARK', HUNTER: 'IMPACT' };
-  for (const archetype of ['SCOUT', 'CASTER', 'HUNTER']) {
+  const expected = {
+    SCOUT: { launch: 'PROJECTILE', impact: 'SHOCK', travel: 'dart' },
+    CASTER: { launch: 'ULTIMATE', impact: 'MARK', travel: 'arcane-orb' },
+    HUNTER: { launch: 'ELITE_REAPER', impact: 'IMPACT', travel: 'crescent' },
+    VANGUARD: { launch: 'ELITE_VANGUARD', impact: 'SHOCK', travel: 'lance' },
+  };
+  const launchPaths = new Set();
+  for (const [archetype, profile] of Object.entries(expected)) {
     const event = enemy(archetype);
     assert.equal(event.pipeline, 'PROJECTILE', archetype);
-    assert.equal(event.asset, vfx.ASSETS.PROJECTILE, archetype);
-    assert.equal(event.impactAsset, vfx.ASSETS[expectedImpactAsset[archetype]], archetype);
+    assert.equal(event.asset.path, vfx.ASSETS[profile.launch].path, archetype);
+    assert.equal(event.travelProfile, profile.travel, archetype);
+    assert.equal(event.impactAsset, vfx.ASSETS[profile.impact], archetype);
     assert.equal(event.contactMs < event.duration, true, archetype);
+    launchPaths.add(event.asset.path);
   }
+  assert.equal(launchPaths.size, 4);
   assert.notEqual(enemy('SCOUT').particleProfile, enemy('CASTER').particleProfile);
   assert.notEqual(enemy('CASTER').duration, enemy('HUNTER').duration);
 });
@@ -63,19 +72,23 @@ test('elite vanguard and all bosses retain dedicated source art and finishers', 
   const vanguard = enemy('VANGUARD', 'elite');
   assert.equal(vanguard.pipeline, 'PROJECTILE');
   assert.equal(vanguard.category, 'ELITE_VANGUARD');
-  assert.equal(vanguard.asset, vfx.ASSETS.ELITE_VANGUARD);
+  assert.equal(vanguard.asset.path, vfx.ASSETS.ELITE_VANGUARD.path);
 
+  const launchPaths = new Set();
   for (const archetype of ['APOSTLE', 'OVERMIND', 'SOVEREIGN']) {
     const event = enemy(archetype, 'boss');
     assert.equal(event.pipeline, 'ULTIMATE', archetype);
     assert.match(event.category, /^BOSS_(APOSTLE|OVERMIND|SOVEREIGN)$/);
     assert.equal(event.priority, 'P0');
     assert.equal(event.contactMs, Math.round(event.duration * 0.52));
-    assert.equal(event.launchAsset, vfx.ASSETS.PROJECTILE, archetype);
     assert.equal(event.launchAsset.motion, 'TRAVEL', archetype);
-    assert.notEqual(event.impactAsset, event.launchAsset, archetype);
+    assert.equal(event.launchAsset.path, vfx.ASSETS[vfx.BOSS_LAUNCH_PROFILES[archetype].assetKey].path, archetype);
+    assert.equal(event.travelProfile, vfx.BOSS_LAUNCH_PROFILES[archetype].travelProfile, archetype);
+    assert.notEqual(event.impactAsset.motion, 'TRAVEL', archetype);
     assert.equal(event.launchDuration > event.contactMs, true, archetype);
+    launchPaths.add(event.launchAsset.path);
   }
+  assert.equal(launchPaths.size, 3);
 });
 
 test('monster and boss VFX have bounded debris with deterministic cleanup and actor-facing travel', () => {

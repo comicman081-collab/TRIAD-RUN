@@ -67,6 +67,8 @@ node_modules/
 *.py[cod]
 *.tmp
 *.log
+qa_artifacts/combat_vfx_v3/random_samples/
+qa_artifacts/combat_vfx_v4_mask_preview/
 .DS_Store
 Thumbs.db
 desktop.ini

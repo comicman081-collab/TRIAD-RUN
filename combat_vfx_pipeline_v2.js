@@ -6,8 +6,8 @@
   const BASE=global.TRIAD_COMBAT_VFX;
   if(!BASE)throw new Error('TRIAD combat VFX V2 requires the V1 asset authority');
 
-  const VERSION='3.0.0-unique-skill-assets';
-  const UNIQUE=global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3||{cards:{},enemies:{}};
+  const VERSION='4.0.0-distinct-visual-grammar';
+  const UNIQUE=global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V4||global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3||{cards:{},enemies:{}};
   const PIPELINES=Object.freeze({PROJECTILE:'PROJECTILE',HEAVY:'HEAVY_IMPACT',ULTIMATE:'ULTIMATE',SUPPORT:'SUPPORT'});
   const RANGED_CARDS=new Set(['quick','dot','volley','ambush','mark']);
   const HEAVY_CARDS=new Set(['strike','heavy','combo','scale','execute','burst','inferno','overload']);
@@ -130,7 +130,7 @@
     const launchTemplate=event.launchAsset||event.asset,impactTemplate=event.impactAsset||event.asset;
     const launchAsset=launchTemplate?{...launchTemplate,path:unique.launch}:null,impactAsset=impactTemplate?{...impactTemplate,path:unique.impact}:null;
     const travelling=event.pipeline===PIPELINES.PROJECTILE||Boolean(event.launchAsset),support=event.pipeline===PIPELINES.SUPPORT;
-    return{...event,asset:support?launchAsset:travelling?launchAsset:impactAsset,launchAsset:event.launchAsset?launchAsset:event.launchAsset,impactAsset:support?event.impactAsset:impactAsset,impactFamily:event.impactProfile||unique.impactFamily,impactProfile:unique.id,variantSeed:unique.seed,motionVariant:unique.motion,ruptureVariant:unique.rupture,uniqueAssetId:unique.id,uniqueAssetPaths:{launch:unique.launch,impact:unique.impact}}
+    return{...event,asset:support?launchAsset:travelling?launchAsset:impactAsset,launchAsset:event.launchAsset?launchAsset:event.launchAsset,impactAsset:support?event.impactAsset:impactAsset,impactFamily:unique.impactFamily||event.impactProfile,impactProfile:unique.id,variantSeed:unique.seed,motionVariant:unique.motion,ruptureVariant:unique.rupture,sequenceVariant:unique.sequence,uniqueSequenceId:unique.sequence?.id||unique.id,visualIdentity:unique.visualIdentity,uniqueAssetId:unique.id,uniqueAssetPaths:{launch:unique.launch,impact:unique.impact}}
   }
   const uniqueCard=(event,record)=>applyUniqueSkillAsset(event,'cards',record?.id);
   const uniqueEnemy=(event,skillId)=>applyUniqueSkillAsset(event,'enemies',skillId);

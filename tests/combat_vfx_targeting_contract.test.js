@@ -92,7 +92,7 @@ test('every offensive skill gets a directional projectile, a non-generic collisi
   assert.match(html, /\.battle-vfx\[data-motion="TRAVEL"\]\{width:clamp\(230px,31vw,520px\)/);
   assert.equal(html.includes("appendCombatVfxCharge(event,source,Number(event?.motionVariant?.chargeMs)||150,Number(event?.motionVariant?.chargeMotes)||7);appendCombatVfxWake(event,source,target,primary.duration)"), true);
   assert.doesNotMatch(html, /function spawnSdProjectile\(/);
-  assert.equal(vfx.VERSION, '3.0.0-unique-skill-assets');
+  assert.equal(vfx.VERSION, '4.0.0-distinct-visual-grammar');
 });
 
 test('every projectile card uses a distinct authored launch silhouette', () => {

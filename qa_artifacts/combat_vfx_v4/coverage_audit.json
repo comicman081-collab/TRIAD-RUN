@@ -1,0 +1,391 @@
+{
+  "result": "PASS",
+  "pipelineVersion": "4.0.0-distinct-visual-grammar",
+  "actorCounts": {
+    "selectableCharacters": 12,
+    "monsterActors": 90,
+    "totalActors": 102
+  },
+  "recordCounts": {
+    "cardPatterns": 21,
+    "characterCardPresentationPaths": 252,
+    "monsterSkillRecords": 180,
+    "distinctMonsterSkillPresentations": 180,
+    "authoredVfxAssets": 20,
+    "derivedSkillAssets": 612
+  },
+  "assetAudit": {
+    "IMPACT": {
+      "path": "assets/vfx/gpt_web_v1/vfx_impact.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "PROJECTILE": {
+      "path": "assets/vfx/gpt_web_v1/vfx_projectile.png",
+      "width": 1774,
+      "height": 887,
+      "colorType": 6,
+      "alpha": true
+    },
+    "BURN": {
+      "path": "assets/vfx/gpt_web_v1/vfx_burn.png",
+      "width": 1184,
+      "height": 1328,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SHOCK": {
+      "path": "assets/vfx/gpt_web_v1/vfx_shock.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "MARK": {
+      "path": "assets/vfx/gpt_web_v1/vfx_mark.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SHIELD": {
+      "path": "assets/vfx/gpt_web_v1/vfx_shield.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "HEAL": {
+      "path": "assets/vfx/gpt_web_v1/vfx_heal.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "ULTIMATE": {
+      "path": "assets/vfx/gpt_web_v1/vfx_ultimate.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SIG_EMBER": {
+      "path": "assets/vfx/gpt_web_v1/vfx_signature_ember.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SIG_VOLT": {
+      "path": "assets/vfx/gpt_web_v1/vfx_signature_volt.png",
+      "width": 1672,
+      "height": 941,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SIG_AEGIS": {
+      "path": "assets/vfx/gpt_web_v1/vfx_signature_aegis.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SIG_SHADE": {
+      "path": "assets/vfx/gpt_web_v1/vfx_signature_shade.png",
+      "width": 1536,
+      "height": 1024,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SIG_BLOOM": {
+      "path": "assets/vfx/gpt_web_v1/vfx_signature_bloom.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "SIG_RIFT": {
+      "path": "assets/vfx/gpt_web_v1/vfx_signature_rift.png",
+      "width": 1254,
+      "height": 1254,
+      "colorType": 6,
+      "alpha": true
+    },
+    "ELITE_VANGUARD": {
+      "path": "assets/vfx/gpt_web_v1/vfx_elite_vanguard.png",
+      "width": 1672,
+      "height": 941,
+      "colorType": 6,
+      "alpha": true
+    },
+    "ELITE_REAPER": {
+      "path": "assets/vfx/gpt_web_v1/vfx_elite_reaper.png",
+      "width": 1536,
+      "height": 1024,
+      "colorType": 6,
+      "alpha": true
+    },
+    "ELITE_COLOSSUS": {
+      "path": "assets/vfx/gpt_web_v1/vfx_elite_colossus.png",
+      "width": 1672,
+      "height": 941,
+      "colorType": 6,
+      "alpha": true
+    },
+    "BOSS_APOSTLE": {
+      "path": "assets/vfx/gpt_web_v1/vfx_boss_apostle.png",
+      "width": 1122,
+      "height": 1402,
+      "colorType": 6,
+      "alpha": true
+    },
+    "BOSS_OVERMIND": {
+      "path": "assets/vfx/gpt_web_v1/vfx_boss_overmind.png",
+      "width": 1536,
+      "height": 1024,
+      "colorType": 6,
+      "alpha": true
+    },
+    "BOSS_SOVEREIGN": {
+      "path": "assets/vfx/gpt_web_v1/vfx_boss_sovereign.png",
+      "width": 1672,
+      "height": 941,
+      "colorType": 6,
+      "alpha": true
+    }
+  },
+  "perArchetype": {
+    "SCOUT": {
+      "skills": [
+        {
+          "id": "EMBER_SCOUT_JAB",
+          "name": "화염 탐침",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_scout_jab_launch.webp|dart|assets/vfx/derived_v4/enemies/ember_scout_jab_impact.webp|enemie-ember_scout_jab|enemy-needle|sequence-ember_scout_jab"
+        },
+        {
+          "id": "EMBER_SCOUT_FLURRY",
+          "name": "화염 연속 찌르기",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_scout_flurry_launch.webp|orb|assets/vfx/derived_v4/enemies/ember_scout_flurry_impact.webp|enemie-ember_scout_flurry|flurry-orbs|sequence-ember_scout_flurry"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "HOUND": {
+      "skills": [
+        {
+          "id": "EMBER_HOUND_BITE",
+          "name": "화염 물어뜯기",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_hound_bite_impact.webp||assets/vfx/derived_v4/enemies/ember_hound_bite_impact.webp|enemie-ember_hound_bite|fang-shard|sequence-ember_hound_bite"
+        },
+        {
+          "id": "EMBER_HOUND_LEAP",
+          "name": "화염 도약 강습",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_hound_leap_impact.webp||assets/vfx/derived_v4/enemies/ember_hound_leap_impact.webp|enemie-ember_hound_leap|leap-rubble|sequence-ember_hound_leap"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "WARDEN": {
+      "skills": [
+        {
+          "id": "EMBER_WARDEN_BASH",
+          "name": "화염 방패 가격",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_warden_bash_impact.webp||assets/vfx/derived_v4/enemies/ember_warden_bash_impact.webp|enemie-ember_warden_bash|guard-shard|sequence-ember_warden_bash"
+        },
+        {
+          "id": "EMBER_WARDEN_WAVE",
+          "name": "화염 방호 파동",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_warden_wave_impact.webp||assets/vfx/derived_v4/enemies/ember_warden_wave_impact.webp|enemie-ember_warden_wave|ward-wave|sequence-ember_warden_wave"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "CASTER": {
+      "skills": [
+        {
+          "id": "EMBER_CASTER_BOLT",
+          "name": "화염 응축탄",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_caster_bolt_launch.webp|arcane-orb|assets/vfx/derived_v4/enemies/ember_caster_bolt_impact.webp|enemie-ember_caster_bolt|enemy-orb|sequence-ember_caster_bolt"
+        },
+        {
+          "id": "EMBER_CASTER_SURGE",
+          "name": "화염 이중 방출",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_caster_surge_launch.webp|singularity|assets/vfx/derived_v4/enemies/ember_caster_surge_impact.webp|enemie-ember_caster_surge|rift-surge|sequence-ember_caster_surge"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "HUNTER": {
+      "skills": [
+        {
+          "id": "EMBER_HUNTER_SHOT",
+          "name": "화염 정밀 사격",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_hunter_shot_launch.webp|crescent|assets/vfx/derived_v4/enemies/ember_hunter_shot_impact.webp|enemie-ember_hunter_shot|hunter-shot|sequence-ember_hunter_shot"
+        },
+        {
+          "id": "EMBER_HUNTER_VOLLEY",
+          "name": "화염 산개 사격",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_hunter_volley_launch.webp|lance|assets/vfx/derived_v4/enemies/ember_hunter_volley_impact.webp|enemie-ember_hunter_volley|hunter-volley|sequence-ember_hunter_volley"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "BRUTE": {
+      "skills": [
+        {
+          "id": "EMBER_BRUTE_CLUB",
+          "name": "화염 중량 타격",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_brute_club_impact.webp||assets/vfx/derived_v4/enemies/ember_brute_club_impact.webp|enemie-ember_brute_club|club-shard|sequence-ember_brute_club"
+        },
+        {
+          "id": "EMBER_BRUTE_CRUSH",
+          "name": "화염 분쇄 강타",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_brute_crush_impact.webp||assets/vfx/derived_v4/enemies/ember_brute_crush_impact.webp|enemie-ember_brute_crush|crush-rubble|sequence-ember_brute_crush"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "WEAVER": {
+      "skills": [
+        {
+          "id": "EMBER_WEAVER_LASH",
+          "name": "화염 사슬 채찍",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_weaver_lash_impact.webp||assets/vfx/derived_v4/enemies/ember_weaver_lash_impact.webp|enemie-ember_weaver_lash|lash-shard|sequence-ember_weaver_lash"
+        },
+        {
+          "id": "EMBER_WEAVER_WEB",
+          "name": "화염 구속 폭발",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_weaver_web_impact.webp||assets/vfx/derived_v4/enemies/ember_weaver_web_impact.webp|enemie-ember_weaver_web|web-lump|sequence-ember_weaver_web"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "RAVAGER": {
+      "skills": [
+        {
+          "id": "EMBER_RAVAGER_REND",
+          "name": "화염 쌍열상",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_ravager_rend_impact.webp||assets/vfx/derived_v4/enemies/ember_ravager_rend_impact.webp|enemie-ember_ravager_rend|rend-shard|sequence-ember_ravager_rend"
+        },
+        {
+          "id": "EMBER_RAVAGER_FRENZY",
+          "name": "화염 광란",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_ravager_frenzy_impact.webp||assets/vfx/derived_v4/enemies/ember_ravager_frenzy_impact.webp|enemie-ember_ravager_frenzy|frenzy-ember|sequence-ember_ravager_frenzy"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "SENTINEL": {
+      "skills": [
+        {
+          "id": "EMBER_SENTINEL_SPEAR",
+          "name": "화염 관통창",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_sentinel_spear_launch.webp|lance|assets/vfx/derived_v4/enemies/ember_sentinel_spear_impact.webp|enemie-ember_sentinel_spear|sentinel-lance|sequence-ember_sentinel_spear"
+        },
+        {
+          "id": "EMBER_SENTINEL_PULSE",
+          "name": "화염 감시 파동",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_sentinel_pulse_impact.webp||assets/vfx/derived_v4/enemies/ember_sentinel_pulse_impact.webp|enemie-ember_sentinel_pulse|sentinel-pulse|sequence-ember_sentinel_pulse"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "VANGUARD": {
+      "skills": [
+        {
+          "id": "EMBER_VANGUARD_BREACH",
+          "name": "화염 전선 붕괴",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_vanguard_breach_launch.webp|lance|assets/vfx/derived_v4/enemies/ember_vanguard_breach_impact.webp|enemie-ember_vanguard_breach|siege-shot|sequence-ember_vanguard_breach"
+        },
+        {
+          "id": "EMBER_VANGUARD_CROSS",
+          "name": "화염 교차 참격",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_vanguard_cross_impact.webp||assets/vfx/derived_v4/enemies/ember_vanguard_cross_impact.webp|enemie-ember_vanguard_cross|cross-shard|sequence-ember_vanguard_cross"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "REAPER": {
+      "skills": [
+        {
+          "id": "EMBER_REAPER_REAP",
+          "name": "화염 수확의 낫",
+          "presentation": "PROJECTILE|assets/vfx/derived_v4/enemies/ember_reaper_reap_launch.webp|crescent|assets/vfx/derived_v4/enemies/ember_reaper_reap_impact.webp|enemie-ember_reaper_reap|reap-crescent|sequence-ember_reaper_reap"
+        },
+        {
+          "id": "EMBER_REAPER_HARVEST",
+          "name": "화염 생명 수확",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_reaper_harvest_impact.webp||assets/vfx/derived_v4/enemies/ember_reaper_harvest_impact.webp|enemie-ember_reaper_harvest|harvest-lump|sequence-ember_reaper_harvest"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "COLOSSUS": {
+      "skills": [
+        {
+          "id": "EMBER_COLOSSUS_FIST",
+          "name": "화염 거신권",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_colossus_fist_impact.webp||assets/vfx/derived_v4/enemies/ember_colossus_fist_impact.webp|enemie-ember_colossus_fist|fist-rubble|sequence-ember_colossus_fist"
+        },
+        {
+          "id": "EMBER_COLOSSUS_QUAKE",
+          "name": "화염 붕괴 지진",
+          "presentation": "HEAVY_IMPACT|assets/vfx/derived_v4/enemies/ember_colossus_quake_impact.webp||assets/vfx/derived_v4/enemies/ember_colossus_quake_impact.webp|enemie-ember_colossus_quake|quake-rubble|sequence-ember_colossus_quake"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "APOSTLE": {
+      "skills": [
+        {
+          "id": "EMBER_APOSTLE_EDICT",
+          "name": "화염 파멸 선고",
+          "presentation": "ULTIMATE|assets/vfx/derived_v4/enemies/ember_apostle_edict_launch.webp|judgment|assets/vfx/derived_v4/enemies/ember_apostle_edict_impact.webp|enemie-ember_apostle_edict|apostle-edict|sequence-ember_apostle_edict"
+        },
+        {
+          "id": "EMBER_APOSTLE_JUDGMENT",
+          "name": "화염 초동 심판",
+          "presentation": "ULTIMATE|assets/vfx/derived_v4/enemies/ember_apostle_judgment_launch.webp|judgment|assets/vfx/derived_v4/enemies/ember_apostle_judgment_impact.webp|enemie-ember_apostle_judgment|apostle-judgment|sequence-ember_apostle_judgment"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "OVERMIND": {
+      "skills": [
+        {
+          "id": "EMBER_OVERMIND_SYNAPSE",
+          "name": "화염 신경 절단",
+          "presentation": "ULTIMATE|assets/vfx/derived_v4/enemies/ember_overmind_synapse_launch.webp|psychic-orb|assets/vfx/derived_v4/enemies/ember_overmind_synapse_impact.webp|enemie-ember_overmind_synapse|overmind-synapse|sequence-ember_overmind_synapse"
+        },
+        {
+          "id": "EMBER_OVERMIND_DOMINION",
+          "name": "화염 정신 지배파",
+          "presentation": "ULTIMATE|assets/vfx/derived_v4/enemies/ember_overmind_dominion_launch.webp|singularity|assets/vfx/derived_v4/enemies/ember_overmind_dominion_impact.webp|enemie-ember_overmind_dominion|overmind-dominion|sequence-ember_overmind_dominion"
+        }
+      ],
+      "distinctPresentations": 2
+    },
+    "SOVEREIGN": {
+      "skills": [
+        {
+          "id": "EMBER_SOVEREIGN_END",
+          "name": "화염 종말의 쌍격",
+          "presentation": "ULTIMATE|assets/vfx/derived_v4/enemies/ember_sovereign_end_launch.webp|domination-slice|assets/vfx/derived_v4/enemies/ember_sovereign_end_impact.webp|enemie-ember_sovereign_end|sovereign-end|sequence-ember_sovereign_end"
+        },
+        {
+          "id": "EMBER_SOVEREIGN_COLLAPSE",
+          "name": "화염 세계 붕괴",
+          "presentation": "ULTIMATE|assets/vfx/derived_v4/enemies/ember_sovereign_collapse_launch.webp|singularity|assets/vfx/derived_v4/enemies/ember_sovereign_collapse_impact.webp|enemie-ember_sovereign_collapse|sovereign-collapse|sequence-ember_sovereign_collapse"
+        }
+      ],
+      "distinctPresentations": 2
+    }
+  },
+  "unresolved": [],
+  "notes": [
+    "Every elemental monster skill now has a separate launch/impact path and deterministic motion/rupture profile while retaining its own actor atlas and element hue.",
+    "Character records sharing a core intentionally use that core's card inventory; all 126 immutable card IDs still have separate launch/impact derivatives."
+  ]
+}

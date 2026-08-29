@@ -11,7 +11,7 @@ const root = path.resolve(__dirname, '..', '..');
 const read = relative => fs.readFileSync(path.join(root, relative), 'utf8');
 const window = {};
 window.window = window;
-for (const source of ['combat_data.js', 'enemy_visual_data.js', 'combat_vfx_data.js', 'combat_vfx_skill_assets_v3.js', 'combat_vfx_pipeline_v2.js', 'assets/characters/roster/triad_character_roster.js']) {
+for (const source of ['combat_data.js', 'enemy_visual_data.js', 'combat_vfx_data.js', 'combat_vfx_skill_assets_v4.js', 'combat_vfx_pipeline_v2.js', 'assets/characters/roster/triad_character_roster.js']) {
   vm.runInNewContext(read(source), { window }, { filename: source });
 }
 
@@ -22,7 +22,7 @@ const html = read('TRIAD_RUN_V0_8_MANEQUIN_ASSEMBLY.html');
 const cardBlock = html.match(/const CARD_PATTERNS=\[([\s\S]*?)function coreBy\(/)?.[1] || '';
 const cardKeys = [...new Set([...cardBlock.matchAll(/key:'([^']+)'/g)].map(([, key]) => key))];
 const primaryAsset = event => event?.launchAsset || event?.asset;
-const signature = event => [event.pipeline, primaryAsset(event)?.path, event.travelProfile, event.impactAsset?.path, event.impactProfile, event.particleProfile].join('|');
+const signature = event => [event.pipeline, primaryAsset(event)?.path, event.travelProfile, event.impactAsset?.path, event.impactProfile, event.particleProfile, event.uniqueSequenceId].join('|');
 const pngMetadata = relative => {
   const bytes = fs.readFileSync(path.join(root, relative));
   const valid = bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
@@ -42,8 +42,8 @@ const perArchetype = Object.fromEntries(data.ARCHETYPES.map((archetype, index) =
   return [archetype.key, { skills: monster.skills.map((skill, i) => ({ id: skill.id, name: skill.name, presentation: signature(events[i]) })), distinctPresentations: new Set(events.map(signature)).size }];
 }));
 for (const [archetype, result] of Object.entries(perArchetype)) if (result.distinctPresentations !== 2) missing.push({ archetype, reason: 'two skill records collapsed to one presentation' });
-const cardEntries = roster.flatMap(character => cardKeys.map(key => {
-  const event = vfx.card({ pattern: { key }, owner: character.coreId, characterId: character.id });
+const cardEntries = roster.flatMap(character => cardKeys.map((key, index) => {
+  const event = vfx.card({ id: `${character.coreId}_${String(index + 1).padStart(2, '0')}`, pattern: { key }, owner: character.coreId, characterId: character.id });
   if (!event?.asset?.path || (event.target === 'enemy' && !event?.impactAsset?.path)) missing.push({ characterId: character.id, cardKey: key, reason: 'unresolved authored card event' });
   return { characterId: character.id, coreId: character.coreId, cardKey: key, pipeline: event?.pipeline, launch: event?.asset?.path, travelProfile: event?.travelProfile || null, impact: event?.impactAsset?.path || null, impactProfile: event?.impactProfile || null, target: event?.target };
 }));
@@ -53,13 +53,13 @@ const report = {
   result: missing.length ? 'FAIL' : 'PASS',
   pipelineVersion: vfx.VERSION,
   actorCounts: { selectableCharacters: roster.length, monsterActors: data.MONSTERS.length, totalActors: roster.length + data.MONSTERS.length },
-  recordCounts: { cardPatterns: cardKeys.length, characterCardPresentationPaths: cardEntries.length, monsterSkillRecords: enemyEntries.length, distinctMonsterSkillPresentations: new Set(enemyEntries.map(entry => [entry.event.pipeline, entry.event.launch, entry.event.travelProfile, entry.event.impact, entry.event.impactProfile, entry.event.particleProfile].join('|'))).size, authoredVfxAssets: Object.keys(assetAudit).length, derivedSkillAssets: Object.keys(window.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3.cards).length * 2 + Object.keys(window.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3.enemies).length * 2 },
+  recordCounts: { cardPatterns: cardKeys.length, characterCardPresentationPaths: cardEntries.length, monsterSkillRecords: enemyEntries.length, distinctMonsterSkillPresentations: new Set(enemyEntries.map(entry => [entry.event.pipeline, entry.event.launch, entry.event.travelProfile, entry.event.impact, entry.event.impactProfile, entry.event.particleProfile].join('|'))).size, authoredVfxAssets: Object.keys(assetAudit).length, derivedSkillAssets: Object.keys(window.TRIAD_COMBAT_VFX_SKILL_ASSETS_V4.cards).length * 2 + Object.keys(window.TRIAD_COMBAT_VFX_SKILL_ASSETS_V4.enemies).length * 2 },
   assetAudit,
   perArchetype,
   unresolved: missing,
   notes: ['Every elemental monster skill now has a separate launch/impact path and deterministic motion/rupture profile while retaining its own actor atlas and element hue.', 'Character records sharing a core intentionally use that core\'s card inventory; all 126 immutable card IDs still have separate launch/impact derivatives.']
 };
-const outputDirectory = path.join(root, 'qa_artifacts', 'combat_vfx_v2');
+const outputDirectory = path.join(root, 'qa_artifacts', 'combat_vfx_v4');
 fs.mkdirSync(outputDirectory, { recursive: true });
 const output = path.join(outputDirectory, 'coverage_audit.json');
 fs.writeFileSync(output, `${JSON.stringify(report, null, 2)}\n`);

@@ -18,8 +18,10 @@ const aegisSignature=vfx.card({pattern:{key:'signature'},owner:'AEGIS'});
 const heal=vfx.card({pattern:{key:'heal'},owner:'BLOOM'});
 const guard=vfx.card({pattern:{key:'guard'},owner:'AEGIS'});
 const quick=vfx.card({pattern:{key:'quick'},owner:'VOLT'});
-const apostle=vfx.enemy({data:{catalogNo:13,rank:'boss',elementId:'SHADE'}});
-const scout=vfx.enemy({data:{catalogNo:1,rank:'normal',elementId:'VOLT'}});
+const apostle=vfx.enemy({data:{catalogNo:13,rank:'boss',elementId:'SHADE'}},'SHADE_APOSTLE_EDICT');
+const apostleJudgment=vfx.enemy({data:{catalogNo:13,rank:'boss',elementId:'SHADE'}},'SHADE_APOSTLE_JUDGMENT');
+const scout=vfx.enemy({data:{catalogNo:1,rank:'normal',elementId:'VOLT'}},'VOLT_SCOUT_JAB');
+const scoutFlurry=vfx.enemy({data:{catalogNo:1,rank:'normal',elementId:'VOLT'}},'VOLT_SCOUT_FLURRY');
 const eliteColossus=vfx.enemy({data:{catalogNo:12,rank:'elite',elementId:'EMBER'}});
 const assertions=[
   ['runtime script is linked',html.includes('combat_vfx_data.js')],
@@ -31,8 +33,9 @@ const assertions=[
   ['aegis signature targets party',aegisSignature.target==='party'],
   ['heal covers all allies',heal.target==='party'&&heal.scope==='ALL_ALLIES'],
   ['shield covers all allies',guard.target==='party'&&guard.scope==='ALL_ALLIES'],
-  ['card projectile carries an impact follow-up',quick.asset.motion==='TRAVEL'&&quick.impactAsset===vfx.ASSETS.IMPACT],
-  ['enemy projectile carries an impact follow-up',scout.asset.motion==='TRAVEL'&&scout.impactAsset===vfx.ASSETS.IMPACT],
+  ['card projectile carries an impact follow-up',quick.asset.motion==='TRAVEL'&&quick.impactAsset===vfx.ASSETS.SHOCK],
+  ['enemy projectile carries an impact follow-up',scout.asset.motion==='TRAVEL'&&scout.impactAsset===vfx.ASSETS.SHOCK],
+  ['each enemy skill id selects its own presentation',scout.travelProfile!==scoutFlurry.travelProfile&&apostle.launchAsset.path!==apostleJudgment.launchAsset.path],
   ['party actors expose both immutable character and core IDs',html.includes('data-core-id="${esc(p.id||core?.id||\'\')}"')],
   ['party-wide VFX uses a transparent expanded zone',html.includes('data-target-scope="ALL_ALLIES"')&&html.includes('filter:opacity(.64)')],
   ['travel VFX lands with a direct impact',html.includes('triggerCombatVfxImpact(event,event.impactAsset||asset,target,stage)')&&html.includes('appendCombatVfxImpactBurst(event,target)')],

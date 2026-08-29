@@ -63,7 +63,7 @@ test('travel impact VFX, cinematic SFX, and battle shake share one collision del
   assert.match(html, /SFX\.playCard\(card,\{damage:damageDealt,hits,damageType,impactDelay:cardImpactDelay,enemy:c\.enemy\.data,defeated\}\)/);
   assert.match(html, /SFX\.playEnemy\(\{hits:enemyResults\.length,results:enemyResults,enemy:c\.enemy\.data,skillId:enemyActionSkillId,impactDelay:enemyImpactDelay\}\)/);
   assert.match(html, /renderEnemyHpPresentation\(result\.hpAfter,c\.enemy\.maxHp\);pulseBattleImpact\('enemy'\).*?cardImpactDelay\+\(hitOffsets\[index\]\|\|0\)/s);
-  assert.match(html, /combatEnemyVfxEvent\(c\.enemy,result\.targetId\).*?presentPartyImpact\(result\);pulseBattleImpact\('player'\).*?enemyImpactDelay\+offset/s);
+  assert.match(html, /combatEnemyVfxEvent\(c\.enemy,result\.targetId,enemyActionSkillId\).*?presentPartyImpact\(result\);pulseBattleImpact\('player'\).*?enemyImpactDelay\+offset/s);
   assert.match(html, /const presentationEnd=Math\.max\(360,hitResults\.length\?cardImpactDelay\+\(hitOffsets\[hitResults\.length-1\]\|\|0\)\+90:220\)/);
 });
 
@@ -92,7 +92,7 @@ test('every offensive skill gets a directional projectile, a non-generic collisi
   assert.match(html, /\.battle-vfx\[data-motion="TRAVEL"\]\{width:clamp\(230px,31vw,520px\)/);
   assert.match(html, /appendCombatVfxCharge\(event,source,150,7\);appendCombatVfxWake\(event,source,target,primary\.duration\)/);
   assert.doesNotMatch(html, /function spawnSdProjectile\(/);
-  assert.equal(vfx.VERSION, '2.4.0-authored-fireball-travel');
+  assert.equal(vfx.VERSION, '2.5.0-enemy-skill-record-coverage');
 });
 
 test('every projectile card uses a distinct authored launch silhouette', () => {

@@ -6,7 +6,7 @@
   const BASE=global.TRIAD_COMBAT_VFX;
   if(!BASE)throw new Error('TRIAD combat VFX V2 requires the V1 asset authority');
 
-  const VERSION='2.4.0-authored-fireball-travel';
+  const VERSION='2.5.0-enemy-skill-record-coverage';
   const PIPELINES=Object.freeze({PROJECTILE:'PROJECTILE',HEAVY:'HEAVY_IMPACT',ULTIMATE:'ULTIMATE',SUPPORT:'SUPPORT'});
   const RANGED_CARDS=new Set(['quick','dot','volley','ambush','mark']);
   const HEAVY_CARDS=new Set(['strike','heavy','combo','scale','execute','burst','inferno','overload']);
@@ -26,6 +26,73 @@
     CASTER:{duration:880,contactMs:634,particleProfile:'enemy-orb',launchAssetKey:'ULTIMATE',travelProfile:'arcane-orb',impactAssetKey:'MARK',impactProfile:'void-seal',emphasis:1.08},
     HUNTER:{duration:735,contactMs:529,particleProfile:'hunter-shot',launchAssetKey:'ELITE_REAPER',travelProfile:'crescent',impactAssetKey:'IMPACT',impactProfile:'pierce-shards',emphasis:.94},
     VANGUARD:{duration:920,contactMs:662,particleProfile:'siege-shot',launchAssetKey:'ELITE_VANGUARD',travelProfile:'lance',impactAssetKey:'SHOCK',impactProfile:'siege-shock',emphasis:1.16}
+  });
+  // A monster has two authored combat actions.  This table deliberately keys
+  // the presentation to the immutable combat skill id suffix rather than just
+  // its archetype, so e.g. SCOUT_JAB and SCOUT_FLURRY no longer emit the same
+  // travelling silhouette and rupture.  Elemental variants retain their
+  // source actor and colour, while sharing only the semantic skill language.
+  const ENEMY_SKILL_VFX_PROFILES=Object.freeze({
+    SCOUT:Object.freeze({
+      JAB:{pipeline:'PROJECTILE',duration:700,contactMs:504,particleProfile:'enemy-needle',launchAssetKey:'PROJECTILE',travelProfile:'dart',impactAssetKey:'SHOCK',impactProfile:'ion-burst',emphasis:.86},
+      FLURRY:{pipeline:'PROJECTILE',duration:744,contactMs:536,particleProfile:'flurry-orbs',launchAssetKey:'SHOCK',travelProfile:'orb',impactAssetKey:'IMPACT',impactProfile:'scatter-volley',emphasis:.78}
+    }),
+    HOUND:Object.freeze({
+      BITE:{pipeline:'HEAVY_IMPACT',assetKey:'IMPACT',impactProfile:'maul-sweep',particleProfile:'fang-shard'},
+      LEAP:{pipeline:'HEAVY_IMPACT',assetKey:'ELITE_COLOSSUS',impactProfile:'crater',particleProfile:'leap-rubble'}
+    }),
+    WARDEN:Object.freeze({
+      BASH:{pipeline:'HEAVY_IMPACT',assetKey:'SHIELD',impactProfile:'guard-break',particleProfile:'guard-shard'},
+      WAVE:{pipeline:'HEAVY_IMPACT',assetKey:'SHOCK',impactProfile:'ion-burst',particleProfile:'ward-wave'}
+    }),
+    CASTER:Object.freeze({
+      BOLT:{pipeline:'PROJECTILE',duration:880,contactMs:634,particleProfile:'enemy-orb',launchAssetKey:'ULTIMATE',travelProfile:'arcane-orb',impactAssetKey:'MARK',impactProfile:'void-seal',emphasis:1.08},
+      SURGE:{pipeline:'PROJECTILE',duration:930,contactMs:670,particleProfile:'rift-surge',launchAssetKey:'SIG_RIFT',launchScale:.54,travelProfile:'singularity',impactAssetKey:'SHOCK',impactProfile:'star-collapse',emphasis:.92}
+    }),
+    HUNTER:Object.freeze({
+      SHOT:{pipeline:'PROJECTILE',duration:735,contactMs:529,particleProfile:'hunter-shot',launchAssetKey:'ELITE_REAPER',travelProfile:'crescent',impactAssetKey:'IMPACT',impactProfile:'pierce-shards',emphasis:.94},
+      VOLLEY:{pipeline:'PROJECTILE',duration:790,contactMs:569,particleProfile:'hunter-volley',launchAssetKey:'ELITE_VANGUARD',launchScale:.78,travelProfile:'lance',impactAssetKey:'SHOCK',impactProfile:'scatter-volley',emphasis:.82}
+    }),
+    BRUTE:Object.freeze({
+      CLUB:{pipeline:'HEAVY_IMPACT',assetKey:'IMPACT',impactProfile:'maul-sweep',particleProfile:'club-shard'},
+      CRUSH:{pipeline:'HEAVY_IMPACT',assetKey:'ELITE_COLOSSUS',impactProfile:'crater',particleProfile:'crush-rubble'}
+    }),
+    WEAVER:Object.freeze({
+      LASH:{pipeline:'HEAVY_IMPACT',assetKey:'ELITE_REAPER',impactProfile:'reaper-rend',particleProfile:'lash-shard'},
+      WEB:{pipeline:'HEAVY_IMPACT',assetKey:'MARK',impactProfile:'thread-collapse',particleProfile:'web-lump'}
+    }),
+    RAVAGER:Object.freeze({
+      REND:{pipeline:'HEAVY_IMPACT',assetKey:'ELITE_REAPER',impactProfile:'reaper-rend',particleProfile:'rend-shard'},
+      FRENZY:{pipeline:'HEAVY_IMPACT',assetKey:'BURN',impactProfile:'ember-plume',particleProfile:'frenzy-ember'}
+    }),
+    SENTINEL:Object.freeze({
+      SPEAR:{pipeline:'PROJECTILE',duration:900,contactMs:648,particleProfile:'sentinel-lance',launchAssetKey:'ELITE_VANGUARD',launchScale:.84,travelProfile:'lance',impactAssetKey:'IMPACT',impactProfile:'pierce-shards',emphasis:1.02},
+      PULSE:{pipeline:'HEAVY_IMPACT',assetKey:'SHOCK',impactProfile:'ion-burst',particleProfile:'sentinel-pulse'}
+    }),
+    VANGUARD:Object.freeze({
+      BREACH:{pipeline:'PROJECTILE',duration:920,contactMs:662,particleProfile:'siege-shot',launchAssetKey:'ELITE_VANGUARD',travelProfile:'lance',impactAssetKey:'SHOCK',impactProfile:'siege-shock',emphasis:1.16},
+      CROSS:{pipeline:'HEAVY_IMPACT',assetKey:'ELITE_REAPER',impactProfile:'reaper-rend',particleProfile:'cross-shard'}
+    }),
+    REAPER:Object.freeze({
+      REAP:{pipeline:'PROJECTILE',duration:820,contactMs:590,particleProfile:'reap-crescent',launchAssetKey:'ELITE_REAPER',launchScale:.78,travelProfile:'crescent',impactAssetKey:'MARK',impactProfile:'void-seal',emphasis:1.08},
+      HARVEST:{pipeline:'HEAVY_IMPACT',assetKey:'MARK',impactProfile:'thread-collapse',particleProfile:'harvest-lump'}
+    }),
+    COLOSSUS:Object.freeze({
+      FIST:{pipeline:'HEAVY_IMPACT',assetKey:'ELITE_COLOSSUS',impactProfile:'crater',particleProfile:'fist-rubble'},
+      QUAKE:{pipeline:'HEAVY_IMPACT',assetKey:'SHOCK',impactProfile:'siege-shock',particleProfile:'quake-rubble'}
+    }),
+    APOSTLE:Object.freeze({
+      EDICT:{pipeline:'ULTIMATE',launchAssetKey:'BOSS_APOSTLE',travelProfile:'judgment',launchEmphasis:.38,impactAssetKey:'BOSS_APOSTLE',impactProfile:'boss-ritual',particleProfile:'apostle-edict'},
+      JUDGMENT:{pipeline:'ULTIMATE',launchAssetKey:'SIG_AEGIS',launchScale:.42,travelProfile:'judgment',launchEmphasis:.42,impactAssetKey:'BOSS_APOSTLE',impactProfile:'boss-ritual',particleProfile:'apostle-judgment'}
+    }),
+    OVERMIND:Object.freeze({
+      SYNAPSE:{pipeline:'ULTIMATE',launchAssetKey:'BOSS_OVERMIND',travelProfile:'psychic-orb',launchEmphasis:.40,impactAssetKey:'BOSS_OVERMIND',impactProfile:'boss-psychic',particleProfile:'overmind-synapse'},
+      DOMINION:{pipeline:'ULTIMATE',launchAssetKey:'SIG_RIFT',launchScale:.43,travelProfile:'singularity',launchEmphasis:.43,impactAssetKey:'BOSS_OVERMIND',impactProfile:'boss-psychic',particleProfile:'overmind-dominion'}
+    }),
+    SOVEREIGN:Object.freeze({
+      END:{pipeline:'ULTIMATE',launchAssetKey:'BOSS_SOVEREIGN',travelProfile:'domination-slice',launchEmphasis:.36,impactAssetKey:'BOSS_SOVEREIGN',impactProfile:'boss-domination',particleProfile:'sovereign-end'},
+      COLLAPSE:{pipeline:'ULTIMATE',launchAssetKey:'SIG_RIFT',launchScale:.46,travelProfile:'singularity',launchEmphasis:.46,impactAssetKey:'BOSS_SOVEREIGN',impactProfile:'boss-domination',particleProfile:'sovereign-collapse'}
+    })
   });
   const CARD_HEAVY_PROFILES=Object.freeze({
     strike:{assetKey:'IMPACT',impactProfile:'arc-cleave'},heavy:{assetKey:'IMPACT',impactProfile:'crater'},
@@ -78,8 +145,22 @@
     return{...event,category:profile.assetKey,asset,impactAsset:asset,impactProfile:profile.impactProfile,pipeline:PIPELINES.HEAVY,duration:760,contactMs:210,priority:HEAVY_CARDS.has(key)?'P0':'P1',particleProfile:key==='inferno'?'ember':'shard'};
   }
 
-  function enemy(record){
+  function enemySkillKey(skillId){return String(skillId||'').trim().toUpperCase().split('_').pop()||''}
+  function enemy(record,skillId){
     const event=BASE.enemy(record),rank=String(record?.data?.rank||record?.rank||(record?.boss?'boss':record?.elite?'elite':'normal')).toLowerCase(),archetype=String(event.archetype||'SCOUT').toUpperCase();
+    const actionKey=enemySkillKey(skillId),skillProfile=ENEMY_SKILL_VFX_PROFILES[archetype]?.[actionKey];
+    if(skillProfile?.pipeline===PIPELINES.ULTIMATE){
+      const duration=rank==='boss'?Number(event.duration)||1420:1080,contactMs=Math.round(duration*.52),launch=authoredTravel(skillProfile.launchAssetKey,BASE.ASSETS.PROJECTILE,Number(skillProfile.launchScale)||1),impactAsset=authored(skillProfile.impactAssetKey,event.asset||BASE.ASSETS.ULTIMATE);
+      return{...event,...skillProfile,skillId,skillKey:actionKey,pipeline:PIPELINES.ULTIMATE,launchAsset:launch,launchDuration:Math.max(820,contactMs+160),impactAsset,contactMs,priority:'P0'}
+    }
+    if(skillProfile?.pipeline===PIPELINES.PROJECTILE){
+      const eliteMultiplier=rank==='elite'?1.10:1,duration=Math.round(skillProfile.duration*eliteMultiplier),asset=authoredTravel(skillProfile.launchAssetKey,BASE.ASSETS.PROJECTILE,Number(skillProfile.launchScale)||1);
+      return{...event,...skillProfile,skillId,skillKey:actionKey,category:skillProfile.launchAssetKey||'PROJECTILE',asset,impactAsset:authored(skillProfile.impactAssetKey,BASE.ASSETS.SHOCK),pipeline:PIPELINES.PROJECTILE,duration,contactMs:Math.round(skillProfile.contactMs*eliteMultiplier),priority:'P0'}
+    }
+    if(skillProfile?.pipeline===PIPELINES.HEAVY){
+      const asset=authored(skillProfile.assetKey,event.asset||BASE.ASSETS.IMPACT);
+      return{...event,...skillProfile,skillId,skillKey:actionKey,category:skillProfile.assetKey,asset,impactAsset:asset,pipeline:PIPELINES.HEAVY,duration:rank==='elite'?900:760,contactMs:rank==='elite'?260:220,priority:rank==='elite'?'P0':'P1'}
+    }
     if(rank==='boss'){
       const contactMs=Math.round((Number(event.duration)||1420)*.52);
       const launch=BOSS_LAUNCH_PROFILES[archetype]||{assetKey:'ULTIMATE',travelProfile:'arcane-orb',launchEmphasis:.4};
@@ -98,7 +179,7 @@
     return{...event,category:profile.assetKey,asset,impactAsset:asset,impactProfile:profile.impactProfile,pipeline:PIPELINES.HEAVY,duration:rank==='elite'?900:760,contactMs:rank==='elite'?260:220,priority:rank==='elite'?'P0':'P1',particleProfile:archetype==='COLOSSUS'?'quake':'enemy-shard'};
   }
 
-  const API=Object.freeze({...BASE,VERSION,PIPELINES,RANGED_CARDS,HEAVY_CARDS,PROJECTILE_ARCHETYPES,CARD_PROJECTILE_PROFILES,ENEMY_PROJECTILE_PROFILES,CARD_HEAVY_PROFILES,ENEMY_HEAVY_PROFILES,SIGNATURE_IMPACT_PROFILES,BOSS_IMPACT_PROFILES,SIGNATURE_LAUNCH_PROFILES,BOSS_LAUNCH_PROFILES,card,enemy});
+  const API=Object.freeze({...BASE,VERSION,PIPELINES,RANGED_CARDS,HEAVY_CARDS,PROJECTILE_ARCHETYPES,CARD_PROJECTILE_PROFILES,ENEMY_PROJECTILE_PROFILES,ENEMY_SKILL_VFX_PROFILES,CARD_HEAVY_PROFILES,ENEMY_HEAVY_PROFILES,SIGNATURE_IMPACT_PROFILES,BOSS_IMPACT_PROFILES,SIGNATURE_LAUNCH_PROFILES,BOSS_LAUNCH_PROFILES,card,enemy});
   global.TRIAD_COMBAT_VFX_V2=API;
   global.TRIAD_COMBAT_VFX=API;
 })(window);

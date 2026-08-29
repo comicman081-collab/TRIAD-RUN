@@ -13,7 +13,7 @@
 <script src="enemy_animation_authority.js?v=1.2.0-per-actor-player-facing"></script>
 <script src="enemy_visual_data.js?v=2.0.0-monster-frame-mvp"></script>
 <script src="combat_vfx_data.js?v=1.2.0-targeting-and-party-zones"></script>
-<script src="combat_vfx_pipeline_v2.js?v=2.4.0-authored-fireball-travel"></script>
+<script src="combat_vfx_pipeline_v2.js?v=2.5.0-enemy-skill-record-coverage"></script>
 <script src="src/triad_architecture.js"></script>
 <script src="src/triad_transactions.js"></script>
 <script src="src/triad_meta_progression.js?v=1.1.0-meta-breakthrough"></script>
@@ -1743,9 +1743,9 @@ function endTurnAuthoritative(expectedToken){
   cancelAutoBattleStep();c.inputLocked=true;c.phase='ENEMY';c.actionToken++;
   const enemyActionSkillId=c.intent?.skillId;
   for(const state of c.hand.splice(0)){const card=ALL_CARDS[state.id];if(card)settleResolvedCard(c,state,card,false)}
-  const enemyResults=enemyTurn(),enemyVfxTarget=enemyResults[0]?.targetId||run.party.find(p=>p.hp>0)?.id||'',enemyVfxEvent=combatEnemyVfxEvent(c.enemy,enemyVfxTarget),enemyImpactDelay=combatEnemyImpactDelay(enemyVfxEvent,c.enemy.data,enemyActionSkillId),enemyStyle=SFX.resolveEnemyStyle?.({enemy:c.enemy.data,skillId:enemyActionSkillId})||{},enemyOffsets=combatHitOffsets(enemyStyle.flurry?'flurry':'',enemyResults.length),presentationGeneration=beginCombatPresentation();enforceKoCardInvariant();if(c.type==='tutorial')run.tutorial=TUTORIAL.recordEndTurn(run.tutorial);SFX.playEnemy({hits:enemyResults.length,results:enemyResults,enemy:c.enemy.data,skillId:enemyActionSkillId,impactDelay:enemyImpactDelay});
+  const enemyResults=enemyTurn(),enemyVfxTarget=enemyResults[0]?.targetId||run.party.find(p=>p.hp>0)?.id||'',enemyVfxEvent=combatEnemyVfxEvent(c.enemy,enemyVfxTarget,enemyActionSkillId),enemyImpactDelay=combatEnemyImpactDelay(enemyVfxEvent,c.enemy.data,enemyActionSkillId),enemyStyle=SFX.resolveEnemyStyle?.({enemy:c.enemy.data,skillId:enemyActionSkillId})||{},enemyOffsets=combatHitOffsets(enemyStyle.flurry?'flurry':'',enemyResults.length),presentationGeneration=beginCombatPresentation();enforceKoCardInvariant();if(c.type==='tutorial')run.tutorial=TUTORIAL.recordEndTurn(run.tutorial);SFX.playEnemy({hits:enemyResults.length,results:enemyResults,enemy:c.enemy.data,skillId:enemyActionSkillId,impactDelay:enemyImpactDelay});
   renderCombat();const initialPartySnapshots=new Map();for(const result of enemyResults)if(!initialPartySnapshots.has(result.targetId))initialPartySnapshots.set(result.targetId,{targetId:result.targetId,hpAfter:result.hpBefore,shieldAfter:result.shieldBefore});for(const snapshot of initialPartySnapshots.values())renderPartyMemberPresentation(snapshot);const firstCounter=enemyResults.find(result=>result.counterHit)?.counterHit;if(firstCounter)renderEnemyHpPresentation(firstCounter.hpBefore,c.enemy.maxHp);queueEnemyVisualState(enemyActionPresentationState(enemyActionSkillId));
-  enemyResults.forEach((result,index)=>{const offset=enemyOffsets[index]||0,event=combatEnemyVfxEvent(c.enemy,result.targetId);scheduleCombatPresentation(()=>presentCombatVfx(event),offset,presentationGeneration);scheduleCombatPresentation(()=>{presentPartyImpact(result);pulseBattleImpact('player');if(result.counterHit){renderEnemyHpPresentation(result.counterHit.hpAfter,c.enemy.maxHp);pulseBattleImpact('enemy');setEnemyVisualState(result.counterHit.hpAfter<=0?'DEFEAT':'HIT')}},enemyImpactDelay+offset,presentationGeneration);if(result.counterHit)SFX.play('impactLight',{delay:enemyImpactDelay+offset,volume:.66,rate:1.01})});
+  enemyResults.forEach((result,index)=>{const offset=enemyOffsets[index]||0,event=combatEnemyVfxEvent(c.enemy,result.targetId,enemyActionSkillId);scheduleCombatPresentation(()=>presentCombatVfx(event),offset,presentationGeneration);scheduleCombatPresentation(()=>{presentPartyImpact(result);pulseBattleImpact('player');if(result.counterHit){renderEnemyHpPresentation(result.counterHit.hpAfter,c.enemy.maxHp);pulseBattleImpact('enemy');setEnemyVisualState(result.counterHit.hpAfter<=0?'DEFEAT':'HIT')}},enemyImpactDelay+offset,presentationGeneration);if(result.counterHit)SFX.play('impactLight',{delay:enemyImpactDelay+offset,volume:.66,rate:1.01})});
   const presentationEnd=enemyImpactDelay+(enemyOffsets[Math.max(0,enemyResults.length-1)]||0)+110;
   const finalizeEnemyPresentation=()=>{if(c.enemy.hp<=0){setEnemyVisualState('DEFEAT');winCombat();return}if(run.party.every(p=>p.hp<=0)){if(c.type==='tutorial')retryTutorialCombat();else finishRun('DEFEAT');return}if(!newTurnAuthoritative(false))return;renderCombat();saveRun();scheduleAutoBattle(980)};registerCombatPresentationFinalizer(presentationGeneration,finalizeEnemyPresentation);scheduleCombatPresentation(()=>runCombatPresentationFinalizer(presentationGeneration),presentationEnd,presentationGeneration);return true
 }
@@ -2034,7 +2034,7 @@ function presentCombatVfx(event){
   return true
 }
 function combatCardVfxEvent(card){const event=window.TRIAD_COMBAT_VFX?.card?.(card);if(event)event.ownerId=card?.owner;return event||null}
-function combatEnemyVfxEvent(enemy,targetId){const event=window.TRIAD_COMBAT_VFX?.enemy?.(enemy);if(event)event.ownerId=targetId||run?.party?.find(p=>p.hp>0)?.id||'';return event||null}
+function combatEnemyVfxEvent(enemy,targetId,skillId){const event=window.TRIAD_COMBAT_VFX?.enemy?.(enemy,skillId);if(event){event.ownerId=targetId||run?.party?.find(p=>p.hp>0)?.id||'';event.skillId=skillId||event.skillId||''}return event||null}
 function combatVfxTravelImpactMs(event){const configured=Number(event?.contactMs);if(Number.isFinite(configured)&&configured>0)return configured;const asset=event?.asset;if(asset?.motion!=='TRAVEL')return undefined;return Math.round(Math.max(240,Number(event?.duration)||Number(asset.duration)||700)*.72)}
 function presentCardVfx(card){return presentCombatVfx(combatCardVfxEvent(card))}
 function presentEnemyVfx(enemy,targetId){return presentCombatVfx(combatEnemyVfxEvent(enemy,targetId))}

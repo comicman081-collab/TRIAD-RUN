@@ -6,7 +6,7 @@
   const BASE=global.TRIAD_COMBAT_VFX;
   if(!BASE)throw new Error('TRIAD combat VFX V2 requires the V1 asset authority');
 
-  const VERSION='2.3.0-authored-projectile-language';
+  const VERSION='2.4.0-authored-fireball-travel';
   const PIPELINES=Object.freeze({PROJECTILE:'PROJECTILE',HEAVY:'HEAVY_IMPACT',ULTIMATE:'ULTIMATE',SUPPORT:'SUPPORT'});
   const RANGED_CARDS=new Set(['quick','dot','volley','ambush','mark']);
   const HEAVY_CARDS=new Set(['strike','heavy','combo','scale','execute','burst','inferno','overload']);
@@ -16,7 +16,7 @@
   // replacing the authored high-resolution image that remains on top.
   const CARD_PROJECTILE_PROFILES=Object.freeze({
     quick:{duration:680,contactMs:490,particleProfile:'needle',launchAssetKey:'PROJECTILE',travelProfile:'dart',impactAssetKey:'SHOCK',impactProfile:'ion-burst',emphasis:.86},
-    dot:{duration:840,contactMs:605,particleProfile:'ember-orb',launchAssetKey:'BURN',travelProfile:'plume',impactAssetKey:'BURN',impactProfile:'ember-plume',emphasis:1.04},
+    dot:{duration:840,contactMs:605,particleProfile:'ember-orb',launchAssetKey:'SIG_EMBER',launchScale:.55,travelProfile:'fireball',impactAssetKey:'BURN',impactProfile:'ember-plume',emphasis:1.04},
     volley:{duration:710,contactMs:512,particleProfile:'scatter',launchAssetKey:'SHOCK',travelProfile:'orb',impactAssetKey:'SHOCK',impactProfile:'scatter-volley',emphasis:.78},
     ambush:{duration:735,contactMs:529,particleProfile:'shade-needle',launchAssetKey:'ELITE_REAPER',travelProfile:'crescent',impactAssetKey:'MARK',impactProfile:'void-seal',emphasis:.92},
     mark:{duration:790,contactMs:569,particleProfile:'lockshot',launchAssetKey:'MARK',travelProfile:'seal',impactAssetKey:'MARK',impactProfile:'lock-on-seal',emphasis:.94}
@@ -56,7 +56,7 @@
     SOVEREIGN:{assetKey:'BOSS_SOVEREIGN',travelProfile:'domination-slice',launchEmphasis:.36}
   });
   const authored=(key,fallback)=>BASE.ASSETS[key]||fallback;
-  const authoredTravel=(key,fallback)=>({...authored(key,fallback),motion:'TRAVEL'});
+  const authoredTravel=(key,fallback,scaleMultiplier=1)=>{const asset=authored(key,fallback);return{...asset,scale:(Number(asset.scale)||1)*scaleMultiplier,motion:'TRAVEL'}};
 
   function card(record){
     const event=BASE.card(record),key=String(record?.pattern?.key||record?.key||'').toLowerCase();
@@ -72,7 +72,7 @@
     }
     if(RANGED_CARDS.has(key)){
       const profile=CARD_PROJECTILE_PROFILES[key]||CARD_PROJECTILE_PROFILES.quick;
-      return{...event,...profile,category:'PROJECTILE',asset:authoredTravel(profile.launchAssetKey,BASE.ASSETS.PROJECTILE),impactAsset:authored(profile.impactAssetKey,BASE.ASSETS.SHOCK),pipeline:PIPELINES.PROJECTILE,priority:'P0'};
+      return{...event,...profile,category:'PROJECTILE',asset:authoredTravel(profile.launchAssetKey,BASE.ASSETS.PROJECTILE,Number(profile.launchScale)||1),impactAsset:authored(profile.impactAssetKey,BASE.ASSETS.SHOCK),pipeline:PIPELINES.PROJECTILE,priority:'P0'};
     }
     const profile=CARD_HEAVY_PROFILES[key]||{assetKey:HEAVY_CATEGORY_BY_CARD[key]||'IMPACT',impactProfile:'arc-cleave'},asset=authored(profile.assetKey,BASE.ASSETS.IMPACT);
     return{...event,category:profile.assetKey,asset,impactAsset:asset,impactProfile:profile.impactProfile,pipeline:PIPELINES.HEAVY,duration:760,contactMs:210,priority:HEAVY_CARDS.has(key)?'P0':'P1',particleProfile:key==='inferno'?'ember':'shard'};

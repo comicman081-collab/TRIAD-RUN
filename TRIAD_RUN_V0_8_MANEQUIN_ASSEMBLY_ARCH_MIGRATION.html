@@ -13,7 +13,7 @@
 <script src="enemy_animation_authority.js?v=1.2.0-per-actor-player-facing"></script>
 <script src="enemy_visual_data.js?v=2.0.0-monster-frame-mvp"></script>
 <script src="combat_vfx_data.js?v=1.2.0-targeting-and-party-zones"></script>
-<script src="combat_vfx_pipeline_v2.js?v=2.3.0-authored-projectile-language"></script>
+<script src="combat_vfx_pipeline_v2.js?v=2.4.0-authored-fireball-travel"></script>
 <script src="src/triad_architecture.js"></script>
 <script src="src/triad_transactions.js"></script>
 <script src="src/triad_meta_progression.js?v=1.1.0-meta-breakthrough"></script>
@@ -285,6 +285,36 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 .hand-jrpg{position:relative;z-index:3;display:flex;justify-content:center;gap:8px;overflow-x:auto;padding:12px 5px 2px;scrollbar-width:thin}.hand-jrpg .hand-card{flex:0 0 180px;min-width:180px;max-width:180px;height:270px;border:0;background:none;box-shadow:0 10px 24px rgba(0,0,0,.48);transform-origin:50% 100%;transition:transform .15s}.hand-jrpg .hand-card:nth-child(odd){transform:rotate(-1.5deg)}.hand-jrpg .hand-card:nth-child(even){transform:rotate(1.5deg)}.hand-jrpg .hand-card:hover{transform:translateY(-18px) scale(1.06)!important;z-index:5}.hand-jrpg .tactical-card{min-height:270px}.hand-jrpg .card-heading{top:68px}.hand-jrpg .card-heading h3{font-size:18px}.hand-jrpg .card-desc{font-size:11px}.hand-jrpg .cost{transform:scale(.86) rotate(-7deg);transform-origin:left top}.hand-jrpg .card-type-pill{transform:scale(.88);transform-origin:right top}
 @media(max-width:900px){.battle-stage{min-height:430px}.ally-side{left:3%;width:68%;height:270px}.enemy-side{right:0;width:48%;height:320px}.sd-party{gap:2px}.ally-side .sd-card{width:82px;flex:0 0 82px}.sd-card img{height:205px}.enemy-side .sd-card{width:230px!important;flex-basis:230px}.enemy-side .sd-card img,.enemy-animation-canvas{height:270px!important}.enemy-panel{width:190px}.hand-jrpg .hand-card{flex-basis:160px;min-width:160px;max-width:160px;height:246px}.hand-jrpg .tactical-card{min-height:246px}}
 
+/* V2.4 fireball travel: the round authored ember source stays compact in
+   flight, deforms in place, then hands off to the full flame rupture art. */
+.battle-vfx[data-motion="TRAVEL"][data-travel-profile="fireball"]{
+  width:clamp(112px,15vw,242px);height:clamp(112px,15vw,242px);
+  object-fit:contain;object-position:50% 50%;
+  clip-path:polygon(50% 0%,77% 8%,96% 31%,91% 65%,70% 92%,39% 100%,11% 82%,0 48%,14% 17%);
+  border-radius:48% 52% 54% 46%;transform-origin:50% 56%;
+  animation-name:triadCombatVfxFireball;
+}
+.battle-vfx-wake[data-travel-profile="fireball"]{
+  width:clamp(12px,1.6vw,25px);height:clamp(10px,1.25vw,19px);aspect-ratio:auto;
+  border-radius:48% 61% 42% 57%;
+  background:radial-gradient(ellipse at 38% 42%,#fff6bf 0 9%,var(--vfx-color) 31%,transparent 73%);
+  animation-name:triadVfxFireWake;
+}
+@keyframes triadCombatVfxFireball{
+  0%{opacity:0;object-position:50% 77%;filter:brightness(1.38) saturate(1.18) drop-shadow(0 0 10px var(--vfx-color));transform:translate(calc(var(--vfx-start-x) - 50%),calc(var(--vfx-start-y) - 50%)) rotate(var(--vfx-rotation)) scale(calc(var(--vfx-scale,1)*.20),calc(var(--vfx-scale,1)*.16))}
+  11%{opacity:1;object-position:47% 67%;transform:translate(calc(var(--vfx-start-x) - 50%),calc(var(--vfx-start-y) - 50%)) rotate(calc(var(--vfx-rotation) - 8deg)) scale(calc(var(--vfx-scale,1)*.76),calc(var(--vfx-scale,1)*.96))}
+  31%{object-position:53% 76%;filter:brightness(1.52) saturate(1.28) drop-shadow(0 0 23px var(--vfx-color));transform:translate(calc(var(--vfx-mid-one-x) - 50%),calc(var(--vfx-mid-one-y) - 50%)) rotate(calc(var(--vfx-rotation) + 12deg)) scale(calc(var(--vfx-scale,1)*1.04),calc(var(--vfx-scale,1)*.88))}
+  52%{object-position:48% 70%;transform:translate(calc(var(--vfx-mid-two-x) - 50%),calc(var(--vfx-mid-two-y) - 50%)) rotate(calc(var(--vfx-rotation) - 10deg)) scale(calc(var(--vfx-scale,1)*.88),calc(var(--vfx-scale,1)*1.12))}
+  66%{opacity:1;object-position:54% 78%;filter:brightness(1.22) saturate(1.16) drop-shadow(0 0 28px var(--vfx-color));transform:translate(calc(var(--vfx-end-x) - 50%),calc(var(--vfx-end-y) - 50%)) rotate(calc(var(--vfx-rotation) + 7deg)) scale(calc(var(--vfx-scale,1)*1.08),calc(var(--vfx-scale,1)*.94))}
+  72%{opacity:.98;object-position:50% 72%;transform:translate(calc(var(--vfx-end-x) - 50%),calc(var(--vfx-end-y) - 50%)) rotate(var(--vfx-rotation)) scale(calc(var(--vfx-scale,1)*1.42),calc(var(--vfx-scale,1)*.68))}
+  100%{opacity:0;filter:brightness(1.44) blur(1px) drop-shadow(0 0 34px var(--vfx-color));transform:translate(calc(var(--vfx-end-x) - 50%),calc(var(--vfx-end-y) - 50%)) rotate(calc(var(--vfx-rotation) + 18deg)) scale(calc(var(--vfx-scale,1)*1.76),calc(var(--vfx-scale,1)*.24))}
+}
+@keyframes triadVfxFireWake{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.34) rotate(var(--wake-rotation,0deg))}
+  16%{opacity:.9}
+  62%{opacity:.68;transform:translate(calc(-50% + var(--wake-mid-x)),calc(-50% + var(--wake-mid-y) - 8px)) scale(.74) rotate(calc(var(--wake-rotation,0deg) + 42deg))}
+  100%{opacity:0;transform:translate(calc(-50% + var(--wake-x)),calc(-50% + var(--wake-y) - 18px)) scale(.12) rotate(calc(var(--wake-rotation,0deg) + 102deg))}
+}
 </style>
 <style>
 /* Card system derived from the supplied Chaos Zero Nightmare references: art fills the inner card; UI rides over a dark lower plate. */
@@ -1927,7 +1957,7 @@ function appendCombatVfxParticle(event,asset,source,target,zone,phase='PRIMARY')
   const layer=combatVfxLayer();if(!layer||!asset?.path)return null;
   const particle=document.createElement('img'),duration=Math.max(240,Number(phase==='IMPACT'?asset.duration:event.duration)||Number(asset.duration)||700),anchor=asset.motion==='TRAVEL'&&phase==='PRIMARY'?{x:0,y:0}:target;
   particle.className='battle-vfx';particle.src=asset.path;particle.alt='';particle.dataset.category=phase==='IMPACT'?'IMPACT':event.category||'';particle.dataset.motion=asset.motion||'STRIKE';particle.dataset.travelProfile=String(event.travelProfile||'dart');particle.dataset.sequence=String(++battleVfxSequence);particle.dataset.targetScope=event.scope||'SINGLE';particle.dataset.phase=phase;particle.dataset.pipeline=event.pipeline||'';particle.dataset.impactProfile=combatVfxRuptureProfile(event).name;particle.dataset.ownerId=String(event.ownerId||'');
-  const elementId=String(event.elementId||'').toUpperCase();particle.style.left=`${anchor.x}px`;particle.style.top=`${anchor.y}px`;particle.style.setProperty('--vfx-color',combatVfxColor(event));particle.style.setProperty('--vfx-hue',COMBAT_VFX_HUES[elementId]||'0deg');particle.style.setProperty('--vfx-scale',String((Number(asset.scale)||1)*(Number(event.emphasis)||1)));particle.style.setProperty('--vfx-duration',`${duration}ms`);particle.style.setProperty('--vfx-start-x',`${source.x}px`);particle.style.setProperty('--vfx-start-y',`${source.y}px`);particle.style.setProperty('--vfx-end-x',`${target.x}px`);particle.style.setProperty('--vfx-end-y',`${target.y}px`);particle.style.setProperty('--vfx-rotation',`${source.x>target.x?180:0}deg`);
+  const elementId=String(event.elementId||'').toUpperCase(),deltaX=target.x-source.x,deltaY=target.y-source.y;particle.style.left=`${anchor.x}px`;particle.style.top=`${anchor.y}px`;particle.style.setProperty('--vfx-color',combatVfxColor(event));particle.style.setProperty('--vfx-hue',COMBAT_VFX_HUES[elementId]||'0deg');particle.style.setProperty('--vfx-scale',String((Number(asset.scale)||1)*(Number(event.emphasis)||1)));particle.style.setProperty('--vfx-duration',`${duration}ms`);particle.style.setProperty('--vfx-start-x',`${source.x}px`);particle.style.setProperty('--vfx-start-y',`${source.y}px`);particle.style.setProperty('--vfx-mid-one-x',`${source.x+deltaX*.34}px`);particle.style.setProperty('--vfx-mid-one-y',`${source.y+deltaY*.34-8}px`);particle.style.setProperty('--vfx-mid-two-x',`${source.x+deltaX*.70}px`);particle.style.setProperty('--vfx-mid-two-y',`${source.y+deltaY*.70-4}px`);particle.style.setProperty('--vfx-end-x',`${target.x}px`);particle.style.setProperty('--vfx-end-y',`${target.y}px`);particle.style.setProperty('--vfx-rotation',`${source.x>target.x?180:0}deg`);
   if(zone){particle.style.setProperty('--vfx-zone-width',`${zone.width}px`);particle.style.setProperty('--vfx-zone-height',`${zone.height}px`)}
   particle.addEventListener('error',()=>particle.remove(),{once:true});layer.appendChild(particle);setTimeout(()=>particle.remove(),duration+120);return{particle,duration}
 }
@@ -1942,7 +1972,7 @@ function appendCombatVfxWake(event,source,target,duration=760){
   const count=event?.particleProfile==='scatter'?9:7,dx=target.x-source.x,dy=target.y-source.y,seed=++battleVfxSequence;
   for(let index=0;index<count;index++){
     const progress=(index+1)/(count+3)*.58,jitter=((seed+index*17)%19)-9,node=document.createElement('i');
-    node.className='battle-vfx-wake';node.style.left=`${source.x+dx*progress}px`;node.style.top=`${source.y+dy*progress+jitter}px`;node.style.setProperty('--vfx-color',combatVfxColor(event));node.style.setProperty('--wake-x',`${dx*(.065+(index%3)*.018)+jitter}px`);node.style.setProperty('--wake-y',`${dy*(.065+(index%2)*.018)+jitter*.65}px`);node.style.setProperty('--wake-rotation',`${(seed*37+index*61)%360}deg`);node.style.setProperty('--wake-duration',`${220+(index%3)*48}ms`);node.style.setProperty('--wake-delay',`${90+index*42}ms`);layer.appendChild(node);setTimeout(()=>node.remove(),duration+180)
+    const wakeX=dx*(.065+(index%3)*.018)+jitter,wakeY=dy*(.065+(index%2)*.018)+jitter*.65;node.className='battle-vfx-wake';node.dataset.travelProfile=String(event?.travelProfile||'dart');node.style.left=`${source.x+dx*progress}px`;node.style.top=`${source.y+dy*progress+jitter}px`;node.style.setProperty('--vfx-color',combatVfxColor(event));node.style.setProperty('--wake-x',`${wakeX}px`);node.style.setProperty('--wake-y',`${wakeY}px`);node.style.setProperty('--wake-mid-x',`${wakeX*.46}px`);node.style.setProperty('--wake-mid-y',`${wakeY*.46}px`);node.style.setProperty('--wake-rotation',`${(seed*37+index*61)%360}deg`);node.style.setProperty('--wake-duration',`${220+(index%3)*48}ms`);node.style.setProperty('--wake-delay',`${90+index*42}ms`);layer.appendChild(node);setTimeout(()=>node.remove(),duration+180)
   }
   return count
 }

@@ -287,7 +287,7 @@ def render_projectile(
     source = (580, 226) if enemy_to_player else (214, 226)
     target = (218, 226) if enemy_to_player else (550, 226)
     launch = ASSETS[launch_key]
-    color = (255, 122, 61) if launch_key == "burn" else (195, 104, 255) if launch_key in {"ultimate", "mark"} else (86, 222, 255)
+    color = (255, 122, 61) if launch_key in {"burn", "sig_ember"} else (195, 104, 255) if launch_key in {"ultimate", "mark"} else (86, 222, 255)
     if t < 0.18:
         charge = ease_out(t / 0.18)
         glow(canvas, source, 20 + 24 * charge, color, 100)
@@ -321,7 +321,7 @@ def render_projectile(
             glow(canvas, target, 38 * (1 - rupture) + 10, color, int(72 * (1 - rupture)))
     draw_hud(
         canvas,
-        "MONSTER CASTER • ARCANE ORB" if enemy_to_player else "CARD DOT • FIRE PLUME",
+        "MONSTER CASTER • ARCANE ORB" if enemy_to_player else "CARD DOT • FIREBALL",
         "charge → release → travel → rupture",
         "CASTER" if enemy_to_player else "EMBER / DOT",
         "TRIAD PARTY" if enemy_to_player else "CASTER",
@@ -443,7 +443,7 @@ def save_gif(name: str, renderer) -> Path:
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     clips = (
-        ("01_card_quick_projectile.gif", lambda frame: render_projectile(frame, enemy_to_player=False, launch_key="burn", impact_key="burn", launch_width=132, travel_scale_y=1.12)),
+        ("01_card_quick_projectile.gif", lambda frame: render_projectile(frame, enemy_to_player=False, launch_key="sig_ember", impact_key="burn", launch_width=128, travel_scale_y=.96)),
         ("02_card_inferno_heavy_impact.gif", render_heavy),
         ("03_card_signature_ultimate.gif", render_card_ultimate),
         ("04_monster_caster_projectile.gif", lambda frame: render_projectile(frame, enemy_to_player=True, launch_key="ultimate", impact_key="mark", launch_width=146, travel_scale_y=.92)),

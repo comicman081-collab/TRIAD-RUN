@@ -92,13 +92,13 @@ test('every offensive skill gets a directional projectile, a non-generic collisi
   assert.match(html, /\.battle-vfx\[data-motion="TRAVEL"\]\{width:clamp\(230px,31vw,520px\)/);
   assert.match(html, /appendCombatVfxCharge\(event,source,150,7\);appendCombatVfxWake\(event,source,target,primary\.duration\)/);
   assert.doesNotMatch(html, /function spawnSdProjectile\(/);
-  assert.equal(vfx.VERSION, '2.3.0-authored-projectile-language');
+  assert.equal(vfx.VERSION, '2.4.0-authored-fireball-travel');
 });
 
 test('every projectile card uses a distinct authored launch silhouette', () => {
   const expected = {
     quick: { launch: 'PROJECTILE', travel: 'dart' },
-    dot: { launch: 'BURN', travel: 'plume' },
+    dot: { launch: 'SIG_EMBER', travel: 'fireball' },
     volley: { launch: 'SHOCK', travel: 'orb' },
     ambush: { launch: 'ELITE_REAPER', travel: 'crescent' },
     mark: { launch: 'MARK', travel: 'seal' },
@@ -113,6 +113,9 @@ test('every projectile card uses a distinct authored launch silhouette', () => {
     launchPaths.add(event.asset.path);
   }
   assert.equal(launchPaths.size, 5);
+  assert.match(html, /data-travel-profile="fireball"/);
+  assert.match(html, /@keyframes triadCombatVfxFireball/);
+  assert.match(html, /node\.dataset\.travelProfile=String\(event\?\.travelProfile\|\|'dart'\)/);
 });
 
 test('offensive signature cards launch compact but distinct authored energy before their unique rupture', () => {

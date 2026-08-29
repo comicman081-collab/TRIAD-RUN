@@ -13,7 +13,7 @@
 <script src="enemy_animation_authority.js?v=1.2.0-per-actor-player-facing"></script>
 <script src="enemy_visual_data.js?v=2.0.0-monster-frame-mvp"></script>
 <script src="combat_vfx_data.js?v=1.2.0-targeting-and-party-zones"></script>
-<script src="combat_vfx_pipeline_v2.js?v=2.1.0-diverse-authored-ruptures"></script>
+<script src="combat_vfx_pipeline_v2.js?v=2.2.0-ultimate-launch-ruptures"></script>
 <script src="src/triad_architecture.js"></script>
 <script src="src/triad_transactions.js"></script>
 <script src="src/triad_meta_progression.js?v=1.1.0-meta-breakthrough"></script>
@@ -1982,6 +1982,19 @@ function presentCombatVfx(event){
   const source=event.kind==='ENEMY'?enemyAnchor:allyAnchor,target=event.target==='enemy'?enemyAnchor:event.target==='self'?allyAnchor:partyWide?{x:zone.x,y:zone.y}:allyAnchor,pipeline=event.pipeline||(asset.motion==='TRAVEL'?'PROJECTILE':'HEAVY_IMPACT'),configuredContact=Math.max(0,Number(event.contactMs)||0);
   if(pipeline==='HEAVY_IMPACT'){
     appendCombatVfxPreflash(event,target,Math.max(100,configuredContact||210));setTimeout(()=>{if(stage.isConnected)triggerCombatVfxImpact(event,asset,target,stage)},configuredContact||210);return true
+  }
+  if(pipeline==='ULTIMATE'&&event.launchAsset?.path){
+    // ULTIMATE is intentionally two authored phases: compact travelling energy,
+    // then the character/boss-specific source art ruptures at the actual target.
+    // This keeps the principal silhouette authored while making contact legible.
+    const requestedLaunchDuration=Number(event.launchDuration),launchDuration=Number.isFinite(requestedLaunchDuration)?requestedLaunchDuration:Math.max(820,configuredContact+160);
+    const launchEvent={...event,asset:event.launchAsset,duration:Math.max(320,launchDuration),emphasis:Math.max(.46,(Number(event.emphasis)||1)*(Number(event.launchEmphasis)||.7))};
+    appendCombatVfxCharge(event,source,180,12);stage.classList.add('vfx-ultimate-field');
+    const launch=appendCombatVfxParticle(launchEvent,event.launchAsset,source,target,null);if(!launch)return false;
+    appendCombatVfxWake(launchEvent,source,target,launch.duration);
+    const contactMs=Math.max(150,Math.min(launch.duration-34,configuredContact||Math.round(launch.duration*.72)));
+    setTimeout(()=>{if(stage.isConnected)triggerCombatVfxImpact(event,event.impactAsset||asset,target,stage)},contactMs);
+    return true
   }
   const primary=appendCombatVfxParticle(event,asset,source,target,zone);if(!primary)return false;
   if(pipeline==='PROJECTILE'){appendCombatVfxCharge(event,source,150,7);appendCombatVfxWake(event,source,target,primary.duration)}

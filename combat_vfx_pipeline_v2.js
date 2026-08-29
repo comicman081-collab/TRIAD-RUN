@@ -6,7 +6,7 @@
   const BASE=global.TRIAD_COMBAT_VFX;
   if(!BASE)throw new Error('TRIAD combat VFX V2 requires the V1 asset authority');
 
-  const VERSION='2.1.0-diverse-authored-ruptures';
+  const VERSION='2.2.0-ultimate-launch-ruptures';
   const PIPELINES=Object.freeze({PROJECTILE:'PROJECTILE',HEAVY:'HEAVY_IMPACT',ULTIMATE:'ULTIMATE',SUPPORT:'SUPPORT'});
   const RANGED_CARDS=new Set(['quick','dot','volley','ambush','mark']);
   const HEAVY_CARDS=new Set(['strike','heavy','combo','scale','execute','burst','inferno','overload']);
@@ -48,7 +48,11 @@
     if(event.target!=='enemy')return{...event,pipeline:PIPELINES.SUPPORT,contactMs:0,priority:'P2',particleProfile:'support'};
     if(key==='signature'){
       const elementId=String(event.elementId||record?.owner||'').toUpperCase();
-      return{...event,pipeline:PIPELINES.ULTIMATE,impactAsset:event.asset,impactProfile:SIGNATURE_IMPACT_PROFILES[elementId]||'star-collapse',contactMs:Math.round((Number(event.asset?.duration)||1200)*.52),priority:'P0',particleProfile:'finisher'}
+      const contactMs=Math.round((Number(event.asset?.duration)||1200)*.52);
+      // The existing signature source remains the authored rupture silhouette.
+      // A smaller pre-existing projectile carries that energy to the contact point,
+      // avoiding the old "large source art slides away" presentation.
+      return{...event,pipeline:PIPELINES.ULTIMATE,launchAsset:BASE.ASSETS.PROJECTILE,launchDuration:Math.max(680,contactMs+160),launchEmphasis:.62,impactAsset:event.asset,impactProfile:SIGNATURE_IMPACT_PROFILES[elementId]||'star-collapse',contactMs,priority:'P0',particleProfile:'finisher'}
     }
     if(RANGED_CARDS.has(key)){
       const profile=CARD_PROJECTILE_PROFILES[key]||CARD_PROJECTILE_PROFILES.quick;
@@ -60,7 +64,12 @@
 
   function enemy(record){
     const event=BASE.enemy(record),rank=String(record?.data?.rank||record?.rank||(record?.boss?'boss':record?.elite?'elite':'normal')).toLowerCase(),archetype=String(event.archetype||'SCOUT').toUpperCase();
-    if(rank==='boss')return{...event,pipeline:PIPELINES.ULTIMATE,impactAsset:event.asset,impactProfile:BOSS_IMPACT_PROFILES[archetype]||'boss-ritual',contactMs:Math.round((Number(event.duration)||1420)*.52),priority:'P0',particleProfile:'boss'};
+    if(rank==='boss'){
+      const contactMs=Math.round((Number(event.duration)||1420)*.52);
+      // Boss source art no longer drifts across the arena.  It forms at the
+      // caster, launches a compact authored projectile, then ruptures at impact.
+      return{...event,pipeline:PIPELINES.ULTIMATE,launchAsset:BASE.ASSETS.PROJECTILE,launchDuration:Math.max(820,contactMs+160),launchEmphasis:.72,impactAsset:event.asset,impactProfile:BOSS_IMPACT_PROFILES[archetype]||'boss-ritual',contactMs,priority:'P0',particleProfile:'boss'};
+    }
     if(PROJECTILE_ARCHETYPES.has(archetype)||event.asset?.motion==='TRAVEL'){
       const asset=rank==='elite'&&archetype==='VANGUARD'?BASE.ASSETS.ELITE_VANGUARD:BASE.ASSETS.PROJECTILE;
       const profile=ENEMY_PROJECTILE_PROFILES[archetype]||ENEMY_PROJECTILE_PROFILES.SCOUT;

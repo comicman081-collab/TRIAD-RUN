@@ -357,12 +357,16 @@ def render_card_ultimate(frame: int) -> Image.Image:
         signature = transform_asset(ASSETS["sig_ember"], int(82 + 142 * charge), opacity=.35 + .65 * charge)
         paste_center(canvas, signature, (213, 214))
     elif t < .57:
+        # The travel phase is a compact authored projectile, not a drifting
+        # copy of the large signature key art.  The signature art returns only
+        # when that stored energy actually ruptures at the target.
         travel = ease_in_out((t - .20) / .37)
         x = 228 + (target[0] - 228) * travel
-        asset = transform_asset(ASSETS["ultimate"], int(150 + 72 * travel), opacity=1.0, scale_x=1.12, scale_y=.92)
-        glow(canvas, (x, 216), 35, (255, 93, 68), 85)
+        squash = .76 if t >= .545 else 1.0 + .06 * sin(t * 28)
+        asset = transform_asset(ASSETS["projectile"], int(118 + 34 * travel), opacity=1.0, scale_x=squash, scale_y=.82)
+        glow(canvas, (x, 216), 24, (255, 93, 68), 92)
         paste_center(canvas, asset, (x, 216))
-        draw_particles(canvas, particles(508, 18, pi), travel, (x - 30, 216), (255, 144, 82), 1)
+        draw_particles(canvas, particles(508, 18, pi), travel, (x - 23, 216), (255, 144, 82), 1)
     else:
         rupture = min(1.0, (t - .57) / .43)
         darken = Image.new("RGBA", SIZE, (11, 0, 18, int(92 * (1 - rupture))))
@@ -371,7 +375,7 @@ def render_card_ultimate(frame: int) -> Image.Image:
         main = transform_asset(ASSETS["sig_ember"], int(275 + 130 * ease_out(rupture)), opacity=(1 - rupture) ** .46, angle=7 * rupture)
         paste_center(canvas, main, target)
         draw_particles(canvas, particles(1508, 70, 0.0), rupture, target, (255, 129, 89), 1)
-    draw_hud(canvas, "CARD SIGNATURE • ULTIMATE", "activation → primary attack → hit confirm → clean decay", "EMBER / SIGNATURE", "SOVEREIGN")
+    draw_hud(canvas, "CARD SIGNATURE • ULTIMATE", "charge → compact shot → rupture → authored debris", "EMBER / SIGNATURE", "SOVEREIGN")
     return canvas
 
 
@@ -379,7 +383,7 @@ def render_boss_ultimate(frame: int) -> Image.Image:
     t = frame / (FRAME_COUNT - 1)
     canvas = arena()
     # Three allied positions make the boss-area attack target legible.
-    impact_shake = -7 * max(0.0, 1 - abs((t - .59) / .08))
+    impact_shake = -7 * max(0.0, 1 - abs((t - .56) / .08))
     paste_actor(canvas, ASSETS["volt"], 120 + impact_shake, 350, 105, 195, lean_x=impact_shake)
     paste_actor(canvas, ASSETS["ember"], 200 + impact_shake, 350, 105, 195, lean_x=impact_shake)
     paste_actor(canvas, ASSETS["bloom"], 284 + impact_shake, 350, 105, 195, lean_x=impact_shake)
@@ -393,22 +397,30 @@ def render_boss_ultimate(frame: int) -> Image.Image:
         glow(canvas, origin, 42 + 60 * charge, (194, 93, 255), 120)
         asset = transform_asset(ASSETS["boss_sovereign"], int(150 + 200 * charge), opacity=.36 + .62 * charge, scale_y=.74)
         paste_center(canvas, asset, origin)
-    elif t < .59:
-        attack = ease_in_out((t - .26) / .33)
+    elif t < .56:
+        # The boss key art stays at its casting point.  A compact existing
+        # projectile crosses the battlefield and carries its rupture energy.
+        attack = ease_in_out((t - .26) / .30)
         x = origin[0] + (target[0] - origin[0]) * attack
         y = origin[1] + sin(attack * pi) * 16
-        asset = transform_asset(ASSETS["boss_sovereign"], int(305 + 145 * attack), opacity=1.0, scale_x=1.04, scale_y=.78)
+        squash = .70 if t >= .535 else 1.0 + .06 * sin(t * 30)
+        asset = transform_asset(ASSETS["projectile"], int(128 + 36 * attack), opacity=1.0, scale_x=squash, scale_y=.86, mirrored=True)
+        glow(canvas, (x, y), 29, (211, 101, 255), 94)
         paste_center(canvas, asset, (x, y))
-        draw_particles(canvas, particles(904, 24, 0), attack, (x + 58, y), (219, 115, 255), -1)
+        draw_particles(canvas, particles(904, 26, 0), attack, (x + 26, y), (219, 115, 255), -1)
     else:
-        rupture = min(1.0, (t - .59) / .41)
+        rupture = min(1.0, (t - .56) / .44)
         veil = Image.new("RGBA", SIZE, (13, 0, 24, int(72 * (1 - rupture))))
         canvas.alpha_composite(veil)
         white_hot_contact(canvas, target, min(1.0, rupture * 5))
-        main = transform_asset(ASSETS["boss_sovereign"], int(430 + 130 * ease_out(rupture)), opacity=(1 - rupture) ** .48, scale_y=.78)
+        # The boss-exclusive authored silhouette is the rupture itself, followed
+        # by varied ground-biased plasma lumps, shards and residual motes.
+        main = transform_asset(ASSETS["boss_sovereign"], int(440 + 148 * ease_out(rupture)), opacity=(1 - rupture) ** .44, scale_y=.78)
         paste_center(canvas, main, target)
-        draw_particles(canvas, particles(2590, 82, pi), rupture, target, (226, 102, 255), -1)
-    draw_hud(canvas, "BOSS SOVEREIGN • FINISHER", "ritual charge → field collapse → rupture → residual fragments", "TRIAD PARTY", "SOVEREIGN")
+        draw_particles(canvas, particles(2590, 92, pi), rupture, target, (226, 102, 255), -1)
+        if rupture > .42:
+            glow(canvas, target, 48 * (1 - rupture) + 12, (209, 99, 255), int(82 * (1 - rupture)))
+    draw_hud(canvas, "BOSS SOVEREIGN • FINISHER", "ritual charge → compact shot → rupture → residual fragments", "TRIAD PARTY", "SOVEREIGN")
     return canvas
 
 

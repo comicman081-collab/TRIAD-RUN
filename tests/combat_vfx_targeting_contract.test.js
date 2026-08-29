@@ -92,5 +92,18 @@ test('every offensive skill gets a directional projectile, a non-generic collisi
   assert.match(html, /\.battle-vfx\[data-motion="TRAVEL"\]\{width:clamp\(230px,31vw,520px\)/);
   assert.match(html, /appendCombatVfxCharge\(event,source,150,7\);appendCombatVfxWake\(event,source,target,primary\.duration\)/);
   assert.doesNotMatch(html, /function spawnSdProjectile\(/);
-  assert.equal(vfx.VERSION, '2.1.0-diverse-authored-ruptures');
+  assert.equal(vfx.VERSION, '2.2.0-ultimate-launch-ruptures');
+});
+
+test('offensive signature cards launch compact authored energy before their unique rupture', () => {
+  for (const owner of ['EMBER', 'VOLT', 'SHADE', 'RIFT']) {
+    const event = vfx.card({ pattern: { key: 'signature' }, owner });
+    assert.equal(event.pipeline, 'ULTIMATE', owner);
+    assert.equal(event.launchAsset, vfx.ASSETS.PROJECTILE, owner);
+    assert.equal(event.launchAsset.motion, 'TRAVEL', owner);
+    assert.notEqual(event.impactAsset, event.launchAsset, owner);
+    assert.equal(event.launchDuration > event.contactMs, true, owner);
+  }
+  assert.match(html, /pipeline==='ULTIMATE'&&event\.launchAsset\?\.path/);
+  assert.match(html, /appendCombatVfxWake\(launchEvent,source,target,launch\.duration\)/);
 });

@@ -71,6 +71,10 @@ test('elite vanguard and all bosses retain dedicated source art and finishers', 
     assert.match(event.category, /^BOSS_(APOSTLE|OVERMIND|SOVEREIGN)$/);
     assert.equal(event.priority, 'P0');
     assert.equal(event.contactMs, Math.round(event.duration * 0.52));
+    assert.equal(event.launchAsset, vfx.ASSETS.PROJECTILE, archetype);
+    assert.equal(event.launchAsset.motion, 'TRAVEL', archetype);
+    assert.notEqual(event.impactAsset, event.launchAsset, archetype);
+    assert.equal(event.launchDuration > event.contactMs, true, archetype);
   }
 });
 

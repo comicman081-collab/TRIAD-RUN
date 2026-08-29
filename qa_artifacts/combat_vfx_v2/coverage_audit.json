@@ -346,7 +346,7 @@
         {
           "id": "EMBER_APOSTLE_JUDGMENT",
           "name": "화염 초동 심판",
-          "presentation": "ULTIMATE|assets/vfx/gpt_web_v1/vfx_boss_apostle.png|judgment|assets/vfx/gpt_web_v1/vfx_boss_apostle.png|boss-ritual|apostle-judgment"
+          "presentation": "ULTIMATE|assets/vfx/gpt_web_v1/vfx_signature_aegis.png|judgment|assets/vfx/gpt_web_v1/vfx_boss_apostle.png|boss-ritual|apostle-judgment"
         }
       ],
       "distinctPresentations": 2
@@ -361,7 +361,7 @@
         {
           "id": "EMBER_OVERMIND_DOMINION",
           "name": "화염 정신 지배파",
-          "presentation": "ULTIMATE|assets/vfx/gpt_web_v1/vfx_boss_overmind.png|singularity|assets/vfx/gpt_web_v1/vfx_boss_overmind.png|boss-psychic|overmind-dominion"
+          "presentation": "ULTIMATE|assets/vfx/gpt_web_v1/vfx_signature_rift.png|singularity|assets/vfx/gpt_web_v1/vfx_boss_overmind.png|boss-psychic|overmind-dominion"
         }
       ],
       "distinctPresentations": 2
@@ -376,7 +376,7 @@
         {
           "id": "EMBER_SOVEREIGN_COLLAPSE",
           "name": "화염 세계 붕괴",
-          "presentation": "ULTIMATE|assets/vfx/gpt_web_v1/vfx_boss_sovereign.png|singularity|assets/vfx/gpt_web_v1/vfx_boss_sovereign.png|boss-domination|sovereign-collapse"
+          "presentation": "ULTIMATE|assets/vfx/gpt_web_v1/vfx_signature_rift.png|singularity|assets/vfx/gpt_web_v1/vfx_boss_sovereign.png|boss-domination|sovereign-collapse"
         }
       ],
       "distinctPresentations": 2

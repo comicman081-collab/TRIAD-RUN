@@ -21,7 +21,8 @@ const roster = window.TRIAD_CHARACTER_ROSTER.records;
 const html = read('TRIAD_RUN_V0_8_MANEQUIN_ASSEMBLY.html');
 const cardBlock = html.match(/const CARD_PATTERNS=\[([\s\S]*?)function coreBy\(/)?.[1] || '';
 const cardKeys = [...new Set([...cardBlock.matchAll(/key:'([^']+)'/g)].map(([, key]) => key))];
-const signature = event => [event.pipeline, event.asset?.path, event.travelProfile, event.impactAsset?.path, event.impactProfile, event.particleProfile].join('|');
+const primaryAsset = event => event?.launchAsset || event?.asset;
+const signature = event => [event.pipeline, primaryAsset(event)?.path, event.travelProfile, event.impactAsset?.path, event.impactProfile, event.particleProfile].join('|');
 const pngMetadata = relative => {
   const bytes = fs.readFileSync(path.join(root, relative));
   const valid = bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
@@ -32,7 +33,8 @@ const missing = [];
 const enemyEntries = data.MONSTERS.flatMap(monster => monster.skills.map(skill => {
   const event = vfx.enemy(actor(monster), skill.id);
   if (!event?.asset?.path || !event?.impactAsset?.path || !event?.impactProfile) missing.push({ monsterId: monster.id, skillId: skill.id, reason: 'unresolved authored event' });
-  return { monsterId: monster.id, archetype: data.ARCHETYPES[monster.catalogNo - 1].key, rank: monster.rank, elementId: monster.elementId, skillId: skill.id, skillName: skill.name, event: { pipeline: event?.pipeline, launch: event?.asset?.path, launchMotion: event?.asset?.motion, travelProfile: event?.travelProfile || null, impact: event?.impactAsset?.path, impactProfile: event?.impactProfile, particleProfile: event?.particleProfile, contactMs: event?.contactMs || null, duration: event?.duration || null } };
+  const primary = primaryAsset(event);
+  return { monsterId: monster.id, archetype: data.ARCHETYPES[monster.catalogNo - 1].key, rank: monster.rank, elementId: monster.elementId, skillId: skill.id, skillName: skill.name, event: { pipeline: event?.pipeline, launch: primary?.path, launchMotion: primary?.motion, travelProfile: event?.travelProfile || null, impact: event?.impactAsset?.path, impactProfile: event?.impactProfile, particleProfile: event?.particleProfile, contactMs: event?.contactMs || null, duration: event?.duration || null } };
 }));
 const perArchetype = Object.fromEntries(data.ARCHETYPES.map((archetype, index) => {
   const monster = data.MONSTERS.find(entry => entry.catalogNo === index + 1);
@@ -51,7 +53,7 @@ const report = {
   result: missing.length ? 'FAIL' : 'PASS',
   pipelineVersion: vfx.VERSION,
   actorCounts: { selectableCharacters: roster.length, monsterActors: data.MONSTERS.length, totalActors: roster.length + data.MONSTERS.length },
-  recordCounts: { cardPatterns: cardKeys.length, characterCardPresentationPaths: cardEntries.length, monsterSkillRecords: enemyEntries.length, distinctMonsterSkillPresentations: new Set(enemyEntries.map(entry => signature({ pipeline: entry.event.pipeline, asset: { path: entry.event.launch }, travelProfile: entry.event.travelProfile, impactAsset: { path: entry.event.impact }, impactProfile: entry.event.impactProfile, particleProfile: entry.event.particleProfile }))).size, authoredVfxAssets: Object.keys(assetAudit).length },
+  recordCounts: { cardPatterns: cardKeys.length, characterCardPresentationPaths: cardEntries.length, monsterSkillRecords: enemyEntries.length, distinctMonsterSkillPresentations: new Set(enemyEntries.map(entry => [entry.event.pipeline, entry.event.launch, entry.event.travelProfile, entry.event.impact, entry.event.impactProfile, entry.event.particleProfile].join('|'))).size, authoredVfxAssets: Object.keys(assetAudit).length },
   assetAudit,
   perArchetype,
   unresolved: missing,

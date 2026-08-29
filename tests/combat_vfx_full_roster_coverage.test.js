@@ -18,7 +18,7 @@ const roster = window.TRIAD_CHARACTER_ROSTER.records;
 const html = fs.readFileSync(path.join(root, 'TRIAD_RUN_V0_8_MANEQUIN_ASSEMBLY.html'), 'utf8');
 const cardBlock = html.match(/const CARD_PATTERNS=\[([\s\S]*?)function coreBy\(/)?.[1] || '';
 const cardKeys = [...new Set([...cardBlock.matchAll(/key:'([^']+)'/g)].map(([, key]) => key))];
-const eventSignature = event => [event.pipeline, event.asset?.path, event.travelProfile, event.impactAsset?.path, event.impactProfile, event.particleProfile].join('|');
+const eventSignature = event => [event.pipeline, (event.launchAsset || event.asset)?.path, event.travelProfile, event.impactAsset?.path, event.impactProfile, event.particleProfile].join('|');
 
 function enemyActor(monster) {
   const archetype = window.TRIAD_COMBAT_DATA.ARCHETYPES[monster.catalogNo - 1].key;

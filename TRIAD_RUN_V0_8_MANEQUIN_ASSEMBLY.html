@@ -1894,13 +1894,13 @@ class EnemyBattleActor{
   play(state){
     const normalized=String(state||'IDLE').toUpperCase();
     if(!this.manifest?.clips?.[normalized])throw new Error(`Unknown enemy animation state: ${normalized}`);
-    const priority={IDLE:0,ENTER:1,ATTACK:2,SKILL:3,HIT:4,DEFEAT:5};
     const options=arguments[1]||{};
-    const currentClip=this.manifest?.clips?.[this.state];
-    const elapsed=Math.max(0,performance.now()-this.started);
-    const currentOneShot=currentClip&&!currentClip.loop&&!currentClip.holdLastFrame&&elapsed<((currentClip.frames||1)*1000/Math.max(1,currentClip.fps||1));
     if(!options.force&&this.state==='DEFEAT'&&normalized!=='DEFEAT')return false;
-    if(!options.force&&currentOneShot&&normalized!=='DEFEAT'&&(priority[normalized]||0)<(priority[this.state]||0))return false;
+    // HIT is a short visual response, never a gameplay lock.  A player may
+    // end their turn while the previous hit clip is still within its final
+    // frames; the living enemy must immediately enter its authored ATTACK or
+    // SKILL clip rather than cast while the old hit/down-looking frame lingers.
+    // DEFEAT is the single terminal state and is guarded above.
     const history=(this.canvas.dataset.stateHistory||'').split('>').filter(Boolean);history.push(normalized);
     this.generation+=1;this.canvas.dataset.stateGeneration=String(this.generation);this.canvas.dataset.stateHistory=history.slice(-12).join('>');this.canvas.dataset.playCount=String((Number(this.canvas.dataset.playCount)||0)+1);
     if(normalized!=='IDLE')this.canvas.dataset.lastActionState=normalized;

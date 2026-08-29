@@ -9,6 +9,7 @@ const html=fs.readFileSync(path.join(root,'TRIAD_RUN_V0_8_MANEQUIN_ASSEMBLY.html
 const sandbox={window:{TRIAD_COMBAT_VISUAL_DATA:{resolveCard:(key,owner)=>key==='signature'?['ULTIMATE',owner==='EMBER'?'BURN':'SHOCK']:key==='heal'?['HEAL']:key==='quick'?['PROJECTILE','IMPACT']:['IMPACT']}}};
 sandbox.window.window=sandbox.window;
 vm.runInNewContext(fs.readFileSync(path.join(root,'combat_vfx_data.js'),'utf8'),sandbox,{filename:'combat_vfx_data.js'});
+vm.runInNewContext(fs.readFileSync(path.join(root,'combat_vfx_skill_assets_v3.js'),'utf8'),sandbox,{filename:'combat_vfx_skill_assets_v3.js'});
 vm.runInNewContext(fs.readFileSync(path.join(root,'combat_vfx_pipeline_v2.js'),'utf8'),sandbox,{filename:'combat_vfx_pipeline_v2.js'});
 const vfx=sandbox.window.TRIAD_COMBAT_VFX;
 const required=['IMPACT','PROJECTILE','BURN','SHOCK','MARK','SHIELD','HEAL','ULTIMATE','SIG_EMBER','SIG_VOLT','SIG_AEGIS','SIG_SHADE','SIG_BLOOM','SIG_RIFT','ELITE_VANGUARD','ELITE_REAPER','ELITE_COLOSSUS','BOSS_APOSTLE','BOSS_OVERMIND','BOSS_SOVEREIGN'];
@@ -34,7 +35,7 @@ const assertions=[
   ['heal covers all allies',heal.target==='party'&&heal.scope==='ALL_ALLIES'],
   ['shield covers all allies',guard.target==='party'&&guard.scope==='ALL_ALLIES'],
   ['card projectile carries an impact follow-up',quick.asset.motion==='TRAVEL'&&quick.impactAsset===vfx.ASSETS.SHOCK],
-  ['enemy projectile carries an impact follow-up',scout.asset.motion==='TRAVEL'&&scout.impactAsset===vfx.ASSETS.SHOCK],
+  ['enemy projectile carries an impact follow-up',scout.asset.motion==='TRAVEL'&&scout.impactAsset.path===sandbox.window.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3.enemies.VOLT_SCOUT_JAB.impact],
   ['each enemy skill id selects its own presentation',scout.travelProfile!==scoutFlurry.travelProfile&&apostle.launchAsset.path!==apostleJudgment.launchAsset.path],
   ['party actors expose both immutable character and core IDs',html.includes('data-core-id="${esc(p.id||core?.id||\'\')}"')],
   ['party-wide VFX uses a transparent expanded zone',html.includes('data-target-scope="ALL_ALLIES"')&&html.includes('filter:opacity(.64)')],

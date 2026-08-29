@@ -9,7 +9,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const window = {};
 window.window = window;
-for (const source of ['combat_data.js', 'enemy_visual_data.js', 'combat_vfx_data.js', 'combat_vfx_pipeline_v2.js', 'assets/characters/roster/triad_character_roster.js']) {
+for (const source of ['combat_data.js', 'enemy_visual_data.js', 'combat_vfx_data.js', 'combat_vfx_skill_assets_v3.js', 'combat_vfx_pipeline_v2.js', 'assets/characters/roster/triad_character_roster.js']) {
   vm.runInNewContext(fs.readFileSync(path.join(root, source), 'utf8'), { window }, { filename: source });
 }
 const vfx = window.TRIAD_COMBAT_VFX;
@@ -45,7 +45,7 @@ test('all 90 monster actors and all 180 immutable skill records resolve usable V
     const signatures = new Set(sample.skills.map(skill => eventSignature(vfx.enemy(enemyActor(sample), skill.id))));
     assert.equal(signatures.size, 2, `${archetype.key} two skills still share one VFX presentation`);
   }
-  assert.equal(new Set(entries.map(({ event }) => eventSignature(event))).size, 30);
+  assert.equal(new Set(entries.map(({ event }) => eventSignature(event))).size, 180);
 });
 
 test('all 12 selectable character records resolve every 21 card-skill presentation', () => {

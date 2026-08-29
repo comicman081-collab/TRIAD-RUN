@@ -6,7 +6,8 @@
   const BASE=global.TRIAD_COMBAT_VFX;
   if(!BASE)throw new Error('TRIAD combat VFX V2 requires the V1 asset authority');
 
-  const VERSION='2.5.0-enemy-skill-record-coverage';
+  const VERSION='3.0.0-unique-skill-assets';
+  const UNIQUE=global.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3||{cards:{},enemies:{}};
   const PIPELINES=Object.freeze({PROJECTILE:'PROJECTILE',HEAVY:'HEAVY_IMPACT',ULTIMATE:'ULTIMATE',SUPPORT:'SUPPORT'});
   const RANGED_CARDS=new Set(['quick','dot','volley','ambush','mark']);
   const HEAVY_CARDS=new Set(['strike','heavy','combo','scale','execute','burst','inferno','overload']);
@@ -124,10 +125,19 @@
   });
   const authored=(key,fallback)=>BASE.ASSETS[key]||fallback;
   const authoredTravel=(key,fallback,scaleMultiplier=1)=>{const asset=authored(key,fallback);return{...asset,scale:(Number(asset.scale)||1)*scaleMultiplier,motion:'TRAVEL'}};
+  function applyUniqueSkillAsset(event,group,id){
+    const unique=UNIQUE[group]?.[String(id||'')];if(!unique)return event;
+    const launchTemplate=event.launchAsset||event.asset,impactTemplate=event.impactAsset||event.asset;
+    const launchAsset=launchTemplate?{...launchTemplate,path:unique.launch}:null,impactAsset=impactTemplate?{...impactTemplate,path:unique.impact}:null;
+    const travelling=event.pipeline===PIPELINES.PROJECTILE||Boolean(event.launchAsset),support=event.pipeline===PIPELINES.SUPPORT;
+    return{...event,asset:support?launchAsset:travelling?launchAsset:impactAsset,launchAsset:event.launchAsset?launchAsset:event.launchAsset,impactAsset:support?event.impactAsset:impactAsset,impactFamily:event.impactProfile||unique.impactFamily,impactProfile:unique.id,variantSeed:unique.seed,motionVariant:unique.motion,ruptureVariant:unique.rupture,uniqueAssetId:unique.id,uniqueAssetPaths:{launch:unique.launch,impact:unique.impact}}
+  }
+  const uniqueCard=(event,record)=>applyUniqueSkillAsset(event,'cards',record?.id);
+  const uniqueEnemy=(event,skillId)=>applyUniqueSkillAsset(event,'enemies',skillId);
 
   function card(record){
     const event=BASE.card(record),key=String(record?.pattern?.key||record?.key||'').toLowerCase();
-    if(event.target!=='enemy')return{...event,pipeline:PIPELINES.SUPPORT,contactMs:0,priority:'P2',particleProfile:'support'};
+    if(event.target!=='enemy')return uniqueCard({...event,pipeline:PIPELINES.SUPPORT,contactMs:0,priority:'P2',particleProfile:'support'},record);
     if(key==='signature'){
       const elementId=String(event.elementId||record?.owner||'').toUpperCase();
       const launch=SIGNATURE_LAUNCH_PROFILES[elementId]||{assetKey:'ULTIMATE',travelProfile:'arcane-orb',launchEmphasis:.44};
@@ -135,14 +145,14 @@
       // The existing signature source remains the authored rupture silhouette.
       // A smaller pre-existing projectile carries that energy to the contact point,
       // avoiding the old "large source art slides away" presentation.
-      return{...event,pipeline:PIPELINES.ULTIMATE,launchAsset:authoredTravel(launch.assetKey,BASE.ASSETS.PROJECTILE),travelProfile:launch.travelProfile,launchDuration:Math.max(680,contactMs+160),launchEmphasis:launch.launchEmphasis,impactAsset:event.asset,impactProfile:SIGNATURE_IMPACT_PROFILES[elementId]||'star-collapse',contactMs,priority:'P0',particleProfile:'finisher'}
+      return uniqueCard({...event,pipeline:PIPELINES.ULTIMATE,launchAsset:authoredTravel(launch.assetKey,BASE.ASSETS.PROJECTILE),travelProfile:launch.travelProfile,launchDuration:Math.max(680,contactMs+160),launchEmphasis:launch.launchEmphasis,impactAsset:event.asset,impactProfile:SIGNATURE_IMPACT_PROFILES[elementId]||'star-collapse',contactMs,priority:'P0',particleProfile:'finisher'},record)
     }
     if(RANGED_CARDS.has(key)){
       const profile=CARD_PROJECTILE_PROFILES[key]||CARD_PROJECTILE_PROFILES.quick;
-      return{...event,...profile,category:'PROJECTILE',asset:authoredTravel(profile.launchAssetKey,BASE.ASSETS.PROJECTILE,Number(profile.launchScale)||1),impactAsset:authored(profile.impactAssetKey,BASE.ASSETS.SHOCK),pipeline:PIPELINES.PROJECTILE,priority:'P0'};
+      return uniqueCard({...event,...profile,category:'PROJECTILE',asset:authoredTravel(profile.launchAssetKey,BASE.ASSETS.PROJECTILE,Number(profile.launchScale)||1),impactAsset:authored(profile.impactAssetKey,BASE.ASSETS.SHOCK),pipeline:PIPELINES.PROJECTILE,priority:'P0'},record);
     }
     const profile=CARD_HEAVY_PROFILES[key]||{assetKey:HEAVY_CATEGORY_BY_CARD[key]||'IMPACT',impactProfile:'arc-cleave'},asset=authored(profile.assetKey,BASE.ASSETS.IMPACT);
-    return{...event,category:profile.assetKey,asset,impactAsset:asset,impactProfile:profile.impactProfile,pipeline:PIPELINES.HEAVY,duration:760,contactMs:210,priority:HEAVY_CARDS.has(key)?'P0':'P1',particleProfile:key==='inferno'?'ember':'shard'};
+    return uniqueCard({...event,category:profile.assetKey,asset,impactAsset:asset,impactProfile:profile.impactProfile,pipeline:PIPELINES.HEAVY,duration:760,contactMs:210,priority:HEAVY_CARDS.has(key)?'P0':'P1',particleProfile:key==='inferno'?'ember':'shard'},record);
   }
 
   function enemySkillKey(skillId){return String(skillId||'').trim().toUpperCase().split('_').pop()||''}
@@ -151,15 +161,15 @@
     const actionKey=enemySkillKey(skillId),skillProfile=ENEMY_SKILL_VFX_PROFILES[archetype]?.[actionKey];
     if(skillProfile?.pipeline===PIPELINES.ULTIMATE){
       const duration=rank==='boss'?Number(event.duration)||1420:1080,contactMs=Math.round(duration*.52),launch=authoredTravel(skillProfile.launchAssetKey,BASE.ASSETS.PROJECTILE,Number(skillProfile.launchScale)||1),impactAsset=authored(skillProfile.impactAssetKey,event.asset||BASE.ASSETS.ULTIMATE);
-      return{...event,...skillProfile,skillId,skillKey:actionKey,pipeline:PIPELINES.ULTIMATE,launchAsset:launch,launchDuration:Math.max(820,contactMs+160),impactAsset,contactMs,priority:'P0'}
+      return uniqueEnemy({...event,...skillProfile,skillId,skillKey:actionKey,pipeline:PIPELINES.ULTIMATE,launchAsset:launch,launchDuration:Math.max(820,contactMs+160),impactAsset,contactMs,priority:'P0'},skillId)
     }
     if(skillProfile?.pipeline===PIPELINES.PROJECTILE){
       const eliteMultiplier=rank==='elite'?1.10:1,duration=Math.round(skillProfile.duration*eliteMultiplier),asset=authoredTravel(skillProfile.launchAssetKey,BASE.ASSETS.PROJECTILE,Number(skillProfile.launchScale)||1);
-      return{...event,...skillProfile,skillId,skillKey:actionKey,category:skillProfile.launchAssetKey||'PROJECTILE',asset,impactAsset:authored(skillProfile.impactAssetKey,BASE.ASSETS.SHOCK),pipeline:PIPELINES.PROJECTILE,duration,contactMs:Math.round(skillProfile.contactMs*eliteMultiplier),priority:'P0'}
+      return uniqueEnemy({...event,...skillProfile,skillId,skillKey:actionKey,category:skillProfile.launchAssetKey||'PROJECTILE',asset,impactAsset:authored(skillProfile.impactAssetKey,BASE.ASSETS.SHOCK),pipeline:PIPELINES.PROJECTILE,duration,contactMs:Math.round(skillProfile.contactMs*eliteMultiplier),priority:'P0'},skillId)
     }
     if(skillProfile?.pipeline===PIPELINES.HEAVY){
       const asset=authored(skillProfile.assetKey,event.asset||BASE.ASSETS.IMPACT);
-      return{...event,...skillProfile,skillId,skillKey:actionKey,category:skillProfile.assetKey,asset,impactAsset:asset,pipeline:PIPELINES.HEAVY,duration:rank==='elite'?900:760,contactMs:rank==='elite'?260:220,priority:rank==='elite'?'P0':'P1'}
+      return uniqueEnemy({...event,...skillProfile,skillId,skillKey:actionKey,category:skillProfile.assetKey,asset,impactAsset:asset,pipeline:PIPELINES.HEAVY,duration:rank==='elite'?900:760,contactMs:rank==='elite'?260:220,priority:rank==='elite'?'P0':'P1'},skillId)
     }
     if(rank==='boss'){
       const contactMs=Math.round((Number(event.duration)||1420)*.52);

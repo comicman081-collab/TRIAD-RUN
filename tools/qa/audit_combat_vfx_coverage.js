@@ -11,7 +11,7 @@ const root = path.resolve(__dirname, '..', '..');
 const read = relative => fs.readFileSync(path.join(root, relative), 'utf8');
 const window = {};
 window.window = window;
-for (const source of ['combat_data.js', 'enemy_visual_data.js', 'combat_vfx_data.js', 'combat_vfx_pipeline_v2.js', 'assets/characters/roster/triad_character_roster.js']) {
+for (const source of ['combat_data.js', 'enemy_visual_data.js', 'combat_vfx_data.js', 'combat_vfx_skill_assets_v3.js', 'combat_vfx_pipeline_v2.js', 'assets/characters/roster/triad_character_roster.js']) {
   vm.runInNewContext(read(source), { window }, { filename: source });
 }
 
@@ -53,11 +53,11 @@ const report = {
   result: missing.length ? 'FAIL' : 'PASS',
   pipelineVersion: vfx.VERSION,
   actorCounts: { selectableCharacters: roster.length, monsterActors: data.MONSTERS.length, totalActors: roster.length + data.MONSTERS.length },
-  recordCounts: { cardPatterns: cardKeys.length, characterCardPresentationPaths: cardEntries.length, monsterSkillRecords: enemyEntries.length, distinctMonsterSkillPresentations: new Set(enemyEntries.map(entry => [entry.event.pipeline, entry.event.launch, entry.event.travelProfile, entry.event.impact, entry.event.impactProfile, entry.event.particleProfile].join('|'))).size, authoredVfxAssets: Object.keys(assetAudit).length },
+  recordCounts: { cardPatterns: cardKeys.length, characterCardPresentationPaths: cardEntries.length, monsterSkillRecords: enemyEntries.length, distinctMonsterSkillPresentations: new Set(enemyEntries.map(entry => [entry.event.pipeline, entry.event.launch, entry.event.travelProfile, entry.event.impact, entry.event.impactProfile, entry.event.particleProfile].join('|'))).size, authoredVfxAssets: Object.keys(assetAudit).length, derivedSkillAssets: Object.keys(window.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3.cards).length * 2 + Object.keys(window.TRIAD_COMBAT_VFX_SKILL_ASSETS_V3.enemies).length * 2 },
   assetAudit,
   perArchetype,
   unresolved: missing,
-  notes: ['Elemental variants preserve the same archetype-and-skill motion language while retaining their own actor atlas and element hue.', 'Character records sharing a core intentionally use that core\'s card skills; this audit still resolves every one of the 12 × 21 runtime card paths.']
+  notes: ['Every elemental monster skill now has a separate launch/impact path and deterministic motion/rupture profile while retaining its own actor atlas and element hue.', 'Character records sharing a core intentionally use that core\'s card inventory; all 126 immutable card IDs still have separate launch/impact derivatives.']
 };
 const outputDirectory = path.join(root, 'qa_artifacts', 'combat_vfx_v2');
 fs.mkdirSync(outputDirectory, { recursive: true });

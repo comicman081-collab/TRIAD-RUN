@@ -99,7 +99,7 @@ test('monster and boss VFX have bounded debris with deterministic cleanup and ac
   assert.match(html, /function combatVfxFragmentVector\(profile,event,index,count,seed\)/);
   assert.match(html, /fragment\.dataset\.vector=profile\.vector/);
   assert.match(html, /source\.x>target\.x\?180:0/);
-  assert.match(html, /appendCombatVfxCharge\(event,source,150,7\)/);
+  assert.equal(html.includes("appendCombatVfxCharge(event,source,Number(event?.motionVariant?.chargeMs)||150,Number(event?.motionVariant?.chargeMotes)||7)"), true);
   assert.match(html, /appendCombatVfxImpactBurst\(event,target\)/);
   assert.doesNotMatch(html, /function spawnSdProjectile\(/);
 });

@@ -13,7 +13,8 @@
 <script src="enemy_animation_authority.js?v=1.2.0-per-actor-player-facing"></script>
 <script src="enemy_visual_data.js?v=2.0.0-monster-frame-mvp"></script>
 <script src="combat_vfx_data.js?v=1.2.0-targeting-and-party-zones"></script>
-<script src="combat_vfx_pipeline_v2.js?v=2.5.0-enemy-skill-record-coverage"></script>
+<script src="combat_vfx_skill_assets_v3.js?v=3.0.0-unique-skill-assets"></script>
+<script src="combat_vfx_pipeline_v2.js?v=3.0.0-unique-skill-assets"></script>
 <script src="src/triad_architecture.js"></script>
 <script src="src/triad_transactions.js"></script>
 <script src="src/triad_meta_progression.js?v=1.1.0-meta-breakthrough"></script>
@@ -314,6 +315,31 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
   16%{opacity:.9}
   62%{opacity:.68;transform:translate(calc(-50% + var(--wake-mid-x)),calc(-50% + var(--wake-mid-y) - 8px)) scale(.74) rotate(calc(var(--wake-rotation,0deg) + 42deg))}
   100%{opacity:0;transform:translate(calc(-50% + var(--wake-x)),calc(-50% + var(--wake-y) - 18px)) scale(.12) rotate(calc(var(--wake-rotation,0deg) + 102deg))}
+}
+/* V3 skill-identity motion.  Every mapped skill supplies its own curve,
+   compression and rotation values while the authored derivative stays sharp. */
+.battle-vfx[data-motion="TRAVEL"][data-unique-asset]:not([data-unique-asset=""]){animation-name:triadCombatVfxSkillTravel}
+.battle-vfx[data-phase="IMPACT"][data-unique-asset]:not([data-unique-asset=""]){animation-name:triadCombatVfxSkillImpact}
+.battle-vfx[data-phase="PRIMARY"][data-pipeline="SUPPORT"][data-unique-asset]:not([data-unique-asset=""]){animation-name:triadCombatVfxSkillSupport}
+@keyframes triadCombatVfxSkillTravel{
+  0%{opacity:0;filter:brightness(1.3) drop-shadow(0 0 10px var(--vfx-color));transform:translate(calc(var(--vfx-start-x) - 50%),calc(var(--vfx-start-y) - 50%)) rotate(var(--vfx-rotation)) scale(calc(var(--vfx-scale,1)*.24),calc(var(--vfx-scale,1)*.42))}
+  12%{opacity:1}
+  34%{filter:brightness(1.24) saturate(1.12) drop-shadow(0 0 20px var(--vfx-color));transform:translate(calc(var(--vfx-mid-one-x) - 50%),calc(var(--vfx-mid-one-y) - 50%)) rotate(calc(var(--vfx-rotation) + var(--vfx-spin-one,0deg))) scale(calc(var(--vfx-scale,1)*1.02),calc(var(--vfx-scale,1)*.88))}
+  57%{opacity:1;transform:translate(calc(var(--vfx-mid-two-x) - 50%),calc(var(--vfx-mid-two-y) - 50%)) rotate(calc(var(--vfx-rotation) + var(--vfx-spin-two,0deg))) scale(calc(var(--vfx-scale,1)*.9),calc(var(--vfx-scale,1)*1.08))}
+  68%{opacity:1;filter:brightness(1.36) saturate(1.14) drop-shadow(0 0 26px var(--vfx-color));transform:translate(calc(var(--vfx-end-x) - 50%),calc(var(--vfx-end-y) - 50%)) rotate(calc(var(--vfx-rotation) + var(--vfx-contact-spin,0deg))) scale(calc(var(--vfx-scale,1)*1.12),calc(var(--vfx-scale,1)*.9))}
+  75%{opacity:.94;transform:translate(calc(var(--vfx-end-x) - 50%),calc(var(--vfx-end-y) - 50%)) rotate(calc(var(--vfx-rotation) + var(--vfx-contact-spin,0deg))) scale(calc(var(--vfx-scale,1)*1.44),calc(var(--vfx-scale,1)*.66))}
+  100%{opacity:0;filter:brightness(1.36) blur(1px) drop-shadow(0 0 30px var(--vfx-color));transform:translate(calc(var(--vfx-end-x) - 50%),calc(var(--vfx-end-y) - 50%)) rotate(calc(var(--vfx-rotation) + var(--vfx-contact-spin,0deg))) scale(calc(var(--vfx-scale,1)*1.72),calc(var(--vfx-scale,1)*.24))}
+}
+@keyframes triadCombatVfxSkillImpact{
+  0%{opacity:0;filter:brightness(2.2) drop-shadow(0 0 10px #fff) drop-shadow(0 0 34px var(--vfx-color));transform:translate(-50%,-50%) scale(calc(var(--vfx-scale,1)*.2)) rotate(calc(var(--vfx-contact-spin,0deg) - 20deg))}
+  14%{opacity:1}
+  48%{opacity:.98;transform:translate(-50%,-50%) scale(calc(var(--vfx-scale,1)*1.08)) rotate(var(--vfx-contact-spin,0deg))}
+  100%{opacity:0;filter:brightness(1.16) drop-shadow(0 0 30px var(--vfx-color));transform:translate(-50%,-50%) scale(calc(var(--vfx-scale,1)*1.58)) rotate(calc(var(--vfx-contact-spin,0deg) + var(--vfx-spin-two,0deg)))}
+}
+@keyframes triadCombatVfxSkillSupport{
+  0%{opacity:0;transform:translate(-50%,calc(-50% + 38px)) scale(calc(var(--vfx-scale,1)*.48)) rotate(var(--vfx-spin-one,0deg))}
+  22%,62%{opacity:.72}
+  100%{opacity:0;transform:translate(-50%,calc(-50% - 46px)) scale(calc(var(--vfx-scale,1)*1.24)) rotate(var(--vfx-spin-two,0deg))}
 }
 </style>
 <style>
@@ -1939,7 +1965,7 @@ const COMBAT_VFX_RUPTURE_PROFILES=Object.freeze({
   'boss-domination':{requested:84,duration:1120,spread:184,vector:'ground',arc:2.96,shapes:['lump','lump','shard','blob'],afterglowMotes:22}
 });
 const DEFAULT_COMBAT_VFX_RUPTURE=Object.freeze({requested:36,duration:700,spread:96,vector:'radial',arc:6.28,shapes:['blob','shard','lump'],afterglowMotes:8});
-function combatVfxRuptureProfile(event){const key=String(event?.impactProfile||'arc-cleave');return{name:key,...DEFAULT_COMBAT_VFX_RUPTURE,...(COMBAT_VFX_RUPTURE_PROFILES[key]||{})}}
+function combatVfxRuptureProfile(event){const key=String(event?.impactProfile||'arc-cleave'),family=String(event?.impactFamily||key);return{name:key,family,...DEFAULT_COMBAT_VFX_RUPTURE,...(COMBAT_VFX_RUPTURE_PROFILES[family]||{}),...(event?.ruptureVariant||{})}}
 function combatVfxFragmentVector(profile,event,index,count,seed){
   const unit=(index+.5)/Math.max(1,count),jitter=(((seed*31+index*47)%101)/100-.5),enemy=event?.kind==='ENEMY',forward=enemy?Math.PI:0;
   let angle=unit*Math.PI*2+jitter*.44;
@@ -1956,20 +1982,20 @@ function combatVfxColor(event){return COMBAT_VISUAL_DATA.ELEMENTS?.[String(event
 function appendCombatVfxParticle(event,asset,source,target,zone,phase='PRIMARY'){
   const layer=combatVfxLayer();if(!layer||!asset?.path)return null;
   const particle=document.createElement('img'),duration=Math.max(240,Number(phase==='IMPACT'?asset.duration:event.duration)||Number(asset.duration)||700),anchor=asset.motion==='TRAVEL'&&phase==='PRIMARY'?{x:0,y:0}:target;
-  particle.className='battle-vfx';particle.src=asset.path;particle.alt='';particle.dataset.category=phase==='IMPACT'?'IMPACT':event.category||'';particle.dataset.motion=asset.motion||'STRIKE';particle.dataset.travelProfile=String(event.travelProfile||'dart');particle.dataset.sequence=String(++battleVfxSequence);particle.dataset.targetScope=event.scope||'SINGLE';particle.dataset.phase=phase;particle.dataset.pipeline=event.pipeline||'';particle.dataset.impactProfile=combatVfxRuptureProfile(event).name;particle.dataset.ownerId=String(event.ownerId||'');
-  const elementId=String(event.elementId||'').toUpperCase(),deltaX=target.x-source.x,deltaY=target.y-source.y;particle.style.left=`${anchor.x}px`;particle.style.top=`${anchor.y}px`;particle.style.setProperty('--vfx-color',combatVfxColor(event));particle.style.setProperty('--vfx-hue',COMBAT_VFX_HUES[elementId]||'0deg');particle.style.setProperty('--vfx-scale',String((Number(asset.scale)||1)*(Number(event.emphasis)||1)));particle.style.setProperty('--vfx-duration',`${duration}ms`);particle.style.setProperty('--vfx-start-x',`${source.x}px`);particle.style.setProperty('--vfx-start-y',`${source.y}px`);particle.style.setProperty('--vfx-mid-one-x',`${source.x+deltaX*.34}px`);particle.style.setProperty('--vfx-mid-one-y',`${source.y+deltaY*.34-8}px`);particle.style.setProperty('--vfx-mid-two-x',`${source.x+deltaX*.70}px`);particle.style.setProperty('--vfx-mid-two-y',`${source.y+deltaY*.70-4}px`);particle.style.setProperty('--vfx-end-x',`${target.x}px`);particle.style.setProperty('--vfx-end-y',`${target.y}px`);particle.style.setProperty('--vfx-rotation',`${source.x>target.x?180:0}deg`);
+  const rupture=combatVfxRuptureProfile(event);particle.className='battle-vfx';particle.src=asset.path;particle.alt='';particle.dataset.category=phase==='IMPACT'?'IMPACT':event.category||'';particle.dataset.motion=asset.motion||'STRIKE';particle.dataset.travelProfile=String(event.travelProfile||'dart');particle.dataset.uniqueAsset=String(event.uniqueAssetId||'');particle.dataset.sequence=String(++battleVfxSequence);particle.dataset.targetScope=event.scope||'SINGLE';particle.dataset.phase=phase;particle.dataset.pipeline=event.pipeline||'';particle.dataset.impactProfile=rupture.family;particle.dataset.uniqueImpactProfile=rupture.name;particle.dataset.ownerId=String(event.ownerId||'');
+  const elementId=String(event.elementId||'').toUpperCase(),deltaX=target.x-source.x,deltaY=target.y-source.y,motion=event.motionVariant||{},controlOne=Math.max(.18,Math.min(.48,Number(motion.controlOne)||.34)),controlTwo=Math.max(.52,Math.min(.84,Number(motion.controlTwo)||.70)),curve=Number(motion.curve)||0;particle.style.left=`${anchor.x}px`;particle.style.top=`${anchor.y}px`;particle.style.setProperty('--vfx-color',combatVfxColor(event));particle.style.setProperty('--vfx-hue',COMBAT_VFX_HUES[elementId]||'0deg');particle.style.setProperty('--vfx-scale',String((Number(asset.scale)||1)*(Number(event.emphasis)||1)));particle.style.setProperty('--vfx-duration',`${duration}ms`);particle.style.setProperty('--vfx-start-x',`${source.x}px`);particle.style.setProperty('--vfx-start-y',`${source.y}px`);particle.style.setProperty('--vfx-mid-one-x',`${source.x+deltaX*controlOne}px`);particle.style.setProperty('--vfx-mid-one-y',`${source.y+deltaY*controlOne+curve}px`);particle.style.setProperty('--vfx-mid-two-x',`${source.x+deltaX*controlTwo}px`);particle.style.setProperty('--vfx-mid-two-y',`${source.y+deltaY*controlTwo+curve*.56}px`);particle.style.setProperty('--vfx-end-x',`${target.x}px`);particle.style.setProperty('--vfx-end-y',`${target.y}px`);particle.style.setProperty('--vfx-rotation',`${source.x>target.x?180:0}deg`);particle.style.setProperty('--vfx-spin-one',`${Number(motion.spinOne)||0}deg`);particle.style.setProperty('--vfx-spin-two',`${Number(motion.spinTwo)||0}deg`);particle.style.setProperty('--vfx-contact-spin',`${Number(motion.contactSpin)||0}deg`);
   if(zone){particle.style.setProperty('--vfx-zone-width',`${zone.width}px`);particle.style.setProperty('--vfx-zone-height',`${zone.height}px`)}
   particle.addEventListener('error',()=>particle.remove(),{once:true});layer.appendChild(particle);setTimeout(()=>particle.remove(),duration+120);return{particle,duration}
 }
 function appendCombatVfxCharge(event,anchor,duration=140,count=6){
   const layer=combatVfxLayer();if(!layer)return null;
-  const seed=++battleVfxSequence,node=document.createElement('div');node.className='battle-vfx-charge';node.style.left=`${anchor.x}px`;node.style.top=`${anchor.y}px`;node.style.setProperty('--vfx-color',combatVfxColor(event));node.style.setProperty('--charge-duration',`${duration}ms`);
+  const seed=++battleVfxSequence+(Number(event?.variantSeed)||0),node=document.createElement('div');node.className='battle-vfx-charge';node.dataset.uniqueAsset=String(event?.uniqueAssetId||'');node.style.left=`${anchor.x}px`;node.style.top=`${anchor.y}px`;node.style.setProperty('--vfx-color',combatVfxColor(event));node.style.setProperty('--charge-duration',`${duration}ms`);
   for(let index=0;index<count;index++){const angle=((seed*29+index*(360/count))%360)*Math.PI/180,radius=28+(index%3)*12,mote=document.createElement('i');mote.className='battle-vfx-charge-mote';mote.style.setProperty('--mote-x',`${Math.cos(angle)*radius}px`);mote.style.setProperty('--mote-y',`${Math.sin(angle)*radius}px`);mote.style.setProperty('--charge-duration',`${duration-(index%2)*16}ms`);node.appendChild(mote)}
   layer.appendChild(node);setTimeout(()=>node.remove(),duration+80);return node
 }
 function appendCombatVfxWake(event,source,target,duration=760){
   const layer=combatVfxLayer();if(!layer)return 0;
-  const count=event?.particleProfile==='scatter'?9:7,dx=target.x-source.x,dy=target.y-source.y,seed=++battleVfxSequence;
+  const count=Math.max(3,Math.min(16,Number(event?.motionVariant?.wakeCount)||(event?.particleProfile==='scatter'?9:7))),dx=target.x-source.x,dy=target.y-source.y,seed=++battleVfxSequence+(Number(event?.variantSeed)||0);
   for(let index=0;index<count;index++){
     const progress=(index+1)/(count+3)*.58,jitter=((seed+index*17)%19)-9,node=document.createElement('i');
     const wakeX=dx*(.065+(index%3)*.018)+jitter,wakeY=dy*(.065+(index%2)*.018)+jitter*.65;node.className='battle-vfx-wake';node.dataset.travelProfile=String(event?.travelProfile||'dart');node.style.left=`${source.x+dx*progress}px`;node.style.top=`${source.y+dy*progress+jitter}px`;node.style.setProperty('--vfx-color',combatVfxColor(event));node.style.setProperty('--wake-x',`${wakeX}px`);node.style.setProperty('--wake-y',`${wakeY}px`);node.style.setProperty('--wake-mid-x',`${wakeX*.46}px`);node.style.setProperty('--wake-mid-y',`${wakeY*.46}px`);node.style.setProperty('--wake-rotation',`${(seed*37+index*61)%360}deg`);node.style.setProperty('--wake-duration',`${220+(index%3)*48}ms`);node.style.setProperty('--wake-delay',`${90+index*42}ms`);layer.appendChild(node);setTimeout(()=>node.remove(),duration+180)
@@ -1982,17 +2008,17 @@ function appendCombatVfxPreflash(event,target,duration=210){
 }
 function appendCombatVfxAfterglow(event,target,duration=460){
   const layer=combatVfxLayer();if(!layer)return null;
-  const profile=combatVfxRuptureProfile(event),seed=++battleVfxSequence,node=document.createElement('i'),count=profile.afterglowMotes;node.className='battle-vfx-afterglow';node.dataset.impactProfile=profile.name;node.style.left=`${target.x}px`;node.style.top=`${target.y}px`;node.style.setProperty('--vfx-color',combatVfxColor(event));
+  const profile=combatVfxRuptureProfile(event),seed=++battleVfxSequence+(Number(event?.variantSeed)||0),node=document.createElement('i'),count=profile.afterglowMotes;node.className='battle-vfx-afterglow';node.dataset.impactProfile=profile.family;node.dataset.uniqueImpactProfile=profile.name;node.style.left=`${target.x}px`;node.style.top=`${target.y}px`;node.style.setProperty('--vfx-color',combatVfxColor(event));
   for(let index=0;index<count;index++){const vector=combatVfxFragmentVector(profile,event,index,count,seed),mote=document.createElement('i'),distance=26+(index%4)*10;mote.className='battle-vfx-afterglow-mote';mote.style.setProperty('--vfx-color',combatVfxColor(event));mote.style.setProperty('--afterglow-x',`${Math.cos(vector.angle)*distance}px`);mote.style.setProperty('--afterglow-y',`${Math.sin(vector.angle)*distance*vector.vertical}px`);mote.style.setProperty('--afterglow-delay',`${index*21}ms`);mote.style.setProperty('--afterglow-duration',`${Math.max(180,duration-index*11)}ms`);node.appendChild(mote)}
   layer.appendChild(node);setTimeout(()=>node.remove(),duration+240);return node
 }
 function appendCombatVfxImpactBurst(event,target){
   const layer=combatVfxLayer();if(!layer||!target)return null;
-  const emphasis=Math.max(.88,Number(event?.emphasis)||1),boss=event?.kind==='ENEMY'&&event?.pipeline==='ULTIMATE',signature=event?.pipeline==='ULTIMATE'&&event?.kind!=='ENEMY',profile=combatVfxRuptureProfile(event),requested=Math.round(profile.requested*(boss||signature?1.08:1)),count=Math.max(0,Math.min(requested,BATTLE_VFX_FRAGMENT_CAP-battleVfxFragmentsLive)),duration=profile.duration,seed=++battleVfxSequence,burst=document.createElement('div');
-  battleVfxFragmentsLive+=count;burst.className='battle-vfx-burst';burst.dataset.sequence=String(seed);burst.dataset.category=event?.category||'IMPACT';burst.dataset.impactProfile=profile.name;burst.dataset.fragments=String(count);burst.style.left=`${target.x}px`;burst.style.top=`${target.y}px`;burst.style.setProperty('--vfx-color',combatVfxColor(event));burst.style.setProperty('--vfx-burst-scale',String(emphasis*(boss||signature?1.24:1)));
+  const emphasis=Math.max(.88,Number(event?.emphasis)||1),boss=event?.kind==='ENEMY'&&event?.pipeline==='ULTIMATE',signature=event?.pipeline==='ULTIMATE'&&event?.kind!=='ENEMY',profile=combatVfxRuptureProfile(event),requested=Math.round(profile.requested*(boss||signature?1.08:1)),count=Math.max(0,Math.min(requested,BATTLE_VFX_FRAGMENT_CAP-battleVfxFragmentsLive)),duration=profile.duration,seed=++battleVfxSequence+(Number(event?.variantSeed)||0),burst=document.createElement('div');
+  battleVfxFragmentsLive+=count;burst.className='battle-vfx-burst';burst.dataset.sequence=String(seed);burst.dataset.category=event?.category||'IMPACT';burst.dataset.impactProfile=profile.family;burst.dataset.uniqueImpactProfile=profile.name;burst.dataset.fragments=String(count);burst.style.left=`${target.x}px`;burst.style.top=`${target.y}px`;burst.style.setProperty('--vfx-color',combatVfxColor(event));burst.style.setProperty('--vfx-burst-scale',String(emphasis*(boss||signature?1.24:1)));
   for(let index=0;index<count;index++){
     const vector=combatVfxFragmentVector(profile,event,index,count,seed),fragment=document.createElement('i'),shape=profile.shapes[index%profile.shapes.length];
-    fragment.className='battle-vfx-fragment';fragment.dataset.shape=shape;fragment.dataset.vector=profile.vector;fragment.style.setProperty('--vfx-color',combatVfxColor(event));fragment.style.setProperty('--fragment-x',`${Math.cos(vector.angle)*vector.spread}px`);fragment.style.setProperty('--fragment-y',`${Math.sin(vector.angle)*vector.spread*vector.vertical}px`);fragment.style.setProperty('--fragment-rotation',`${vector.angle*180/Math.PI+90}deg`);fragment.style.setProperty('--fragment-spin',`${index%2?220:-220}deg`);fragment.style.setProperty('--fragment-duration',`${duration+(index%6)*32}ms`);burst.appendChild(fragment)
+    fragment.className='battle-vfx-fragment';fragment.dataset.shape=shape;fragment.dataset.vector=profile.vector;fragment.style.setProperty('--vfx-color',combatVfxColor(event));fragment.style.setProperty('--fragment-x',`${Math.cos(vector.angle)*vector.spread}px`);fragment.style.setProperty('--fragment-y',`${Math.sin(vector.angle)*vector.spread*vector.vertical}px`);fragment.style.setProperty('--fragment-rotation',`${vector.angle*180/Math.PI+90}deg`);fragment.style.setProperty('--fragment-spin',`${(index%2?1:-1)*(150+(Number(event?.variantSeed)||0)%191)}deg`);fragment.style.setProperty('--fragment-duration',`${duration+(index%6)*32}ms`);burst.appendChild(fragment)
   }
   layer.appendChild(burst);setTimeout(()=>{battleVfxFragmentsLive=Math.max(0,battleVfxFragmentsLive-count);burst.remove()},duration+240);return burst
 }
@@ -2019,7 +2045,7 @@ function presentCombatVfx(event){
     // This keeps the principal silhouette authored while making contact legible.
     const requestedLaunchDuration=Number(event.launchDuration),launchDuration=Number.isFinite(requestedLaunchDuration)?requestedLaunchDuration:Math.max(820,configuredContact+160);
     const launchEvent={...event,asset:event.launchAsset,duration:Math.max(320,launchDuration),emphasis:Math.max(.46,(Number(event.emphasis)||1)*(Number(event.launchEmphasis)||.7))};
-    appendCombatVfxCharge(event,source,180,12);stage.classList.add('vfx-ultimate-field');
+    appendCombatVfxCharge(event,source,Number(event?.motionVariant?.chargeMs)||180,Number(event?.motionVariant?.chargeMotes)||12);stage.classList.add('vfx-ultimate-field');
     const launch=appendCombatVfxParticle(launchEvent,event.launchAsset,source,target,null);if(!launch)return false;
     appendCombatVfxWake(launchEvent,source,target,launch.duration);
     const contactMs=Math.max(150,Math.min(launch.duration-34,configuredContact||Math.round(launch.duration*.72)));
@@ -2027,8 +2053,8 @@ function presentCombatVfx(event){
     return true
   }
   const primary=appendCombatVfxParticle(event,asset,source,target,zone);if(!primary)return false;
-  if(pipeline==='PROJECTILE'){appendCombatVfxCharge(event,source,150,7);appendCombatVfxWake(event,source,target,primary.duration)}
-  if(pipeline==='ULTIMATE'){appendCombatVfxCharge(event,source,180,12);stage.classList.add('vfx-ultimate-field')}
+  if(pipeline==='PROJECTILE'){appendCombatVfxCharge(event,source,Number(event?.motionVariant?.chargeMs)||150,Number(event?.motionVariant?.chargeMotes)||7);appendCombatVfxWake(event,source,target,primary.duration)}
+  if(pipeline==='ULTIMATE'){appendCombatVfxCharge(event,source,Number(event?.motionVariant?.chargeMs)||180,Number(event?.motionVariant?.chargeMotes)||12);stage.classList.add('vfx-ultimate-field')}
   const contactMs=configuredContact||Math.round(primary.duration*.72),offensive=event.target==='enemy'||event.kind==='ENEMY';
   if(offensive)setTimeout(()=>{if(stage.isConnected)triggerCombatVfxImpact(event,event.impactAsset||asset,target,stage)},contactMs);
   return true

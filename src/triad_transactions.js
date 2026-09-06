@@ -1,154 +1,67 @@
-/* TRIAD // RUN authoritative transaction helpers.
-   This module is deterministic, serializable, and intentionally UI-agnostic. */
-(function attachTriadTransactions(root, factory) {
-  const api = factory();
-  if (typeof module === 'object' && module.exports) module.exports = api;
-  root.TRIAD_TXN = api;
-})(typeof globalThis !== 'undefined' ? globalThis : window, function triadTransactionsFactory() {
-  'use strict';
+/* TRIAD // RUN authoritative transaction helpers. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;root.TRIAD_TXN=api})(typeof globalThis!=='undefined'?globalThis:window,function(){
+'use strict';
+const requireRun=run=>{if(!run||typeof run!=='object')throw new Error('TRIAD transaction requires an active run');if(!run.id)throw new Error('TRIAD transaction requires run.id');return run};
+function ensureLedger(run){requireRun(run);if(!run.transactionLedger||typeof run.transactionLedger!=='object'||Array.isArray(run.transactionLedger))run.transactionLedger={};return run.transactionLedger}
+function id(run,kind,scope){requireRun(run);const k=String(kind||'TXN').replace(/[^A-Z0-9_-]/gi,'_').toUpperCase(),s=String(scope==null?'':scope).replace(/[^A-Z0-9_.:-]/gi,'_');return `${run.id}:${k}:${s}`}
+function isCommitted(run,transactionId){return Boolean(transactionId)&&ensureLedger(run)[transactionId]?.status==='COMMITTED'}
+function commit(run,transactionId,payload){if(!transactionId)throw new Error('TRIAD transaction id is required');const ledger=ensureLedger(run);if(ledger[transactionId]?.status==='COMMITTED')return false;ledger[transactionId]={status:'COMMITTED',sequence:Object.keys(ledger).length+1,payload:payload&&typeof payload==='object'?JSON.parse(JSON.stringify(payload)): {}};return true}
+function pending(run,kind,scope,fields){return {...(fields&&typeof fields==='object'?fields:{}),kind,txnId:id(run,kind,scope),status:'PENDING'}}
+function isPending(record,kind,stage){return Boolean(record&&record.kind===kind&&record.status==='PENDING'&&(stage==null||record.stage===stage))}
+function restore(run){requireRun(run);ensureLedger(run);if(run.combat&&typeof run.combat==='object'){run.combat.phase=run.combat.phase==='TERMINAL'?'TERMINAL':'PLAYER';run.combat.inputLocked=run.combat.phase==='TERMINAL';run.combat.actionToken=Number.isInteger(run.combat.actionToken)?run.combat.actionToken:0}if(run.routeOffer&&typeof run.routeOffer==='object'){run.routeOffer.txnId=run.routeOffer.txnId||id(run,'ROUTE',run.routeOffer.stage);run.routeOffer.status=run.routeOffer.status||'PENDING'}return run}
+return Object.freeze({ensureLedger,id,isCommitted,commit,pending,isPending,restore})});
 
-  function requireRun(run) {
-    if (!run || typeof run !== 'object') throw new Error('TRIAD transaction requires an active run');
-    if (!run.id) throw new Error('TRIAD transaction requires run.id');
-    return run;
-  }
+/* Full-resolution battle optimization: source assets and frame quality are unchanged. */
+if(typeof window!=='undefined'&&typeof document!=='undefined'){
+const installPerf=()=>{
+const VERSION='2026-09-07-fullres-lazy-atlas-v3';if(window.TRIAD_RUNTIME_PERF?.version===VERSION||typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
+const metrics={loads:0,evictions:0,draws:0,skips:0},MAX=2,path=(a,n)=>a?.manifest?.assets?.[n]?.path||a?.manifest?.clips?.[n]?.atlas||'',active=()=>!document.hidden&&document.getElementById('combat')?.classList.contains('active');
+const close=x=>{try{if(x?.close)x.close();else if(x instanceof HTMLImageElement){x.onload=null;x.onerror=null;x.src=''}}catch{}};
+const decode=async src=>{if(typeof createImageBitmap==='function'&&location.protocol!=='file:')try{const r=await fetch(src,{cache:'force-cache',credentials:'same-origin'});if(r.ok)return await createImageBitmap(await r.blob())}catch{}return await new Promise((ok,bad)=>{const i=new Image();i.decoding='async';i.onload=()=>ok(i);i.onerror=()=>bad(new Error(`SD atlas load failed: ${src}`));i.src=src})};
+const p=SdBattleActor.prototype;
+p._perfEnsure=function(n){this._perfJobs??=new Map();if(this.atlases?.[n])return Promise.resolve(this.atlases[n]);if(this._perfJobs.has(n))return this._perfJobs.get(n);const src=path(this,n),job=decode(src).then(img=>{if(this._perfDead){close(img);return null}this.atlases[n]=img;metrics.loads++;const keep=new Set(['idle',n,this.clip]);Object.keys(this.atlases).filter(k=>!keep.has(k)).slice(0,Math.max(0,Object.keys(this.atlases).length-MAX)).forEach(k=>{close(this.atlases[k]);delete this.atlases[k];metrics.evictions++});return img}).finally(()=>this._perfJobs.delete(n));this._perfJobs.set(n,job);return job};
+p._perfActivate=function(n){if(!this.atlases?.[n])return false;this.clip=n;this.frame=0;this.started=performance.now();this.eventFrames.clear();this._lastClip='';this._lastFrame=-1;this.canvas.dataset.currentClip=n;this.canvas.dataset.currentAtlas=path(this,n);this.canvas.dataset.pendingAtlas='';return true};
+p.load=async function(){if(!this.manifest)return;this._perfDead=false;this._perfJobs=new Map();const n=this.normalizeClip(this.pendingState||'idle');try{await this._perfEnsure(n);if(this._perfDead)return;this.canvas.dataset.loadStatus='PASS';this._perfActivate(n);this.raf=requestAnimationFrame(t=>this.tick(t));if(n!=='idle'&&this.manifest.clips.idle)setTimeout(()=>!this._perfDead&&this._perfEnsure('idle').catch(()=>{}),180)}catch(e){this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_SD_ATLAS_LOAD_FAIL',this.characterId,e)}};
+p.play=function(name){if(!this.manifest)return false;this.pendingState=name;const n=this.normalizeClip(name),token=(this._perfToken||0)+1;this._perfToken=token;if(this.atlases?.[n])return this._perfActivate(n);this.canvas.dataset.pendingAtlas=n;this._perfEnsure(n).then(img=>{if(img&&!this._perfDead&&token===this._perfToken)this._perfActivate(n)}).catch(e=>console.error('TRIAD_SD_ATLAS_LOAD_FAIL',this.characterId,n,e));return true};
+p.tick=function(now){if(this._perfDead)return;if(active()){const c=this.manifest?.clips?.[this.clip],a=this.atlases?.[this.clip];if(c&&a){const raw=Math.floor(Math.max(0,now-this.started)*c.fps/1000),ended=!c.loop&&raw>=c.frames;if(ended&&!c.holdLastFrame)this.play('idle');else{const f=ended?c.frames-1:c.loop?raw%c.frames:Math.min(raw,c.frames-1);this.frame=f;if(this._lastClip!==this.clip||this._lastFrame!==f){this.draw(a,c,f);this._lastClip=this.clip;this._lastFrame=f;metrics.draws++;for(const [ev,at] of Object.entries(c.events||{}))if(f===at&&!this.eventFrames.has(ev)){this.eventFrames.add(ev);this.canvas.dispatchEvent(new CustomEvent('triad-sd-event',{bubbles:true,detail:{characterId:this.characterId,clip:this.clip,event:ev,frame:f}}))}}else metrics.skips++}}}this.raf=requestAnimationFrame(t=>this.tick(t))};
+p.draw=function(a,c,f){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,sw=Number(a?.naturalWidth||a?.width)||w,cols=c.columns||Math.max(1,Math.floor(sw/w)),sx=(f%cols)*w,sy=Math.floor(f/cols)*h,old=this.ctx.globalCompositeOperation;this.canvas.dataset.currentFrame=String(f);this.canvas.dataset.atlasColumns=String(cols);this.canvas.dataset.atlasRows=String(c.rows||Math.ceil(c.frames/cols));this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(a,sx,sy,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
+p.destroy=function(){this._perfDead=true;this._perfToken=(this._perfToken||0)+1;if(this.raf)cancelAnimationFrame(this.raf);Object.values(this.atlases||{}).forEach(close);this.atlases={}};
+const ep=EnemyBattleActor.prototype,oldPlay=ep.play;
+ep.load=function(){const src=this.manifest?.atlas;if(!src)return;this._perfDead=false;decode(src).then(img=>{if(this._perfDead){close(img);return}this.image=img;this.canvas.dataset.loadStatus='PASS';this.canvas.dataset.atlas=src;this.play(this.pendingState);this.raf=requestAnimationFrame(t=>this.tick(t))}).catch(e=>{this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_ENEMY_ATLAS_LOAD_FAIL',this.manifest?.id,e)})};
+ep.play=function(state,options){const r=oldPlay.call(this,state,options);if(r!==false){this._lastState='';this._lastFrame=-1}return r};
+ep.tick=function(now){if(this._perfDead)return;if(active()){const c=this.manifest?.clips?.[this.state];if(this.image&&c){const g=this.generation,raw=Math.floor(Math.max(0,now-this.started)*c.fps/1000),ended=!c.loop&&raw>=c.frames;if(ended&&!c.holdLastFrame){if(g===this.generation)this.play('IDLE',{force:true,reason:'complete'})}else{const f=ended?c.frames-1:c.loop?raw%c.frames:Math.min(raw,c.frames-1);this.frame=f;if(this._lastState!==this.state||this._lastFrame!==f){this.draw(c,f);this._lastState=this.state;this._lastFrame=f;metrics.draws++}else metrics.skips++}}}this.raf=requestAnimationFrame(t=>this.tick(t))};
+ep.draw=function(c,f){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,old=this.ctx.globalCompositeOperation;this.canvas.dataset.currentFrame=String(f);this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(this.image,f*w,c.row*h,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
+ep.destroy=function(){this._perfDead=true;if(this.raf)cancelAnimationFrame(this.raf);close(this.image);this.image=null};
+window.TRIAD_RUNTIME_PERF={version:VERSION,sourceQuality:'UNCHANGED_FULL_RESOLUTION',playerAtlasLimit:MAX,metrics,snapshot:()=>({version:VERSION,sourceQuality:'UNCHANGED_FULL_RESOLUTION',metrics:{...metrics},players:[...sdBattleActors].map(([id,a])=>({id,clip:a.clip,cached:Object.keys(a.atlases||{})}))})};
+};
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',installPerf,{once:true}):installPerf();
+}
 
-  function ensureLedger(run) {
-    requireRun(run);
-    if (!run.transactionLedger || typeof run.transactionLedger !== 'object' || Array.isArray(run.transactionLedger)) {
-      run.transactionLedger = {};
-    }
-    return run.transactionLedger;
-  }
-
-  function id(run, kind, scope) {
-    requireRun(run);
-    const normalizedKind = String(kind || 'TXN').replace(/[^A-Z0-9_-]/gi, '_').toUpperCase();
-    const normalizedScope = String(scope == null ? '' : scope).replace(/[^A-Z0-9_.:-]/gi, '_');
-    return `${run.id}:${normalizedKind}:${normalizedScope}`;
-  }
-
-  function isCommitted(run, transactionId) {
-    if (!transactionId) return false;
-    return ensureLedger(run)[transactionId]?.status === 'COMMITTED';
-  }
-
-  function commit(run, transactionId, payload) {
-    if (!transactionId) throw new Error('TRIAD transaction id is required');
-    const ledger = ensureLedger(run);
-    if (ledger[transactionId]?.status === 'COMMITTED') return false;
-    ledger[transactionId] = {
-      status: 'COMMITTED',
-      sequence: Object.keys(ledger).length + 1,
-      payload: payload && typeof payload === 'object' ? JSON.parse(JSON.stringify(payload)) : {}
-    };
-    return true;
-  }
-
-  function pending(run, kind, scope, fields) {
-    return {
-      ...(fields && typeof fields === 'object' ? fields : {}),
-      kind,
-      txnId: id(run, kind, scope),
-      status: 'PENDING'
-    };
-  }
-
-  function isPending(record, kind, stage) {
-    return Boolean(record && record.kind === kind && record.status === 'PENDING' && (stage == null || record.stage === stage));
-  }
-
-  function restore(run) {
-    requireRun(run);
-    ensureLedger(run);
-    if (run.combat && typeof run.combat === 'object') {
-      run.combat.phase = run.combat.phase === 'TERMINAL' ? 'TERMINAL' : 'PLAYER';
-      run.combat.inputLocked = run.combat.phase === 'TERMINAL';
-      run.combat.actionToken = Number.isInteger(run.combat.actionToken) ? run.combat.actionToken : 0;
-    }
-    if (run.routeOffer && typeof run.routeOffer === 'object') {
-      run.routeOffer.txnId = run.routeOffer.txnId || id(run, 'ROUTE', run.routeOffer.stage);
-      run.routeOffer.status = run.routeOffer.status || 'PENDING';
-    }
-    return run;
-  }
-
-  return Object.freeze({ ensureLedger, id, isCommitted, commit, pending, isPending, restore });
-});
-
-/* Full-resolution battle runtime optimization.
-   Source atlases, frame size, enemies, skills, ultimates and VFX stay unchanged.
-   Only decode residency and redundant canvas redraw scheduling are changed. */
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-  const installTriadFullResPerf = () => {
-    'use strict';
-    const VERSION='2026-09-07-fullres-lazy-atlas-v2';
-    if(window.TRIAD_RUNTIME_PERF?.version===VERSION)return;
-    if(typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
-
-    const metrics={atlasLoads:0,atlasEvictions:0,playerDraws:0,playerSkipped:0,enemyDraws:0,enemySkipped:0,decodePeak:0};
-    const MAX_ATLASES=2;
-    const MAX_DECODES=(Number(navigator.deviceMemory)||4)<=4?1:2;
-    const queue=[];let active=0,seq=0;
-    const atlasPath=(actor,name)=>actor?.manifest?.assets?.[name]?.path||actor?.manifest?.clips?.[name]?.atlas||'';
-    const visible=()=>!document.hidden&&document.getElementById('combat')?.classList.contains('active');
-    const closeSource=source=>{try{if(source?.close)source.close();else if(source instanceof HTMLImageElement){source.onload=null;source.onerror=null;source.src=''}}catch{}};
-
-    const decodeImage=async path=>{
-      if(typeof createImageBitmap==='function'&&location.protocol!=='file:'){
-        try{const response=await fetch(path,{cache:'force-cache',credentials:'same-origin'});if(!response.ok)throw new Error(`HTTP ${response.status}`);return await createImageBitmap(await response.blob())}catch(error){console.warn('TRIAD bitmap fallback',path,error)}
-      }
-      return await new Promise((resolve,reject)=>{const image=new Image();image.decoding='async';image.onload=()=>{const done=()=>resolve(image);typeof image.decode==='function'?image.decode().catch(()=>{}).finally(done):done()};image.onerror=()=>reject(new Error(`TRIAD atlas load failed: ${path}`));image.src=path})
-    };
-    const pump=()=>{while(active<MAX_DECODES&&queue.length){queue.sort((a,b)=>b.priority-a.priority||a.seq-b.seq);const job=queue.shift();active++;metrics.decodePeak=Math.max(metrics.decodePeak,active);decodeImage(job.path).then(job.resolve,job.reject).finally(()=>{active--;pump()})}};
-    const decode=(path,priority=50)=>new Promise((resolve,reject)=>{queue.push({path,priority,seq:++seq,resolve,reject});pump()});
-
-    const p=SdBattleActor.prototype;
-    p._perfTouch=function(name){(this._perfUse??=new Map()).set(name,performance.now())};
-    p._perfRelease=function(name){const source=this.atlases?.[name];if(!source)return false;closeSource(source);delete this.atlases[name];this._perfUse?.delete(name);metrics.atlasEvictions++;return true};
-    p._perfEvict=function(protect=[]){const keep=new Set(['idle',this.clip,this.normalizeClip?.(this.pendingState),...protect].filter(Boolean));const candidates=Object.keys(this.atlases||{}).filter(name=>!keep.has(name)).sort((a,b)=>(this._perfUse?.get(a)||0)-(this._perfUse?.get(b)||0));while(Object.keys(this.atlases||{}).length>MAX_ATLASES&&candidates.length)this._perfRelease(candidates.shift())};
-    p._perfEnsure=function(name,priority=80){
-      if(!this.manifest?.clips?.[name])return Promise.reject(new Error(`Unknown SD clip: ${name}`));
-      this._perfPromises??=new Map();
-      if(this.atlases?.[name]){this._perfTouch(name);return Promise.resolve(this.atlases[name])}
-      if(this._perfPromises.has(name))return this._perfPromises.get(name);
-      const path=atlasPath(this,name);if(!path)return Promise.reject(new Error(`Missing SD atlas: ${this.characterId}/${name}`));
-      const promise=decode(path,priority).then(source=>{if(this._perfDestroyed){closeSource(source);return null}this.atlases[name]=source;this._perfTouch(name);metrics.atlasLoads++;this._perfEvict([name]);this.canvas.dataset.atlasCacheCount=String(Object.keys(this.atlases).length);return source}).finally(()=>this._perfPromises.delete(name));
-      this._perfPromises.set(name,promise);return promise
-    };
-    p._perfActivate=function(name){if(!this.atlases?.[name])return false;this.clip=name;this.frame=0;this.started=performance.now();this.eventFrames.clear();this._perfLastClip='';this._perfLastFrame=-1;this._perfTouch(name);this.canvas.dataset.currentClip=name;this.canvas.dataset.currentAtlas=atlasPath(this,name);this.canvas.dataset.pendingAtlas='';this.canvas.setAttribute?.('aria-label',`${this.canvas.dataset.characterName||this.characterId} SD ${name}`);this._perfEvict([name]);return true};
-    p.load=async function(){
-      if(!this.manifest)return;this._perfDestroyed=false;this._perfPromises=new Map();this._perfUse=new Map();this._perfLastClip='';this._perfLastFrame=-1;
-      const initial=this.normalizeClip(this.pendingState||'idle');
-      try{await this._perfEnsure(initial,120);if(this._perfDestroyed)return;this.canvas.dataset.loadStatus='PASS';this._perfActivate(initial);this.raf=requestAnimationFrame(t=>this.tick(t));if(initial!=='idle'&&this.manifest.clips.idle)setTimeout(()=>!this._perfDestroyed&&this._perfEnsure('idle',20).catch(()=>{}),200)}catch(error){this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_SD_ATLAS_LOAD_FAIL',this.characterId,error)}
-    };
-    p.play=function(name){
-      if(!this.manifest)return false;this.pendingState=name;const clip=this.normalizeClip(name),request=(this._perfRequest||0)+1;this._perfRequest=request;
-      if(this.atlases?.[clip])return this._perfActivate(clip);
-      this.canvas.dataset.pendingAtlas=clip;this._perfEnsure(clip,130).then(source=>{if(source&&!this._perfDestroyed&&request===this._perfRequest)this._perfActivate(clip)}).catch(error=>{this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_SD_ATLAS_LOAD_FAIL',this.characterId,clip,error)});return true
-    };
-    p.tick=function(now){
-      if(this._perfDestroyed)return;if(!visible()){this.raf=requestAnimationFrame(t=>this.tick(t));return}
-      const clip=this.manifest?.clips?.[this.clip],atlas=this.atlases?.[this.clip];
-      if(clip&&atlas){const raw=Math.floor(Math.max(0,now-this.started)*clip.fps/1000),ended=!clip.loop&&raw>=clip.frames;if(ended&&!clip.holdLastFrame)this.play('idle');else{const frame=ended?clip.frames-1:clip.loop?raw%clip.frames:Math.min(raw,clip.frames-1);this.frame=frame;if(this._perfLastClip!==this.clip||this._perfLastFrame!==frame){this.draw(atlas,clip,frame);this._perfLastClip=this.clip;this._perfLastFrame=frame;metrics.playerDraws++;for(const[eventName,eventFrame]of Object.entries(clip.events||{}))if(frame===eventFrame&&!this.eventFrames.has(eventName)){this.eventFrames.add(eventName);this.canvas.dispatchEvent(new CustomEvent('triad-sd-event',{bubbles:true,detail:{characterId:this.characterId,clip:this.clip,event:eventName,frame}}))}}else metrics.playerSkipped++}}
-      this.raf=requestAnimationFrame(t=>this.tick(t))
-    };
-    p.draw=function(atlas,clip,frame){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,sourceW=Number(atlas?.naturalWidth||atlas?.width)||w,cols=clip.columns||Math.max(1,Math.floor(sourceW/w)),sx=(frame%cols)*w,sy=Math.floor(frame/cols)*h;this.canvas.dataset.currentFrame=String(frame);this.canvas.dataset.atlasColumns=String(cols);this.canvas.dataset.atlasRows=String(clip.rows||Math.ceil(clip.frames/cols));const old=this.ctx.globalCompositeOperation;this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(atlas,sx,sy,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
-    p.destroy=function(){this._perfDestroyed=true;this._perfRequest=(this._perfRequest||0)+1;if(this.raf)cancelAnimationFrame(this.raf);this.raf=0;for(const name of Object.keys(this.atlases||{}))this._perfRelease(name);this._perfPromises?.clear?.()};
-
-    const ep=EnemyBattleActor.prototype,enemyPlay=ep.play;
-    ep.load=function(){const path=this.manifest?.atlas;if(!path)return;this._perfDestroyed=false;decode(path,120).then(source=>{if(this._perfDestroyed){closeSource(source);return}this.image=source;this.canvas.dataset.loadStatus='PASS';this.canvas.dataset.atlas=path;this.play(this.pendingState);this.raf=requestAnimationFrame(t=>this.tick(t))}).catch(error=>{this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_ENEMY_ATLAS_LOAD_FAIL',this.manifest?.id,error)})};
-    ep.play=function(state,options){const result=enemyPlay.call(this,state,options);if(result!==false){this._perfLastState='';this._perfLastFrame=-1}return result};
-    ep.tick=function(now){if(this._perfDestroyed)return;if(!visible()){this.raf=requestAnimationFrame(t=>this.tick(t));return}const clip=this.manifest?.clips?.[this.state];if(this.image&&clip){const generation=this.generation,raw=Math.floor(Math.max(0,now-this.started)*clip.fps/1000),ended=!clip.loop&&raw>=clip.frames;if(ended&&!clip.holdLastFrame){if(generation===this.generation)this.play('IDLE',{force:true,reason:'complete'})}else{const frame=ended?clip.frames-1:clip.loop?raw%clip.frames:Math.min(raw,clip.frames-1);this.frame=frame;if(this._perfLastState!==this.state||this._perfLastFrame!==frame){this.draw(clip,frame);this._perfLastState=this.state;this._perfLastFrame=frame;metrics.enemyDraws++}else metrics.enemySkipped++}}this.raf=requestAnimationFrame(t=>this.tick(t))};
-    ep.draw=function(clip,frame){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,sx=frame*w,sy=clip.row*h;this.canvas.dataset.currentFrame=String(frame);const old=this.ctx.globalCompositeOperation;this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(this.image,sx,sy,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
-    ep.destroy=function(){this._perfDestroyed=true;if(this.raf)cancelAnimationFrame(this.raf);this.raf=0;closeSource(this.image);this.image=null};
-
-    const prefetched=new Set(),prefetchEncoded=path=>{if(!path||prefetched.has(path))return;prefetched.add(path);const link=document.createElement('link');link.rel='prefetch';link.as='image';link.href=path;link.dataset.triadPerfPrefetch='1';document.head.appendChild(link)};
-    const oldRender=renderCombat;
-    renderCombat=function(...args){const out=oldRender.apply(this,args);try{if(run?.combat){const paths=[];for(const state of run.combat.hand||[]){const card=ALL_CARDS[state.id];if(!card)continue;const member=run.party.find(x=>x.id===card.owner),manifest=member&&window.TRIAD_SD_MANIFESTS?.[member.characterId];if(!manifest)continue;const key=card.pattern.key,clip=key==='signature'?'ultimate':['guard','bastion','counter'].includes(key)?'guard':['focus','battery','mark','dot','heal','renewal','overload'].includes(key)?'skill':'attack',path=manifest.assets?.[clip]?.path||manifest.clips?.[clip]?.atlas;if(path&&!paths.includes(path))paths.push(path);if(paths.length>=4)break}setTimeout(()=>paths.forEach(prefetchEncoded),220)}}catch(error){console.warn('TRIAD encoded atlas prefetch skipped',error)}return out};
-
-    window.TRIAD_RUNTIME_PERF={version:VERSION,sourceQuality:'UNCHANGED_FULL_RESOLUTION',playerAtlasLimit:MAX_ATLASES,decodeConcurrency:MAX_DECODES,metrics,snapshot:()=>({version:VERSION,sourceQuality:'UNCHANGED_FULL_RESOLUTION',metrics:{...metrics},players:[...sdBattleActors].map(([id,a])=>({id,clip:a.clip,cached:Object.keys(a.atlases||{})}))})};
-    console.info('TRIAD_RUNTIME_PERF_ACTIVE',window.TRIAD_RUNTIME_PERF.snapshot())
-  };
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installTriadFullResPerf,{once:true});else installTriadFullResPerf();
+/* Artifact offer + acquisition reveal. Mechanics stay authoritative and unchanged. */
+if(typeof window!=='undefined'&&typeof document!=='undefined'){
+const installArtifacts=()=>{
+const VERSION='2026-09-07-artifact-acquire-v2';if(window.TRIAD_ARTIFACT_PRESENTATION?.version===VERSION||typeof window.renderArtifactOffer!=='function'||typeof window.takeArtifact!=='function')return;
+const M=Object.freeze({
+FIRST_ZERO:{name:'초동 가속기',tag:'첫 카드 0 AP',scope:'매 전투 · 첫 행동',effect:'매 전투 첫 번째 카드의 비용이 0이 됩니다.',use:'2~3 AP 고비용 카드를 첫 수로 무료 사용하고 남은 AP로 연계하세요.',stat:'첫 카드 비용 → 0',tone:'#ffd36a',art:'assets/artifacts/candidates/v1/TRIAD-ART-FIRST_ZERO-V1.svg'},
+DRAW_PLUS:{name:'전술 메모리',tag:'시작 손패 +1',scope:'매 전투 · 시작',effect:'전투 시작 시 손패를 1장 더 뽑습니다.',use:'첫 턴 선택지가 늘어 상태이상·방어·콤보 시작 카드를 더 안정적으로 찾습니다.',stat:'시작 손패 +1',tone:'#78d8ff',mark:'+1'},
+ENERGY_PLUS:{name:'과충전 셀',tag:'매 턴 AP +1',scope:'매 전투 · 매 턴',effect:'매 턴 사용할 수 있는 에너지가 1 증가합니다.',use:'카드 한 장을 더 쓰거나 2~3 AP 고비용 카드를 섞은 덱을 편하게 굴릴 수 있습니다.',stat:'턴 에너지 +1',tone:'#8af6d5',mark:'AP+1'},
+SHIELD_START:{name:'위상 코팅',tag:'전투 시작 보호막',scope:'매 전투 · 시작',effect:'전투 시작 시 살아 있는 모든 아군에게 보호막 8을 부여합니다.',use:'첫 적 공격을 흡수해 초반 HP 손실을 줄입니다. 느린 빌드에 특히 유리합니다.',stat:'아군 전체 보호막 +8',tone:'#8ea8ff',mark:'+8'},
+HEAL_AFTER:{name:'재생 모듈',tag:'승리 후 회복',scope:'전투 승리 직후',effect:'승리하면 생존한 아군의 HP를 5 회복합니다.',use:'누적 피해를 자동 복구해 휴식 의존도를 낮추고 전투·엘리트 경로를 더 공격적으로 고를 수 있습니다.',stat:'생존 아군 HP +5',tone:'#8df0ad',mark:'HP+5'},
+STATUS_AMP:{name:'상태 증폭 렌즈',tag:'상태이상 +1',scope:'상태이상 카드 사용',effect:'화상·감전·표식을 부여할 때 수치가 1 추가됩니다.',use:'DOT·표식 누적이 빨라집니다. 상태 수치를 피해로 바꾸는 증폭 루프와 시너지가 큽니다.',stat:'화상/감전/표식 +1',tone:'#df9cff',mark:'+1'},
+TRIAD_CHAIN:{name:'삼중 링크',tag:'교대 연계 피해',scope:'다른 캐릭터 카드 연속 사용',effect:'직전 카드와 다른 캐릭터의 공격 카드를 이어 쓰면 피해가 4 증가합니다.',use:'한 캐릭터 카드만 몰아 쓰지 말고 주인을 번갈아 사용해 연계 보너스를 자주 받으세요.',stat:'교대 연계 피해 +4',tone:'#ff9cce',mark:'+4'},
+BOSS_GUARD:{name:'보스 프로토콜',tag:'보스전 보호막',scope:'보스전 · 시작',effect:'보스전 시작 시 살아 있는 모든 아군에게 보호막 15를 부여합니다.',use:'보스의 초반 고화력 패턴을 버티는 보험입니다. 첫 사이클 생존 여유가 크게 늘어납니다.',stat:'보스전 아군 전체 보호막 +15',tone:'#ff8b9a',mark:'+15'}});
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])),meta=id=>M[id]||{name:id,tag:'유물',scope:'획득 즉시 활성',effect:'런 동안 고유 효과가 적용됩니다.',use:'카드와 경로 선택에서 이 효과를 활용하세요.',stat:'고유 효과 활성',tone:'#86eaff',mark:'RELIC'};
+const art=m=>{if(m.art)return m.art;const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><defs><radialGradient id="b"><stop stop-color="#233752"/><stop offset="1" stop-color="#070b13"/></radialGradient><filter id="g"><feGaussianBlur stdDeviation="5" result="x"/><feMerge><feMergeNode in="x"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="128" cy="128" r="118" fill="#050913" stroke="${m.tone}" stroke-width="5"/><circle cx="128" cy="128" r="103" fill="url(#b)"/><path d="M128 42 151 82 194 91 164 124 170 169 128 151 86 169 92 124 62 91 105 82Z" fill="none" stroke="${m.tone}" stroke-width="5" filter="url(#g)"/><circle cx="128" cy="128" r="62" fill="#0b1322" stroke="#fff1b0" stroke-width="3"/><text x="128" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" font-weight="900" fill="#fff">${esc(m.mark||'RELIC')}</text><circle cx="128" cy="128" r="88" fill="none" stroke="${m.tone}" stroke-dasharray="3 9"/></svg>`;return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`};
+const css=document.createElement('style');css.dataset.triadArtifactPresentation=VERSION;css.textContent=`
+#artifactModal{z-index:95;background:radial-gradient(circle at 50% 45%,#315d8444,#030509ee 58%)}#artifactModal>.panel{width:min(1120px,96vw);max-width:1120px;border-color:#58749b;background:linear-gradient(150deg,#141e30fd,#070b14fd);box-shadow:0 34px 110px #000b}
+#artifactOffer.artifact-offer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.artifact-offer-card{--t:#8bdfff;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:500px;border:1px solid color-mix(in srgb,var(--t) 65%,#33445c);border-radius:22px;background:linear-gradient(#182438fa,#080d17fd);box-shadow:0 18px 46px #0006}.artifact-offer-card:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,transparent,var(--t),#fff5bd,var(--t),transparent);box-shadow:0 0 22px var(--t)}
+.artifact-offer-visual{display:grid;place-items:center;height:210px;background:radial-gradient(circle,color-mix(in srgb,var(--t) 20%,transparent),transparent 64%)}.artifact-offer-visual img{width:165px;height:165px;object-fit:contain;filter:drop-shadow(0 14px 24px #0009) drop-shadow(0 0 16px color-mix(in srgb,var(--t) 42%,transparent));transition:.2s}.artifact-offer-card:hover img{transform:translateY(-4px) scale(1.04)}.artifact-offer-copy{display:flex;flex:1;flex-direction:column;padding:2px 18px 18px}.artifact-kicker{color:var(--t);font-size:10px;font-weight:900;letter-spacing:.18em}.artifact-offer-copy h3{margin:6px 0 4px;font-size:22px}.artifact-scope{color:#9fb1ca;font-size:11px}.artifact-effect-box,.artifact-use-box{margin-top:12px;padding:11px 12px;border:1px solid #33455f;border-radius:13px;background:#080e19c2}.artifact-effect-box b,.artifact-use-box b{display:block;margin-bottom:5px;color:#fff4bf;font-size:10px}.artifact-effect-box strong{font-size:15px;line-height:1.45}.artifact-use-box p{margin:0;color:#bdc9da;font-size:12px;line-height:1.55}.artifact-acquire-btn{width:100%;margin-top:auto;border-color:var(--t);font-weight:900}.artifact-acquire-btn small{display:block;margin-top:3px;color:#d7e7f6;font-size:10px}
+.artifact-acquire-reveal{--t:#8bdfff;position:fixed;z-index:240;inset:0;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 50% 44%,color-mix(in srgb,var(--t) 17%,transparent),#010308f0 56%);backdrop-filter:blur(9px);animation:arFade .2s}.artifact-acquire-card{position:relative;width:min(760px,95vw);overflow:hidden;border:1px solid color-mix(in srgb,var(--t) 70%,#fff1ad);border-radius:30px;padding:28px;background:linear-gradient(150deg,#152236fe,#070b14fe);box-shadow:0 38px 120px #000c,0 0 80px color-mix(in srgb,var(--t) 18%,transparent);animation:arPop .48s cubic-bezier(.16,.85,.2,1)}.artifact-acquire-card:after{content:"";position:absolute;inset:0;background:linear-gradient(108deg,transparent 30%,#ffffff24 46%,transparent 62%);transform:translateX(-120%);animation:arSweep 1.1s .12s forwards;pointer-events:none}.artifact-acquire-layout{position:relative;z-index:2;display:grid;grid-template-columns:250px 1fr;gap:27px;align-items:center}.artifact-acquire-art{position:relative;display:grid;place-items:center;aspect-ratio:1;border-radius:26px;background:radial-gradient(circle,color-mix(in srgb,var(--t) 22%,#142239),#080d17 72%);overflow:hidden}.artifact-acquire-art:before{content:"";position:absolute;inset:-35%;background:repeating-conic-gradient(color-mix(in srgb,var(--t) 24%,transparent) 0 2deg,transparent 2deg 18deg);animation:arSpin 10s linear infinite}.artifact-acquire-art img{position:relative;z-index:2;width:190px;height:190px;animation:arRelic .65s}.artifact-acquire-title{color:#fff0aa;font-size:11px;font-weight:950;letter-spacing:.28em}.artifact-acquire-copy h2{margin:8px 0 5px;font-size:clamp(29px,5vw,46px)}.artifact-acquire-tag{display:inline-flex;padding:5px 9px;border:1px solid var(--t);border-radius:999px;font-size:11px;font-weight:850}.artifact-gained-stat{margin:18px 0 10px;padding:14px 16px;border-left:3px solid var(--t);background:linear-gradient(90deg,color-mix(in srgb,var(--t) 13%,transparent),transparent);font-size:21px;font-weight:950}.artifact-gained-stat small{display:block;margin-bottom:3px;color:#a9bdd5;font-size:10px}.artifact-acquire-copy p{margin:9px 0;color:#c1cee0;line-height:1.55}.artifact-acquire-copy p strong{color:#fff2b5}.artifact-acquire-close{width:100%;margin-top:17px;border-color:var(--t);font-weight:900}
+@keyframes arFade{from{opacity:0}}@keyframes arPop{from{opacity:0;transform:translateY(28px) scale(.94)}}@keyframes arSweep{to{transform:translateX(120%)}}@keyframes arSpin{to{transform:rotate(360deg)}}@keyframes arRelic{0%{opacity:0;transform:scale(.55) rotate(-8deg)}65%{opacity:1;transform:scale(1.08) rotate(2deg)}}@media(max-width:820px){#artifactOffer.artifact-offer-grid{grid-template-columns:1fr}.artifact-offer-card{min-height:0}.artifact-acquire-layout{grid-template-columns:1fr}.artifact-acquire-art{width:min(220px,62vw);margin:auto}.artifact-acquire-card{max-height:94vh;overflow:auto}.artifact-acquire-copy{text-align:center}.artifact-gained-stat,.artifact-acquire-copy p{text-align:left}}
+`;document.head.appendChild(css);
+const originalRender=window.renderArtifactOffer;window.renderArtifactOffer=function(ids){const root=document.getElementById('artifactOffer');if(!root)return originalRender.apply(this,arguments);root.className='artifact-offer-grid';root.innerHTML=(ids||[]).map(id=>{const m=meta(id);return `<article class="artifact-offer-card" style="--t:${m.tone}"><div class="artifact-offer-visual"><img src="${art(m)}" alt="${esc(m.name)} 유물 이미지"></div><div class="artifact-offer-copy"><div class="artifact-kicker">RELIC CANDIDATE</div><h3>${esc(m.name)}</h3><div class="artifact-scope">${esc(m.scope)}</div><div class="artifact-effect-box"><b>획득 효과</b><strong>${esc(m.effect)}</strong></div><div class="artifact-use-box"><b>이렇게 활용</b><p>${esc(m.use)}</p></div><button class="artifact-acquire-btn" type="button" onclick="takeArtifact('${esc(id)}')">이 유물 획득<small>${esc(m.stat)}</small></button></div></article>`}).join('');return true};
+const reveal=id=>{const m=meta(id);document.getElementById('triadArtifactAcquireReveal')?.remove();const n=document.createElement('div');n.id='triadArtifactAcquireReveal';n.className='artifact-acquire-reveal';n.style.setProperty('--t',m.tone);n.setAttribute('role','dialog');n.setAttribute('aria-modal','true');n.innerHTML=`<div class="artifact-acquire-card" onclick="event.stopPropagation()"><div class="artifact-acquire-layout"><div class="artifact-acquire-art"><img src="${art(m)}" alt="${esc(m.name)}"></div><div class="artifact-acquire-copy"><div class="artifact-acquire-title">RELIC ACQUIRED</div><h2>${esc(m.name)}</h2><span class="artifact-acquire-tag">${esc(m.tag)}</span><div class="artifact-gained-stat"><small>RUN에 적용된 효과</small>${esc(m.stat)}</div><p><strong>효과:</strong> ${esc(m.effect)}</p><p><strong>활용:</strong> ${esc(m.use)}</p><button class="artifact-acquire-close" type="button" onclick="closeArtifactAcquireReveal()">확인 · 계속 진행</button></div></div></div>`;n.addEventListener('click',()=>window.closeArtifactAcquireReveal());document.body.appendChild(n);requestAnimationFrame(()=>n.querySelector('button')?.focus())};
+window.closeArtifactAcquireReveal=()=>document.getElementById('triadArtifactAcquireReveal')?.remove();const originalTake=window.takeArtifact;window.takeArtifact=function(id){let had=false;try{had=Boolean(id&&Array.isArray(run?.artifacts)&&run.artifacts.includes(id))}catch{}const ok=originalTake.apply(this,arguments);if(ok&&id&&!had)setTimeout(()=>reveal(id),0);return ok};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('triadArtifactAcquireReveal')){e.preventDefault();window.closeArtifactAcquireReveal()}});window.TRIAD_ARTIFACT_PRESENTATION={version:VERSION,meta:M,show:reveal};
+};
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',installArtifacts,{once:true}):installArtifacts();
 }

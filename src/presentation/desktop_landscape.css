@@ -1,0 +1,38 @@
+/* A narrow desktop window remains a horizontally composed game, not a phone UI.
+   Scroll horizontally instead of rotating the document or stacking the stage. */
+@media (hover:hover) and (pointer:fine) {
+  html,body{overflow-x:auto}
+  #app{min-width:1080px}
+  .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid6{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .combat-grid{grid-template-columns:1fr 1.15fr}
+  .party{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .customizer-layout{grid-template-columns:minmax(310px,.72fr) minmax(0,1.55fr)}
+  .part-grid{grid-template-columns:repeat(4,minmax(120px,1fr))}
+  .selected-part-preview{grid-template-columns:190px 1fr}
+  .preset-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .lobby-layout{grid-template-columns:minmax(330px,.78fr) minmax(360px,1.22fr)}
+  .lobby-shell::before{background:linear-gradient(90deg,rgba(6,10,18,.96) 0 36%,rgba(6,10,18,.5) 58%,rgba(6,10,18,.22)),linear-gradient(0deg,rgba(5,8,14,.84),transparent 55%)}
+  .lobby-command{order:0}
+  .lobby-character-stage{min-height:640px}
+  .lobby-character-art{top:16px;bottom:auto;width:min(100%,650px);height:calc(100% - 122px);object-fit:cover;object-position:center top}
+  .lobby-character-nav{left:8%;right:8%;bottom:24px}
+  .profile-wallet{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .meta-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .lobby-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tutorial-hero{grid-template-columns:minmax(0,1.45fr) minmax(250px,.55fr)}
+  .tutorial-loadout{grid-template-columns:1fr 1.35fr}
+  .tutorial-lesson-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .tutorial-actions{flex-direction:row;align-items:center}
+  .section-title{flex-direction:row;align-items:end}
+  .section-title>.row{width:auto}
+  .topbar{flex-wrap:nowrap;align-items:center}
+  .topbar>.row{width:auto}
+  #saveState{display:initial}
+  .battle-stage{display:block;min-height:500px}
+  .battle-info-grid{display:grid}
+  body:has(#combat.active){overflow-x:auto!important;overflow-y:hidden!important}
+  body:has(#combat.active) #app{min-width:1080px;width:max(100%,1080px);overflow:visible}
+  body:has(#combat.active) #combat .auto-battle-toggle{position:absolute;top:auto;bottom:4%}
+}

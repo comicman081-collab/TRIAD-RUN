@@ -1,0 +1,172 @@
+/* Bottom-centred tactical hand. The battlefield remains the main surface. */
+#combat .combat-panel-v05{--hand-card-w:148px;--hand-card-h:220px;--hand-rest:95px;min-height:750px;padding-bottom:0;overflow:hidden}
+#combat .battle-stage{min-height:610px;padding-bottom:0}
+#combat .combat-panel-v05>.section-title{display:none}
+#combat #hand{position:absolute;z-index:12;left:0;right:0;bottom:0;width:100%;height:var(--hand-card-h);display:block;padding:0;margin:0;overflow:visible;outline:none;pointer-events:none;scrollbar-gutter:auto}
+#combat #hand .hand-card{position:absolute;left:calc(50% + var(--fan-x,0px));bottom:0;width:var(--hand-card-w);min-width:var(--hand-card-w);max-width:var(--hand-card-w);height:var(--hand-card-h);min-height:var(--hand-card-h);margin:0;border-radius:15px;pointer-events:auto;transform-origin:50% 100%;transform:translate(-50%,calc(var(--hand-rest) + var(--fan-y,0px))) rotate(var(--fan-angle,0deg))!important;transition:transform .16s ease,filter .16s ease;z-index:var(--fan-order,1);box-shadow:0 -4px 15px #0009;touch-action:pan-x}
+#combat #hand .tactical-card{min-height:var(--hand-card-h);height:var(--hand-card-h)}
+#combat #hand .hand-card.hand-inspected,#combat #hand .hand-card:focus-visible{z-index:100;transform:translate(-50%,-12px) rotate(0deg)!important;filter:brightness(1.1);outline:2px solid #91eaff;outline-offset:2px}
+@media(hover:hover){#combat #hand .hand-card:hover{z-index:100;transform:translate(-50%,-12px) rotate(0deg)!important;filter:brightness(1.1)}}
+#combat .hand-help{position:absolute;z-index:13;bottom:5px;left:10px;max-width:120px;color:#b9d5e8;font-size:10px;line-height:1.5;pointer-events:none;text-shadow:0 1px 4px #000;word-break:keep-all}
+@media(orientation:landscape) and (max-height:600px) and (pointer:coarse),(orientation:portrait) and (max-width:600px) and (pointer:coarse){
+ #combat .combat-panel-v05{--hand-card-w:110px;--hand-card-h:174px;--hand-rest:82px;height:calc(var(--game-height) - 46px);min-height:300px;display:block;padding:5px}
+ #combat .jrpg-topbar{position:relative;height:39px;z-index:15}
+ #combat .tutorial-combat-coach{position:absolute;top:47px;left:12px;right:12px;z-index:9;padding:5px 8px;background:#0a1e2cec}
+ #combat .tutorial-combat-copy span{display:none}
+ #combat .battle-stage{position:absolute;inset:45px 5px 0;min-height:0;height:auto;grid-area:auto}
+ #combat .ally-side{left:3%;bottom:99px;width:48%;height:calc(100% - 104px)}
+ #combat .sd-party{justify-content:center;gap:0}
+ #combat .ally-side .sd-atlas-canvas{width:132%;margin-left:-16%;max-height:180px}
+ #combat .ally-side .sd-card img{height:175px}
+ #combat .enemy-side{right:4%;top:18px;width:36%;height:calc(100% - 98px)}
+ #combat .enemy-side .sd-card img,#combat .enemy-animation-canvas{height:clamp(155px,calc(var(--game-height) * .49),230px)!important}
+ #combat .enemy-side .sd-name{font-size:10px}
+ #combat .battle-info-grid{position:absolute;left:auto;right:12px;top:76px;width:auto;max-width:180px;z-index:10;pointer-events:none}
+ #combat .enemy-panel{background:#080e19bd;padding:3px;border-color:#704455}
+ #combat .enemy-panel .intent{font-size:9px}
+ #combat #hand{grid-area:auto}
+ #combat #hand .card-heading{top:36px;left:7px;right:6px}
+ #combat #hand .card-heading h3{font-size:12px;line-height:1.2}
+ #combat #hand .card-heading .card-eyebrow{font-size:8px}
+ #combat #hand .card-body{left:8px;right:8px;bottom:10px}
+ #combat #hand .card-desc{font-size:9px;line-height:1.35}
+ #combat #hand .card-body{display:none}
+ #combat #hand .cost{transform:scale(.5) rotate(-7deg)}
+ #combat #hand .card-type-pill{transform:scale(.55)}
+}
+#combat .hand-inspection-preview{position:absolute;left:50%;bottom:24px;z-index:110;width:190px;height:280px;transform:translateX(-50%);border:2px solid #91eaff;border-radius:16px;overflow:hidden;background:#081320;box-shadow:0 16px 50px #000c;cursor:pointer}
+#combat .hand-inspection-preview .tactical-card{height:280px;min-height:280px}
+#combat .hand-inspection-preview .card-heading{top:63px}
+#combat .hand-inspection-preview .card-heading h3{font-size:19px}
+#combat .hand-inspection-preview .card-desc{font-size:12px}
+#combat .hand-inspection-preview .cost{transform:scale(.8);transform-origin:0 0}
+#combat .hand-inspection-preview .card-type-pill{transform:scale(.8);transform-origin:100% 0}
+@media(prefers-reduced-motion:reduce){#combat #hand .hand-card{transition:none}}
+.battle-pile{position:absolute;bottom:20px;z-index:14;width:64px;min-height:64px;padding:5px;background:#0a1629d9;border:1px solid #5f87a1;border-radius:10px;color:#d7f1ff;text-align:center}
+.battle-pile-draw{left:14px}.battle-pile-discard{right:14px}.battle-pile small{display:block;font-size:10px}.battle-pile b{font-size:18px}.pile-icon{font-size:24px;margin-right:5px}.battle-pile.reshuffled{box-shadow:0 0 22px #79e7ff}
+.card-pile-transfer{position:absolute;width:92px;height:138px;z-index:120;pointer-events:none;overflow:hidden;border:1px solid #a8eeff;border-radius:9px;background:#16344c;transform-origin:50% 50%;box-shadow:0 0 16px #75d7ff66}.card-pile-transfer .tactical-card{min-height:138px;height:138px}.card-pile-transfer .card-heading{top:35px;left:6px;right:4px}.card-pile-transfer .card-heading h3{font-size:11px}.card-pile-transfer .card-body{display:none}.card-pile-transfer .cost{transform:scale(.4);transform-origin:0 0}.card-pile-transfer .card-type-pill{display:none}
+.deck-inspector{position:absolute;inset:40px 15%;z-index:150;padding:18px;background:#0a1528f5;border:1px solid #779ab6;border-radius:14px;overflow:auto;box-shadow:0 10px 70px #000b}.deck-inspector>h3{display:inline}.deck-inspector>button{float:right;padding:6px 18px}.deck-inspector p{font-size:12px;color:#b5cbdf}.deck-inspector ul{columns:2;font-size:12px;line-height:1.8;padding-left:20px}
+
+/* Reference composition: a full-bleed stage, not a panel above a card tray. */
+body:has(#combat.active){overflow:clip}
+body:has(#combat.active) #app{max-width:none;padding:0;height:var(--game-height);overflow:clip}
+body:has(#combat.active) #app>.topbar{position:absolute;right:14px;top:8px;z-index:40;margin:0;height:30px;width:auto;gap:5px}
+body:has(#combat.active) .topbar .brand,body:has(#combat.active) #saveState{display:none}
+body:has(#combat.active) .topbar button{padding:5px 8px;min-height:28px;font-size:10px}
+body:has(#combat.active) .topbar .bgm-volume input{width:52px}
+body:has(#combat.active) .topbar .bgm-volume{font-size:10px;gap:3px}
+#combat .combat-panel-v05{--hand-card-h:clamp(112px,calc(var(--game-height) * .235),198px);--hand-card-w:calc(var(--hand-card-h) * .67);--hand-rest:calc(var(--hand-card-h) * .15);position:relative;width:100%;height:var(--game-height);min-height:0;margin:0;padding:0;display:block;border:0;border-radius:0;background:#080d16;overflow:clip}
+#combat .battle-stage{position:absolute;inset:0;min-height:0;width:100%;height:100%;border:0;border-radius:0;background-size:cover;box-shadow:inset 0 -24px 38px #02060d77,inset 0 32px 48px #02060d66}
+#combat .battle-stage::before{background:linear-gradient(180deg,#04081055,transparent 38%,#03060c12 74%,#03060c99 100%)}
+#combat .jrpg-topbar{position:absolute;left:134px;top:14px;right:auto;width:auto;max-width:calc(50% - 194px);height:auto;display:block;padding:0;margin:0;z-index:20}
+#combat .jrpg-topbar .battle-title-cluster{display:block}
+#combat .jrpg-topbar h2{font-size:13px;letter-spacing:.02em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#combat .jrpg-topbar .small{display:none}
+#combat .jrpg-meta{margin-top:6px;gap:4px}
+#combat .jrpg-meta .resource{display:none}
+#combat .jrpg-meta>:not(#turnLabel){display:none}
+#combat .jrpg-meta .tag{font-size:10px;padding:3px 8px}
+#combat .auto-battle-toggle{position:fixed;left:18px;bottom:22px;width:66px;min-width:66px;padding:6px;z-index:24}
+#combat .tutorial-combat-coach{position:absolute;left:134px;right:auto;top:58px;max-width:52%;padding:5px 8px;border:0;border-radius:6px;background:#081725a6;box-shadow:none;z-index:9;margin:0}
+#combat .tutorial-combat-copy strong{font-size:11px}
+#combat .tutorial-combat-copy span,#combat .tutorial-checklist{display:none}
+/* Latest user-marked red zone: x≈8–43%, y≈23–61%. This supersedes the
+   earlier left-edge coordinate limit; the formation itself stays 30% wide. */
+#combat .ally-side{left:10%;bottom:38%;width:30%;height:56%}
+#combat .sd-party{justify-content:center;gap:0;align-items:flex-end}
+#combat .ally-side .sd-card{width:33.333%;flex:0 0 33.333%;min-width:0;display:flex;flex-direction:column;align-items:stretch;position:relative;top:0;z-index:1}
+/* Two rear slots flank a lower forward slot. Move the whole actor host so
+   its HP bars, hit target and authored launch anchors share the same offset. */
+#combat .ally-side .sd-card:nth-child(2){top:clamp(22px,calc(var(--game-height) * .08),72px);z-index:2}
+#combat .ally-side .sd-card .sd-name{order:0;align-self:flex-start}
+#combat .ally-side .sd-card .sd-mini-bar{order:1;flex-shrink:0}
+#combat .ally-side .sd-card canvas,#combat .ally-side .sd-card img{order:2;margin-top:6px;flex-shrink:0}
+#combat .ally-side .sd-atlas-canvas{width:140%;margin-left:-20%;max-height:calc(var(--game-height) * .49);object-fit:contain;object-position:center bottom}
+#combat .ally-side .sd-card img{height:calc(var(--game-height) * .39);object-fit:contain;object-position:center bottom}
+#combat .sd-card .sd-name{font-size:10px;padding:2px 4px}
+#combat .sd-mini-bar{height:4px;margin-top:2px}
+#combat .enemy-side{right:3%;top:auto;bottom:21%;width:53%;height:68%}
+#combat .enemy-side .sd-card{width:100%!important;flex-basis:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+/* Lift only the artwork: the HP header keeps its reserved top lane. */
+#combat .enemy-side .enemy-visual{transform:none}
+#combat .enemy-side .enemy-visual canvas,#combat .enemy-side .enemy-visual img{position:relative;top:var(--enemy-battle-offset,0px);flex-shrink:0}
+#combat .enemy-side .sd-card img,#combat .enemy-animation-canvas{width:100%!important;height:calc(var(--game-height) * .58)!important;max-width:100%;object-fit:contain;object-position:center bottom}
+#combat .enemy-side .enemy-visual[data-rank="boss"] img,#combat .enemy-side .enemy-visual[data-rank="boss"] .enemy-animation-canvas{height:calc(var(--game-height) * .68)!important}
+#combat .enemy-side .enemy-visual .enemy-animation-canvas[data-rig-surface="768x512"]{width:min(100%,calc(var(--game-height) * .86))!important;height:auto!important;aspect-ratio:3/2;object-fit:fill}
+#combat .enemy-side .sd-name{display:block;position:absolute;top:0;left:12%;max-width:calc(76% - 60px);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:18px}
+#combat .enemy-side .enemy-visual::after{top:0;right:12%;line-height:14px;max-width:55px}
+#combat .enemy-side .sd-mini-bar{display:block;position:absolute;top:26px;left:12%;width:76%}
+#combat .battle-info-grid{position:absolute;left:auto;right:3%;top:calc(var(--game-height) * .11 + 44px);width:53%;max-width:none;margin:0;padding-left:6.36%;pointer-events:none;z-index:12}
+#combat .enemy-panel{width:auto;position:static;padding:0;background:none;border:0;border-radius:6px;backdrop-filter:none}
+#combat .enemy-panel .section-title,#combat .enemy-card-row,#combat .enemy-panel #enemyStatus,#combat .enemy-card-v05>div[style]{display:none}
+#combat .enemy-panel .intent{display:inline-block;max-width:100%;font-size:10px;line-height:1.4;padding:4px 7px;margin:0;white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
+#combat #endTurnControl{position:absolute;right:4%;bottom:5%;z-index:25}
+#combat #endTurnControl button{width:64px;height:64px;min-height:64px;padding:0;border:2px solid #80dfff;border-radius:50%;background:radial-gradient(circle,#21547a,#061627 70%);box-shadow:0 0 0 4px #0a253d,0 0 22px #46b8fc44;color:#dff7ff;font-size:12px;font-weight:850}
+#combat .battle-energy{position:absolute;left:calc(50% - min(36vw,380px));top:auto;bottom:calc(var(--hand-card-h) - var(--hand-rest) + 12px);transform:none;z-index:26;width:154px;height:64px;min-height:64px;overflow:hidden;padding:10px 13px;display:grid;grid-template-columns:1fr auto;grid-template-rows:1fr;align-items:center;gap:8px;border:2px solid #ffe17b;border-radius:14px;background:linear-gradient(145deg,#4a3414f5,#1c1b20f7 72%);box-shadow:0 5px 18px #000b,inset 0 1px #fff5bf66;font-size:0;color:#fff4bf;pointer-events:none}
+#combat .battle-energy::before{content:'남은 행동\A 포인트';grid-column:1;grid-row:1;white-space:pre-line;font-size:12px;font-weight:900;line-height:1.22;letter-spacing:-.02em;color:#ffeb9e;text-shadow:0 1px 3px #000}
+#combat .battle-energy b{grid-column:2;grid-row:1;font:900 38px/1 "Bahnschrift","Arial Black",sans-serif;font-variant-numeric:tabular-nums;color:#fffaf0;text-shadow:0 0 12px #ffcb52aa,0 2px 3px #000}
+#combat .battle-energy.is-empty{border-color:#bd7181;background:linear-gradient(145deg,#382025f5,#181b22f7)}
+#combat .battle-energy.is-empty b{color:#ffc2ba;text-shadow:0 2px 3px #000}
+#combat>.combat-panel-v05>#turnLabel{position:absolute;left:50%;top:13px;transform:translateX(-50%);z-index:25;padding:6px 18px;min-width:86px;text-align:center;font-size:14px;font-weight:850;letter-spacing:.1em;color:#d4f4ff;border:1px solid #6b96ae99;background:#0b1926b8;border-radius:20px}
+#combat .battle-pile{bottom:4%;width:48px;min-height:48px;background:#0c1628a6;border-color:#6c8ea3}
+#combat .battle-pile-draw{left:20px}#combat .battle-pile-discard{right:20px}
+#combat .hand-help{left:210px;bottom:10px;max-width:95px;font-size:9px}
+#combat .auto-battle-toggle{left:82px;bottom:4%;width:128px;min-width:128px;height:52px;min-height:52px;padding:6px 10px 6px 9px;grid-template-columns:13px 1fr;column-gap:7px;overflow:visible}
+#combat .auto-battle-toggle b{white-space:nowrap;font-size:13px;letter-spacing:.07em}
+#combat .auto-battle-toggle small{white-space:nowrap;font-size:9px;letter-spacing:.08em;overflow:visible;text-overflow:clip}
+#combat .auto-battle-toggle .auto-led{width:10px;height:10px}
+#combat .battle-pile-discard{right:calc(4% + 86px)}
+/* The resting fan shows identity and cost, not a second text-heavy panel.
+   Full rules remain available in the deliberate hover/focus/touch preview. */
+#combat #hand .card-heading{top:42px;left:8px;right:7px}
+#combat #hand .card-heading h3{font-size:clamp(11px,calc(var(--game-height) * .016),14px);line-height:1.2;word-break:keep-all;overflow-wrap:normal}
+#combat #hand .card-heading .card-eyebrow{font-size:7px}
+#combat #hand .cost{left:8px;top:8px;transform:scale(.58) rotate(-7deg);transform-origin:0 0}
+#combat #hand .card-type-pill{right:7px;top:10px;transform:scale(.57);transform-origin:100% 0}
+#combat #hand .card-body{display:none}
+#combat .hand-inspection-preview{bottom:calc(var(--hand-card-h) - var(--hand-rest) + 10px);width:190px;height:280px}
+#combat .hand-inspection-preview .card-body{display:block}
+@media(hover:hover){#combat #hand .hand-card:hover{transform:translate(-50%,-5px) rotate(0deg)!important}}
+@media(orientation:landscape) and (max-height:600px) and (pointer:coarse),(orientation:portrait) and (max-width:600px) and (pointer:coarse){
+ #combat .combat-panel-v05{--hand-card-h:calc(var(--game-height) * .25);--hand-rest:7px}
+ #combat #hand .hand-card{border-radius:9px}
+ #combat #hand .tactical-card{border-radius:9px}
+ #combat #hand .tactical-card::before{border-radius:6px;inset:3px}
+ #combat #hand .card-heading{top:33px;left:5px;right:4px}
+ #combat #hand .card-heading h3{font-size:10px;margin-top:2px;letter-spacing:-.04em}
+ #combat #hand .card-heading .card-eyebrow,#combat #hand .card-type-pill{display:none}
+ #combat #hand .cost{left:6px;top:6px;transform:scale(.43) rotate(-7deg)}
+ #combat .battle-energy{left:calc(50% - min(39vw,310px));top:auto;bottom:calc(var(--hand-card-h) - var(--hand-rest) + 7px);width:117px;height:49px;min-height:49px;padding:6px 9px}
+ #combat .battle-energy b{font-size:30px}
+ #combat .battle-energy::before{font-size:10px}
+ #combat .jrpg-topbar{left:108px;top:10px}
+ #combat .jrpg-topbar h2{font-size:10px}
+ #combat .tutorial-combat-coach{left:108px;top:32px;max-width:32%}
+ #combat .tutorial-combat-copy strong{font-size:10px}
+ #combat>.combat-panel-v05>#turnLabel{top:8px;font-size:11px;padding:5px 10px;min-width:68px}
+ #combat .hand-inspection-preview{--preview-h:min(245px,calc(var(--game-height) - var(--hand-card-h) - 70px));bottom:calc(var(--hand-card-h) + 7px);width:calc(var(--preview-h) * .633);height:var(--preview-h)}
+ #combat .hand-inspection-preview .tactical-card{height:var(--preview-h);min-height:var(--preview-h)}
+ #combat .hand-inspection-preview .card-heading{top:59px}
+ #combat .hand-inspection-preview .card-heading h3{font-size:17px}
+ #combat .hand-inspection-preview .card-desc{font-size:11px}
+ #combat .battle-pile{width:44px;min-height:44px;padding:3px}
+ #combat .battle-pile small{font-size:9px}
+ #combat .battle-pile b{font-size:15px}
+ #combat .battle-pile .pile-icon{font-size:19px}
+ #combat .battle-pile-draw{left:10px}
+ #combat .auto-battle-toggle{left:62px;min-width:104px;width:104px;height:45px;min-height:45px;padding:5px 7px;grid-template-columns:10px 1fr;column-gap:5px}
+ #combat .auto-battle-toggle b{font-size:11px;letter-spacing:.04em}
+ #combat .auto-battle-toggle small{font-size:8px;letter-spacing:.06em}
+ #combat .auto-battle-toggle .auto-led{width:8px;height:8px}
+ #combat #endTurnControl button{width:52px;height:52px;min-height:52px;font-size:11px}
+ #combat .battle-pile-discard{right:calc(4% + 68px)}
+}
+@media(orientation:portrait) and (pointer:coarse){#combat .auto-battle-toggle{position:absolute;top:calc(var(--game-height) - 65px);bottom:auto}}
+@media(orientation:landscape) and (max-width:950px) and (pointer:coarse),(orientation:portrait) and (max-height:950px) and (pointer:coarse){
+ body:has(#combat.active) .topbar #bgmToggle{min-width:0;width:80px}
+ body:has(#combat.active) .topbar .bgm-volume{padding:4px 6px}
+ body:has(#combat.active) .topbar .bgm-volume input{width:42px}
+ body:has(#combat.active) .topbar .bgm-volume output{display:none}
+ body:has(#combat.active) .topbar>.row{gap:5px}
+}
+@media(orientation:landscape) and (max-width:750px) and (pointer:coarse),(orientation:portrait) and (max-height:750px) and (pointer:coarse){#combat .hand-help{display:none}}

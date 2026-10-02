@@ -1,0 +1,65 @@
+/* One landscape layout even when the physical viewport is portrait. */
+:root{--game-height:100dvh}
+#landscapeOverlays{display:contents}
+@media(orientation:portrait) and (hover:none) and (pointer:coarse){
+  body{overflow:hidden!important}
+  #app,#landscapeOverlays{position:fixed;top:0;left:0;width:100dvh;max-width:none;height:100dvw;transform-origin:0 0;transform:translateX(100dvw) rotate(90deg);margin:0;box-sizing:border-box}
+  #app{overflow:auto}
+  #landscapeOverlays{display:block;z-index:1000;pointer-events:none}
+  #landscapeOverlays>.modal,#landscapeOverlays>.idle-reward-modal,#landscapeOverlays>.triad-artifact-modal{pointer-events:auto;overflow:auto}
+}
+@media(orientation:landscape) and (max-height:600px) and (pointer:coarse),(orientation:portrait) and (max-width:600px) and (pointer:coarse){
+  #app{max-width:none;padding:4px max(8px,env(safe-area-inset-right)) 4px max(8px,env(safe-area-inset-left))}
+  #app>.topbar{height:34px;margin:0 0 4px;gap:6px}
+  .topbar .brand{font-size:15px}.topbar #saveState{display:none}
+  .topbar button{padding:5px 12px;min-height:30px;font-size:11px}
+  .topbar .bgm-volume{gap:4px}.topbar .bgm-volume input{width:70px}
+  .lobby-layout{grid-template-columns:minmax(320px,1fr) minmax(260px,1fr)}
+  .lobby-command{order:0;padding:18px;gap:10px}.lobby-command h1{font-size:42px}
+  .lobby-character-stage{min-height:360px}.lobby-character-art{object-fit:contain!important}
+  .meta-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tutorial-lesson-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .tutorial-hero,.tutorial-loadout{grid-template-columns:1fr 1fr}
+  .tutorial-actions{flex-direction:row}
+  #combat .combat-panel-v05{height:calc(var(--game-height) - 46px);min-height:275px;padding:5px;display:grid;grid-template-columns:minmax(0,1fr) 232px;grid-template-rows:42px auto minmax(0,1fr) auto;gap:4px 8px;overflow:hidden}
+  #combat .jrpg-topbar{grid-column:1/-1;grid-row:1;margin:0;padding:0;gap:6px;flex-wrap:nowrap;align-items:center;min-width:0}
+  #combat .jrpg-topbar h2{font-size:16px}.jrpg-topbar .small{font-size:9px}
+  #combat .battle-title-cluster{gap:7px;align-items:center;min-width:0}
+  #combat .auto-battle-toggle{min-width:68px;width:68px;padding:5px 7px;min-height:34px}
+  #combat .auto-battle-toggle b{font-size:12px}
+  #combat .jrpg-meta{gap:4px;flex-wrap:nowrap}
+  #combat .jrpg-meta .resource,#combat .jrpg-meta .tag{padding:5px;font-size:10px;white-space:nowrap}
+  #combat #endTurnControl button{min-height:36px;padding:6px 10px;font-size:12px;white-space:nowrap}
+  #combat .tutorial-combat-coach{grid-column:1;grid-row:2;margin:0;padding:5px 8px;gap:3px;grid-template-columns:1fr}
+  #combat .tutorial-combat-copy strong{font-size:11px}
+  #combat .tutorial-combat-copy span{font-size:10px;margin-top:1px}
+  #combat .tutorial-checklist{display:none}
+  #combat .battle-stage{grid-column:1;grid-row:3;min-height:0;height:100%;border-radius:12px;box-shadow:inset 0 -45px 50px #020710}
+  #combat .ally-side{left:2%;bottom:8px;width:55%;height:85%}
+  #combat .enemy-side{right:1%;top:3%;width:42%;height:92%}
+  #combat .enemy-side .enemy-visual{--enemy-battle-offset:clamp(-62px,-8vh,-32px)}
+  #combat .sd-party{gap:0}
+  #combat .ally-side .sd-card{width:33.333%;flex:0 0 33.333%;min-width:0}
+  #combat .ally-side .sd-card img{height:130px;max-height:100%;width:100%;object-fit:contain}
+  #combat .ally-side .sd-atlas-canvas{width:130%;margin-left:-15%;height:auto;max-height:170px;object-fit:contain}
+  #combat .sd-card .sd-name{font-size:9px;padding:2px 4px}.sd-mini-bar{height:4px;margin-top:2px}
+  #combat .enemy-side .sd-card{width:100%!important;flex-basis:100%;max-height:100%}
+  #combat .enemy-side .sd-card img,#combat .enemy-animation-canvas{height:clamp(130px,calc(var(--game-height) * .42),240px)!important;max-width:100%;object-fit:contain}
+  #combat .battle-info-grid{grid-column:1;grid-row:4;position:static;margin:0;pointer-events:auto;min-width:0}
+  #combat .enemy-panel{position:static;width:100%;padding:3px 7px;border-radius:7px}
+  #combat .enemy-card-row,#combat .enemy-panel #enemyStatus,#combat .enemy-card-v05>div[style]{display:none}
+  #combat .enemy-panel .intent{margin:0;padding:3px 5px;font-size:10px}
+  #combat .combat-panel-v05>.section-title{display:none}
+  #combat #hand{grid-column:2;grid-row:2/5;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:8px;padding:3px 3px 8px;margin:0;overflow:auto;outline:none;min-height:0;scrollbar-width:thin;overscroll-behavior:contain}
+  #combat #hand .hand-card{width:100%;min-width:0;max-width:none;height:248px;min-height:248px;transform:none!important;border-radius:12px;box-shadow:none}
+  #combat #hand .tactical-card{min-height:248px;height:248px}
+  #combat #hand .cost{transform:scale(.55) rotate(-7deg)}
+  #combat #hand .card-type-pill{transform:scale(.65)}
+  #combat #hand .card-heading{top:43px;left:8px;right:6px}
+  #combat #hand .card-heading h3{font-size:13px;line-height:1.25}
+  #combat #hand .card-desc{font-size:10px;line-height:1.4;left:7px;right:7px;bottom:22px}
+  #combat #hand .card-body{left:6px;right:6px;bottom:8px}
+  #combat #hand .card-heading .card-eyebrow{font-size:8px}
+  #combat #hand .card-tags{font-size:8px;bottom:5px}
+  .idle-reward-modal,.tutorial-modal{overflow:auto}
+}

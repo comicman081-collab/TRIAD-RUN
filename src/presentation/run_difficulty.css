@@ -1,0 +1,24 @@
+/* A RUN-wide rules choice belongs before party and deck setup. */
+#difficultySelect .difficulty-shell{min-height:min(690px,calc(var(--game-height) - 95px));display:flex;flex-direction:column;justify-content:center;gap:28px;padding:clamp(24px,4vw,54px);border:1px solid #52647f;border-radius:23px;background:radial-gradient(ellipse at 12% 12%,#26526c88,transparent 43%),radial-gradient(ellipse at 90% 88%,#743c6259,transparent 41%),linear-gradient(145deg,#162337,#080e1b 74%);box-shadow:inset 0 1px #dbedff25,0 25px 60px #0008}
+#difficultySelect .difficulty-intro{max-width:810px}
+#difficultySelect .difficulty-intro>span{display:block;margin-bottom:9px;color:#93dff2;font-size:12px;font-weight:900;letter-spacing:.18em}
+#difficultySelect .difficulty-intro h2{margin:0;font-size:clamp(34px,4vw,52px);line-height:1.08;letter-spacing:-.05em}
+#difficultySelect .difficulty-intro p{margin:13px 0 0;color:#bdcee0;font-size:15px;line-height:1.5}
+#difficultySelect .difficulty-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+#difficultySelect .difficulty-option{min-height:270px;display:flex;flex-direction:column;align-items:flex-start;gap:13px;overflow:hidden;padding:27px 30px;border:1px solid #669eb0;border-radius:17px;background:linear-gradient(150deg,#173549,#0b192b 67%);box-shadow:inset 0 1px #b8ecff30,0 12px 28px #0008;text-align:left;transition:border-color .15s,transform .15s,box-shadow .15s}
+#difficultySelect .difficulty-option:hover{transform:translateY(-3px)}
+#difficultySelect .difficulty-option:focus-visible{outline:3px solid #e1f9ff;outline-offset:4px}
+#difficultySelect .difficulty-index{color:#a8e5ef;font-size:12px;font-weight:900;letter-spacing:.17em}
+#difficultySelect .difficulty-option strong{font-size:clamp(27px,3vw,39px);line-height:1.1}
+#difficultySelect .difficulty-option>span:not(.difficulty-index){max-width:32ch;color:#dbe6f1;font-size:16px;line-height:1.48}
+#difficultySelect .difficulty-option small{margin-top:auto;color:#a9c4d1;font-size:13px;font-weight:800;line-height:1.4}
+#difficultySelect .difficulty-hard{border-color:#b56a9d;background:linear-gradient(150deg,#4b2444,#171123 70%)}
+#difficultySelect .difficulty-hard .difficulty-index{color:#f3add6}
+#difficultySelect .difficulty-hard small{color:#e2accb}
+#difficultySelect .difficulty-option.selected,#difficultySelect .difficulty-option[aria-pressed="true"]{border:3px solid #b8f1fc;padding:25px 28px;box-shadow:0 0 0 5px #86ddeb27,inset 0 1px #f6ffff5c,0 16px 34px #0009}
+#difficultySelect .difficulty-hard.selected,#difficultySelect .difficulty-hard[aria-pressed="true"]{border-color:#f6afd7;box-shadow:0 0 0 5px #ec91c22b,inset 0 1px #fff1,0 16px 34px #0009}
+#difficultySelect .difficulty-footer{display:flex;justify-content:space-between;gap:16px;align-items:center}
+#difficultySelect .difficulty-footer button{min-height:54px;padding-inline:25px;font-size:15px;font-weight:850}
+#difficultySelect #difficultyContinue{min-width:285px}
+@media(max-width:720px) and (pointer:coarse){#difficultySelect .difficulty-shell{gap:16px;padding:15px}.difficulty-options{gap:9px}#difficultySelect .difficulty-option{min-height:195px;padding:15px}#difficultySelect .difficulty-option.selected,#difficultySelect .difficulty-option[aria-pressed="true"]{padding:13px}#difficultySelect .difficulty-option strong{font-size:23px}#difficultySelect .difficulty-option>span:not(.difficulty-index){font-size:12px}#difficultySelect .difficulty-option small{font-size:10px}}
+@media(prefers-reduced-motion:reduce){#difficultySelect .difficulty-option{transition:none}#difficultySelect .difficulty-option:hover{transform:none}}

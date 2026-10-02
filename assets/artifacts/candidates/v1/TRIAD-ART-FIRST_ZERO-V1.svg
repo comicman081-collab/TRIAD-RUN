@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <radialGradient id="core" cx="0" cy="0" r="1" gradientTransform="translate(128 128) rotate(90) scale(110)"><stop stop-color="#1F3456"/><stop offset=".72" stop-color="#0A1324"/><stop offset="1" stop-color="#060A13"/></radialGradient>
+    <linearGradient id="gold" x1="70" y1="42" x2="190" y2="210" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF7BC"/><stop offset=".36" stop-color="#F8C95A"/><stop offset=".72" stop-color="#C87A19"/><stop offset="1" stop-color="#FFE59A"/></linearGradient>
+    <linearGradient id="energy" x1="120" y1="67" x2="144" y2="190" gradientUnits="userSpaceOnUse"><stop stop-color="#F4FFFF"/><stop offset=".35" stop-color="#83EEFF"/><stop offset="1" stop-color="#3074F0"/></linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="128" cy="128" r="118" fill="#050A14" stroke="url(#gold)" stroke-width="5"/>
+  <circle cx="128" cy="128" r="105" fill="url(#core)" stroke="#305175" stroke-width="2"/>
+  <path d="M66 84 83 61l16 12 18-20 21 20 20-20 18 20 17-12 17 23" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M79 172c21 20 77 30 107 0" stroke="#C47A23" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+  <path d="m142 70-48 67h35l-15 52 51-72h-35l12-47Z" fill="url(#energy)" stroke="#E6FCFF" stroke-width="3" stroke-linejoin="round" filter="url(#glow)"/>
+  <path d="M58 128h18M180 128h18M128 58v18M128 180v18" stroke="#F7D679" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+  <circle cx="128" cy="128" r="91" stroke="#F9D677" stroke-width="1.5" stroke-dasharray="3 9" opacity=".65"/>
+</svg>

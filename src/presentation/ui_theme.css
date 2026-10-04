@@ -198,6 +198,10 @@ body.ui-theme #combat .enemy-visual .sd-mini-bar{height:12px!important}
 body.ui-theme #combat .enemy-visual .sd-mini-bar>i{background:linear-gradient(90deg,#ff3f5d,#ff8a6b);box-shadow:0 0 10px rgba(255,70,90,.5)}
 body.ui-theme #combat .enemy-visual .sd-hp-value{font-size:13.5px}
 body.ui-theme #combat .enemy-visual .sd-name{font-size:14px}
+@media(orientation:landscape) and (max-height:600px) and (pointer:coarse),(orientation:portrait) and (max-width:600px) and (pointer:coarse){
+ body.ui-theme #combat .ally-side .sd-card .sd-name{max-width:100%;font-size:10px;line-height:1.25;padding:2px 3px;margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body.ui-theme #combat .ally-side .sd-hp-value{font-size:9px}
+}
 body.ui-theme #combat .intent{font-size:13px!important;font-weight:850;padding:6px 12px!important;border-radius:10px;border:1px solid rgba(255,90,110,.55)!important;background:linear-gradient(90deg,rgba(90,10,24,.9),rgba(40,6,14,.85))!important;box-shadow:0 0 18px rgba(255,60,80,.25)}
 
 /* The exploration track is authored on a fixed 1140x480 grid; scale it as a

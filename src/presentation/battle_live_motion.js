@@ -15,7 +15,7 @@
    missing the actor's own renderer keeps drawing. */
 (function(root){
   'use strict';
-  const VERSION='battle-live-motion-1.0.2';
+  const VERSION='battle-live-motion-1.0.4';
   const STRIPS=18;
   const FRAME_MS=1000/30;
   const TAU=Math.PI*2;
@@ -64,7 +64,7 @@
   const states=new WeakMap();
   function stateFor(actor){
     let s=states.get(actor);
-    if(!s){s={phase:Math.random()*TAU,phase2:Math.random()*TAU,period:3.2+Math.random()*.7,leanPeriod:5.2+Math.random()*1.4,spring:0,springV:0,lastKey:'',fade:null,last:null,life:0};states.set(actor,s)}
+    if(!s){s={phase:Math.random()*TAU,phase2:Math.random()*TAU,period:3.2+Math.random()*.7,leanPeriod:5.2+Math.random()*1.4,spring:0,springV:0,lastKey:'',fade:null,last:null,life:0,nextPaint:null,paintedAt:null};states.set(actor,s)}
     return s;
   }
   function kick(actor,direction,strength=1){const s=stateFor(actor);s.springV+=direction*.55*strength}
@@ -138,7 +138,9 @@
 
   /* ------------------------------------------------------------------ loop */
   function visible(canvas){
-    if(!canvas?.isConnected||canvas.offsetParent===null)return false;
+    // The combat screen owns visibility. offsetParent forces pending style /
+    // layout work after the preceding actor's canvas and dataset writes.
+    if(!canvas?.isConnected||canvas.hidden)return false;
     if(canvas.dataset.loadStatus==='REPLACED'||canvas.style.display==='none')return false;
     return true;
   }
@@ -148,7 +150,7 @@
     try{if(typeof enemyBattleActor!=='undefined'&&enemyBattleActor)list.push(['enemy',enemyBattleActor])}catch{}
     return list;
   }
-  let last=performance.now(),lastPaint=0,enabled=true;
+  let enabled=true;
   function release(actor){
     // Hand drawing back to the actor's own renderer on its next tick.
     if(actor.canvas?.dataset)actor.canvas.dataset.liveMotion='0';
@@ -156,13 +158,17 @@
   }
   function frame(now){
     requestAnimationFrame(frame);
-    if(now-lastPaint<FRAME_MS)return;
-    lastPaint=now;
-    const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;
     if(document.hidden||!document.getElementById('combat')?.classList.contains('active'))return;
-    for(const [kind,actor] of actors()){
-      if(actor._actorDestroyed||actor._perfDead||!visible(actor.canvas)){continue}
+    const mounted=actors().filter(([,actor])=>!actor._actorDestroyed&&!actor._perfDead&&visible(actor.canvas));
+    for(const [index,[kind,actor]]of mounted.entries()){
       if(!enabled){if(actor.canvas.dataset.liveMotion==='1')release(actor);continue}
+      const state=stateFor(actor),phase=FRAME_MS*index/Math.max(1,mounted.length);
+      if(state.nextPaint===null||now-state.nextPaint>FRAME_MS*2)state.nextPaint=now+phase;
+      // Retain the previous paint interval at this display cadence. Distribute
+      // uploads without increasing their frequency or replaying overdue paints.
+      if(now<state.nextPaint)continue;
+      state.nextPaint=now+FRAME_MS-.1;
+      const dt=Math.min(.05,Math.max(0,(now-(state.paintedAt??now))/1000));state.paintedAt=now;
       const ok=kind==='sd'?renderSd(actor,now,dt):renderEnemy(actor,now,dt);
       if(!ok&&actor.canvas.dataset.liveMotion==='1')release(actor);
     }

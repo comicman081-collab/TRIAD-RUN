@@ -541,11 +541,13 @@ p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-br
 <link rel="stylesheet" href="src/presentation/combat_cinematic_fx.css?v=20261004-composite">
 <link rel="stylesheet" href="src/presentation/combat_tactics.css?v=combat-tactics-1.0.0">
 <link rel="stylesheet" href="src/presentation/build_archive.css?v=build-archive-1.0.0">
-<script defer src="src/presentation/battle_hand_layout.js?v=20261004-cached-hand"></script>
-<script defer src="src/presentation/combat_cinematic_fx.js?v=20261004-camera"></script>
+<script defer src="src/presentation/battle_hand_layout.js?v=20261004-low-hand"></script>
+<script defer src="src/presentation/vfx_raster_cache.js?v=20261004-low"></script>
+<script defer src="src/presentation/cinematic_glow_batch.js?v=20261004-low"></script>
+<script defer src="src/presentation/combat_cinematic_fx.js?v=20261004-low"></script>
 <script defer src="src/presentation/combat_tactics.js?v=combat-tactics-1.0.0"></script>
-<script defer src="src/presentation/battle_live_motion.js?v=battle-live-motion-1.0.2"></script>
-<link rel="stylesheet" href="src/presentation/ui_theme.css?v=ui-theme-1.1.1-roster-framing">
+<script defer src="src/presentation/battle_live_motion.js?v=battle-live-motion-1.0.4"></script>
+<link rel="stylesheet" href="src/presentation/ui_theme.css?v=ui-theme-1.1.2-combat-low">
 <script defer src="src/presentation/ui_theme.js?v=ui-theme-1.1.0"></script>
 <link rel="stylesheet" href="src/presentation/title_lobby.css?v=title-lobby-1.0.0">
 <script defer src="src/presentation/live_illustration.js?v=live-illustration-2.2.1"></script>
@@ -1715,7 +1717,16 @@ function addShieldToMember(member,amount){return COMBAT_ENGINE.addShieldToMember
 function addShield(amount){return COMBAT_ENGINE.addShield(combatEnv(),amount)}
 function healLowest(amount){return COMBAT_ENGINE.healLowest(combatEnv(),amount)}
 function healAllies(amount){return COMBAT_ENGINE.healAllies(combatEnv(),amount)}
-function logCombat(msg){const el=$('#combatLog');if(el){el.innerHTML+=`<div>• ${esc(msg)}</div>`;el.scrollTop=el.scrollHeight}}
+let combatLogScrollFrame=0;
+let combatLogVisible=false;
+if(typeof ResizeObserver==='function')new ResizeObserver(entries=>{combatLogVisible=entries.some(e=>e.contentRect.width>0&&e.contentRect.height>0)}).observe($('#combatLog'));
+function logCombat(msg){
+  const el=$('#combatLog');if(!el)return;
+  const line=document.createElement('div');line.textContent=`• ${msg}`;el.appendChild(line);
+  // A card / enemy turn can log several results. Append them immediately,
+  // then scroll once, rather than reparsing the log and flushing each result.
+  if(combatLogVisible&&!combatLogScrollFrame)combatLogScrollFrame=requestAnimationFrame(()=>{combatLogScrollFrame=0;if(combatLogVisible)el.scrollTop=el.scrollHeight})
+}
 function enemyFor(stage,type){
   const encounter=run.currentEncounter,variant=encounter?.variant||'normal',zoneTier=encounter?.tier||1;
   const source=COMBAT_DATA.pickMonster(stage,COMBAT_ENGINE.encounterRank(type,variant,zoneTier),()=>TRIAD_ARCH.random(run));
@@ -1782,7 +1793,19 @@ function autoBattleStep(){
   return ended
 }
 function cardHitCount(card,state){const key=card?.pattern?.key;if(key==='volley'||key==='burst')return Math.max(1,CARD_DATA.value(key,effectiveCardLevel(card,state?.level))||1);return 1}
-function pulseBattleImpact(side,delay=0){setTimeout(()=>{const stage=$('.battle-stage');if(!stage)return;const className=side==='player'?'impact-player':'impact-enemy';stage.classList.remove(className);void stage.offsetWidth;stage.classList.add(className);setTimeout(()=>stage.classList.remove(className),320)},Math.max(0,delay))}
+const combatStageFeedback=new WeakMap();
+function playCombatStageFeedback(stage,channel,frames,duration,easing){
+  if(!stage?.animate)return false;
+  let channels=combatStageFeedback.get(stage);if(!channels){channels=new Map();combatStageFeedback.set(stage,channels)}
+  channels.get(channel)?.cancel();
+  const animation=stage.animate(frames,{duration,easing});channels.set(channel,animation);
+  animation.finished.then(()=>{if(channels.get(channel)===animation)channels.delete(channel)},()=>{});return true
+}
+function pulseBattleImpact(side,delay=0){setTimeout(()=>{
+  const stage=$('.battle-stage');if(!stage)return;
+  const player=side==='player',frames=[{offset:0,transform:'none',filter:'none'},{offset:.3,transform:`translateX(${player?-4:3}px)`,filter:player?'brightness(1.12) saturate(1.18)':'brightness(1.16)'},{offset:player?.65:.6,transform:`translateX(${player?2:-2}px)`},{offset:1,transform:'none',filter:'none'}];
+  playCombatStageFeedback(stage,'impact',frames,player?280:240,'ease-out')
+},Math.max(0,delay))}
 let combatPresentationGeneration=0;
 let combatPresentationFinalizer=null;
 function cancelCombatPresentation(){const pending=combatPresentationFinalizer;combatPresentationFinalizer=null;combatPresentationGeneration++;if(pending&&!pending.settled){pending.settled=true;pending.callback()}return Boolean(pending)}
@@ -1833,6 +1856,7 @@ function newTurnAuthoritative(initial=false){
   run.battleSpriteState=run.battleSpriteState||{};if(!initial)run.party.forEach(member=>{run.battleSpriteState[member.id]=member.hp>0?'idle':'ko'});
   c.phase='PLAYER';c.inputLocked=false;return true
 }
+function combatCardAnimationState(card){return card.pattern.key==='signature'?'ultimate':['guard','bastion','counter'].includes(card.pattern.key)?'guard':['focus','battery','mark','dot','heal','renewal','overload'].includes(card.pattern.key)?'skill':'attack'}
 function playCardAuthoritative(idx,expectedCardId,expectedToken){
   const c=run?.combat;if(!c||c.phase!=='PLAYER'||c.inputLocked||COMBAT_ENGINE.enemyDefeated(combatEnv()))return false;
   const enemyHpBefore=c.enemy.hp;
@@ -1844,7 +1868,7 @@ function playCardAuthoritative(idx,expectedCardId,expectedToken){
   const cost=COMBAT_ENGINE.cardCost(combatEnv(),card);if(cost>c.energy){toast('AP가 부족합니다');return false}
   if(!takeUiInputFence())return false;
   c.inputLocked=true;c.actionToken++;cancelAutoBattleStep();
-  run.battleSpriteState=run.battleSpriteState||{};run.party.forEach(member=>{run.battleSpriteState[member.id]=member.hp>0?'idle':'ko'});run.battleSpriteState[card.owner]=card.pattern.key==='signature'?'ultimate':['guard','bastion','counter'].includes(card.pattern.key)?'guard':['focus','battery','mark','dot','heal','renewal','overload'].includes(card.pattern.key)?'skill':'attack';
+  run.battleSpriteState=run.battleSpriteState||{};run.party.forEach(member=>{run.battleSpriteState[member.id]=member.hp>0?'idle':'ko'});run.battleSpriteState[card.owner]=combatCardAnimationState(card);
   // Every number (cost, damage, statuses, break, draws) resolves in the engine.
   const resolved=COMBAT_ENGINE.playCard(combatEnv(),idx);
   if(!resolved.ok){c.inputLocked=false;renderCombat();saveRun();return false}
@@ -2175,7 +2199,9 @@ function appendCombatVfxImpactBurst(event,target){
   layer.appendChild(burst);setTimeout(()=>{battleVfxFragmentsLive=Math.max(0,battleVfxFragmentsLive-count);burst.remove()},duration+240);return burst
 }
 function applyCombatVfxImpactFeedback(stage,event){
-  const side=event?.target==='enemy'?'enemy':'player',className=`vfx-contact-${side}`;stage.classList.remove(className);void stage.offsetWidth;stage.classList.add(className);if(event?.pipeline==='ULTIMATE')stage.classList.add('vfx-ultimate-field');setTimeout(()=>stage.classList.remove(className),70);setTimeout(()=>stage.classList.remove('vfx-ultimate-field'),720)
+  const enemy=event?.target==='enemy';
+  playCombatStageFeedback(stage,'contact',[{filter:enemy?'brightness(1.46) saturate(1.24)':'brightness(1.38) saturate(1.2)',transform:`translateX(${enemy?2:-2}px)`},{filter:'none',transform:'none'}],62,'steps(2,end)');
+  if(event?.pipeline==='ULTIMATE')stage.classList.add('vfx-ultimate-field');setTimeout(()=>stage.classList.remove('vfx-ultimate-field'),720)
 }
 function triggerCombatVfxImpact(event,asset,target,stage){
   const impactEvent={...event,scope:'SINGLE',emphasis:Math.max(1,Number(event.emphasis)||1)};
@@ -2269,6 +2295,22 @@ function syncEnemyBattleActor(enemy){
   if(bar)bar.style.width=`${100*enemy.hp/enemy.maxHp}%`;
   return Boolean(card)
 }
+const combatHandNodes=new WeakMap(),combatMarkup=new WeakMap();
+function setCombatMarkup(node,markup){if(combatMarkup.get(node)!==markup){node.innerHTML=markup;combatMarkup.set(node,markup)}}
+function renderCombatHand(entries){
+  const hand=$('#hand'),retained=new Set();
+  entries.forEach(({state,classes,onclick,body},index)=>{
+    let node=combatHandNodes.get(state);
+    if(!node){node=document.createElement('div');node.className='hand-card';node.dataset.cardId=state.id;node.dataset.cardOwner=ALL_CARDS[state.id].owner;combatHandNodes.set(state,node)}
+    for(const name of ['playable','unplayable','owner-ko','tutorial-focus-ap'])node.classList.toggle(name,classes.includes(name));
+    const disabled=classes.includes('playable')?'false':'true';if(node.getAttribute('aria-disabled')!==disabled)node.setAttribute('aria-disabled',disabled);
+    if(onclick){if(node.getAttribute('onclick')!==onclick)node.setAttribute('onclick',onclick)}else if(node.hasAttribute('onclick'))node.removeAttribute('onclick');
+    setCombatMarkup(node,body);retained.add(node);
+    if(hand.children[index]!==node)hand.insertBefore(node,hand.children[index]||null);
+  });
+  for(const node of [...hand.children])if(!retained.has(node))node.remove();
+  window.dispatchEvent(new CustomEvent('triad:hand-updated'));
+}
 function renderCombat(){
   if(!run.combat)return;
   primeVisualUrls(run.party.map(p=>p.visual).filter(Boolean));
@@ -2308,16 +2350,16 @@ function renderCombat(){
   $('#partyCombat').innerHTML=run.party.map(p=>partyStatusCard(p)).join('');
   const inputOpen=c.phase==='PLAYER'&&!c.inputLocked&&!COMBAT_ENGINE.enemyDefeated(combatEnv());
   const endTurnOpen=inputOpen,endTurnHint=tutorial?TUTORIAL.checkEndTurn(run.tutorial):{recommended:false};
-  $('#endTurnControl').innerHTML=`<button class="primary ${endTurnHint.recommended&&TUTORIAL.requirement(run.tutorial)==='END_TURN'?'tutorial-focus-ap':''}" ${endTurnOpen?'':'disabled'} onclick="endTurnAuthoritative(${c.actionToken})">턴 종료</button>`;
+  setCombatMarkup($('#endTurnControl'),`<button class="primary ${endTurnHint.recommended&&TUTORIAL.requirement(run.tutorial)==='END_TURN'?'tutorial-focus-ap':''}" ${endTurnOpen?'':'disabled'} onclick="endTurnAuthoritative(${c.actionToken})">턴 종료</button>`);
 
-  $('#hand').innerHTML=c.hand.map((state,i)=>{
+  renderCombatHand(c.hand.map((state,i)=>{
     const card=ALL_CARDS[state.id];
     const cost=COMBAT_ENGINE.cardCost(combatEnv(),card);
     const turnBlocked=COMBAT_ENGINE.cardTurnBlocked(combatEnv(),card);
     const tutorialHint=tutorial?TUTORIAL.checkCard(run.tutorial,card):{recommended:false},ownerAlive=isPlayableOwner(card.owner),playable=inputOpen&&ownerAlive&&!turnBlocked&&cost<=c.energy,tutorialFocus=tutorial&&tutorialHint.recommended&&Boolean(TUTORIAL.requirement(run.tutorial));
     const footer=`<div class="small muted" style="margin-top:6px">${!ownerAlive?'전투불능 · 카드 비활성':turnBlocked?'이번 턴 사용 완료':`Lv.${state.level}`}</div>`;
-    return `<div class="hand-card ${playable?'playable':'unplayable'} ${ownerAlive?'':'owner-ko'} ${tutorialFocus?'tutorial-focus-ap':''}" data-card-id="${esc(state.id)}" data-card-owner="${esc(card.owner)}"${playable?` onclick="playCardAuthoritative(${i},'${esc(state.id)}',${c.actionToken})"`:''} aria-disabled="${playable?'false':'true'}">${cardHtml(card,state.level,footer)}</div>`
-  }).join('');
+    return {state,classes:[playable?'playable':'unplayable',ownerAlive?'':'owner-ko',tutorialFocus?'tutorial-focus-ap':''],onclick:playable?`playCardAuthoritative(${i},'${state.id}',${c.actionToken})`:'',body:cardHtml(card,state.level,footer)}
+  }));
   renderTutorialCombatCoach();
 }
 // The telegraphed enemy action with its target, riders, expected damage and
@@ -2425,10 +2467,10 @@ function exportEventSubmission(){
 }
 function renderMap(sel){
   const el=$(sel); if(!el)return;
-  if(run?.combat?.type==='tutorial'){el.innerHTML='<div class="node current">T<br>GUIDE</div><div class="node">1<br>·</div><div class="node">2<br>·</div><div class="node">3<br>·</div>';return}
+  if(run?.combat?.type==='tutorial'){setCombatMarkup(el,'<div class="node current">T<br>GUIDE</div><div class="node">1<br>·</div><div class="node">2<br>·</div><div class="node">3<br>·</div>');return}
   const stages=PROGRESSION.mapStages(run.stage);
   if(sel!=='#mapline'){
-    el.innerHTML=stages.map(n=>`<div class="node ${n<run.stage?'done':''} ${n===run.stage?'current':''} ${PROGRESSION.stageInfo(n).isBoss?'boss':''}">${n}<br>${PROGRESSION.stageInfo(n).isBoss?'BOSS':'·'}</div>`).join('');return
+    setCombatMarkup(el,stages.map(n=>`<div class="node ${n<run.stage?'done':''} ${n===run.stage?'current':''} ${PROGRESSION.stageInfo(n).isBoss?'boss':''}">${n}<br>${PROGRESSION.stageInfo(n).isBoss?'BOSS':'·'}</div>`).join(''));return
   }
    const map=ensureExplorationMap(),chosen=new Set(run.path.map(entry=>entry.nodeId)),offer=run.routeOffer;
    const available=new Set(offer?.stage===run.stage?offer.choices.map(choice=>choice.id):[]);

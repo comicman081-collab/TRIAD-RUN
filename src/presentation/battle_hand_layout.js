@@ -39,6 +39,7 @@
  const hint=document.createElement('div');hint.className='hand-help';hint.textContent='카드 터치: 확대\n한 번 더: 사용';hint.style.whiteSpace='pre-line';panel.appendChild(hint);
  let inspected=null,preview=null,touchArmed=null;
  function clear(){inspected?.classList.remove('hand-inspected');inspected=null;touchArmed=null;preview?.remove();preview=null;}
+ addEventListener('triad:hand-updated',()=>{if(inspected&&(!inspected.isConnected||inspected.getAttribute('aria-disabled')==='true'))clear()});
  function inspect(card){
   clear();inspected=card;
   preview=card.cloneNode(true);preview.removeAttribute('onclick');preview.removeAttribute('style');preview.className='hand-inspection-preview';preview.setAttribute('role','button');preview.tabIndex=0;preview.setAttribute('aria-label','확대한 카드 사용');

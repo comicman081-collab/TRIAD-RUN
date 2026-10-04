@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
-  "canonicalCommit": "496ed7a4d5a8d79113de4eba9fcb552ce35b21c5",
-  "siteCommit": "0cf5d03f1e6bcfc0109beeaf5c9aba42a4a58eee",
-  "runtimeBytes": 298560645,
+  "canonicalCommit": "c50c48a8872feaef993a60dcc234dfe64ecd7f2e",
+  "siteCommit": "efa31ec479d87b699e9ca198988d42d949ef974d",
+  "runtimeBytes": 298593200,
   "files": [
     {
       "path": "assets/artifacts/candidates/v1/TRIAD-ART-FIRST_ZERO-V1.svg",
@@ -5341,8 +5341,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 340648,
-      "sha256": "0c08e628766e21a1461f0ba8219a1938671031ad7b9829966ccfa5d08f9ae4dd"
+      "bytes": 343362,
+      "sha256": "2d1be270cd1e074813984e97828737d4a5930d4ba48b88e9c8be3a4603313a66"
     },
     {
       "path": "sounds/triad_run_music/ending/roguelike_ending_10_the_run_becomes_a_story.ogg",
@@ -5456,13 +5456,13 @@
     },
     {
       "path": "src/presentation/battle_hand_layout.js",
-      "bytes": 8896,
-      "sha256": "1370bb640f6668f180d28b2abc508a40773f0e014b424f8a0436dbbbb225a9d7"
+      "bytes": 9040,
+      "sha256": "90919045f02292aaec3723523fe0c14d040aaaeac92310da3d92a43850157514"
     },
     {
       "path": "src/presentation/battle_live_motion.js",
-      "bytes": 11193,
-      "sha256": "85fc962e7cd2e4c0731a56b17887d966c78cd422d75d2b54949abb76b3c9dd26"
+      "bytes": 11759,
+      "sha256": "a73e9c50218d8ffc756d454ed5603daa18183a5dc603f41fff1f9d99de55776c"
     },
     {
       "path": "src/presentation/boss_art_replacement_geometry.js",
@@ -5485,14 +5485,19 @@
       "sha256": "5d7db3a2fcf7be80f9d5a6530956c4c5191b296e930fb17cbb09453d98569594"
     },
     {
+      "path": "src/presentation/cinematic_glow_batch.js",
+      "bytes": 5591,
+      "sha256": "eeb06502f8259f92e11fa8b9d5ed9d4be2b71e9eb98138b2e50291a50547cf44"
+    },
+    {
       "path": "src/presentation/combat_cinematic_fx.css",
       "bytes": 8951,
       "sha256": "2eb8e0a53e6363c6deaaf970d8d333c0ceca7425a7a22de320ba205c8f8af6ae"
     },
     {
       "path": "src/presentation/combat_cinematic_fx.js",
-      "bytes": 47345,
-      "sha256": "817d4f6291a95090dac1f9d8e0f4b5f73a1cc7a6e86215ebbd18b1b28213f3fe"
+      "bytes": 49446,
+      "sha256": "254881955fc5c40be4fb16121d668cc393ce3f3fea7fdb06e9a3de54c0ea8aad"
     },
     {
       "path": "src/presentation/combat_geometry.js",
@@ -5601,13 +5606,23 @@
     },
     {
       "path": "src/presentation/ui_theme.css",
-      "bytes": 26673,
-      "sha256": "4de43332f46e9e0d0a574e3a8f7742b4f9da670d94520a8ff9c29a9b91ac22f4"
+      "bytes": 27071,
+      "sha256": "b8e4e28aee11366388db05af23e712980e20f563d796d195f5261fc2703c2251"
     },
     {
       "path": "src/presentation/ui_theme.js",
       "bytes": 10168,
       "sha256": "688bc19137fd897f9977815c1d9e2259d7ee82414255d07fea7e97f6d20ad396"
+    },
+    {
+      "path": "src/presentation/vfx_raster_cache.js",
+      "bytes": 19150,
+      "sha256": "ad24c1ab070e2d518e6ab4443553097706d4a077f855501e8f2f78c99dff2f7d"
+    },
+    {
+      "path": "src/presentation/vfx_raster_worker.js",
+      "bytes": 1891,
+      "sha256": "fd7785e55deb3483a2ba6196b0539563e23558a47614c63483fa4b2ac5cee729"
     },
     {
       "path": "src/triad_architecture.js",

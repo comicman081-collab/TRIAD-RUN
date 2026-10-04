@@ -7,7 +7,7 @@
    (navigator.webdriver) skips the title unless the URL carries ?title. */
 (function(root){
   'use strict';
-  const VERSION='title-lobby-1.0.1';
+  const VERSION='title-lobby-1.0.2';
   const SCENES=Object.freeze({
     FIRE:{bg:'stage07_b_collapsed_megabridge',tint:'#ff8a4a'},
     LIGHTNING:{bg:'stage09_b_offshore_platform',tint:'#7fdcff'},
@@ -77,7 +77,14 @@
     let done=0;const bar=node.querySelector('.ts-loading i'),label=node.querySelector('.ts-loading span'),t0=performance.now();
     const tick=()=>{const pct=Math.round(done/loads.length*100);bar.style.width=pct+'%';label.textContent=`데이터 동기화 중 ${pct}%`};
     loads.forEach(p=>Promise.resolve(p).then(()=>{done++;tick()}));
-    Promise.all(loads).then(()=>new Promise(r=>setTimeout(r,Math.max(0,300-(performance.now()-t0))))).then(()=>{if(titleNode===node)node.classList.add('ts-ready')});
+    Promise.all(loads).then(()=>new Promise(r=>setTimeout(r,Math.max(0,300-(performance.now()-t0))))).then(()=>{
+      if(titleNode!==node)return;
+      // A fast connection must reveal the title art before enabling its start prompt.
+      for(const selector of ['.ts-char','.ts-logo'])for(const animation of node.querySelector(selector)?.getAnimations?.({subtree:true})||[]){
+        if(Number.isFinite(animation.effect?.getTiming().iterations))try{animation.finish()}catch{}
+      }
+      node.classList.add('ts-ready');
+    });
     node.addEventListener('pointermove',event=>{if(reducedMotion())return;const x=event.clientX/innerWidth-.5,y=event.clientY/innerHeight-.5;node.querySelector('.ts-parallax').style.transform=`translate3d(${-x*18}px,${-y*10}px,0) scale(1.02)`});
     node.querySelector('.ts-sound').addEventListener('click',event=>{event.stopPropagation();call('toggleBgm')});
     node.querySelector('.ts-notice-btn').addEventListener('click',event=>{event.stopPropagation();const open=node.querySelector('.ts-notice');if(open){open.remove();return}const panel=document.createElement('div');panel.className='ts-notice';panel.innerHTML='<h3>업데이트 소식 · VER 0.8</h3><ul></ul>';panel.querySelector('ul').innerHTML=NOTES.map(n=>`<li></li>`).join('');panel.querySelectorAll('li').forEach((li,i)=>li.textContent=NOTES[i]);panel.addEventListener('click',e=>e.stopPropagation());node.appendChild(panel)});

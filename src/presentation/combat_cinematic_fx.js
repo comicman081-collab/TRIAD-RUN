@@ -14,7 +14,7 @@
    something is alive. */
 (function(root){
   'use strict';
-  const VERSION='cinematic-fx-1.0.0';
+  const VERSION='cinematic-fx-1.0.1';
   const TAU=Math.PI*2;
   const MAX_PARTICLES=1400;
   const PALETTE={
@@ -270,10 +270,14 @@
   }
 
   // --- camera / overlays ---------------------------------------------------
+  let cameraShake=null;
   function shake(intensity,duration=380,zoom=0){
     const stage=state.stage;if(!stage||reducedMotion()||!stage.animate)return;
     const steps=9,frames=[];for(let i=0;i<=steps;i++){const k=Math.pow(1-i/steps,1.6),z=1+zoom*(i===0?0:Math.pow(1-i/steps,2)),x=i===steps?0:rand(-1,1)*intensity*k,y=i===steps?0:rand(-1,1)*intensity*k*.7;frames.push({transform:`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${z.toFixed(4)})`})}
-    try{stage.animate(frames,{duration,easing:'linear',composite:'add'})}catch{try{stage.animate(frames,{duration,easing:'linear'})}catch{}}
+    // Multi-hit contacts can arrive before the preceding shake finishes.
+    // Keep one camera impulse instead of accumulating whole-stage zoom layers.
+    cameraShake?.cancel();cameraShake=null;
+    try{cameraShake=stage.animate(frames,{duration,easing:'linear',composite:'add'})}catch{try{cameraShake=stage.animate(frames,{duration,easing:'linear'})}catch{}}
   }
   function overlay(className,duration,setup){
     const stage=state.stage;if(!stage)return null;const node=document.createElement('div');node.className=className;node.setAttribute('aria-hidden','true');node.dataset.cine='1';
@@ -548,7 +552,7 @@
       if(event.kind==='ENEMY')enemyImpact(event,target);else cardImpact(event,target);
     });
     wrap('setEnemyVisualState',(result,[stateName])=>{if(String(stateName||'').toUpperCase()==='DEFEAT'&&isCombatVisible())defeatBurst()});
-    wrap('startCombat',()=>{state.particles.length=0;dim(false);letterbox(false);later(0,encounterIntro)});
+    wrap('startCombat',()=>{cameraShake?.cancel();cameraShake=null;state.particles.length=0;dim(false);letterbox(false);later(0,encounterIntro)});
     root.TRIAD_CINEMATIC_FX=Object.freeze({version:VERSION,setEnabled(value){enabled=Boolean(value);if(!enabled){state.particles.length=0;state.tasks.length=0;dim(false);letterbox(false)}return enabled},get enabled(){return enabled},snapshot:()=>({particles:state.particles.length,tasks:state.tasks.length,running:Boolean(state.raf)})});
   }
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',install,{once:true}):install();

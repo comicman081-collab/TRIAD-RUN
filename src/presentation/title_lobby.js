@@ -7,7 +7,7 @@
    (navigator.webdriver) skips the title unless the URL carries ?title. */
 (function(root){
   'use strict';
-  const VERSION='title-lobby-1.0.2';
+  const VERSION='title-lobby-1.0.3';
   const SCENES=Object.freeze({
     FIRE:{bg:'stage07_b_collapsed_megabridge',tint:'#ff8a4a'},
     LIGHTNING:{bg:'stage09_b_offshore_platform',tint:'#7fdcff'},
@@ -37,17 +37,20 @@
 <path class="core" d="M0-17 15 0 0 17-15 0Z"/></svg>`;
 
   function particles(canvas,tint,count=150){
-    const ctx=canvas.getContext('2d');let w=0,h=0,raf=0,last=performance.now();const dpr=Math.min(1.5,root.devicePixelRatio||1);
-    const resize=()=>{w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)};resize();
+    const ctx=canvas.getContext('2d');let w=0,h=0,raf=0,last=performance.now(),playing=true;const dpr=Math.min(1.5,root.devicePixelRatio||1);
+    const resize=()=>{if(!playing||document.hidden)return;w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)};resize();
     const hex=tint.replace('#',''),rgb=[0,2,4].map(i=>parseInt(hex.slice(i,i+2),16));
     const make=()=>{const kind=Math.random();return{x:Math.random()*w,y:h*(.3+Math.random()*.8),r:kind<.12?Math.random()*18+10:Math.random()*2.2+.6,vy:-(Math.random()*26+8),vx:Math.random()*14-7,a:Math.random()*.6+.25,ph:Math.random()*6.28,bokeh:kind<.12,warm:Math.random()<.7}};
     const list=Array.from({length:reducedMotion()?Math.min(30,count):count},make);
-    const frame=now=>{raf=requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;if(canvas.offsetParent===null||document.hidden)return;if(canvas.clientWidth!==w)resize();ctx.clearRect(0,0,w,h);ctx.globalCompositeOperation='lighter';
+    const frame=now=>{raf=0;if(!playing||document.hidden)return;raf=requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;ctx.clearRect(0,0,w,h);ctx.globalCompositeOperation='lighter';
       for(const p of list){p.x+=(p.vx+Math.sin(now/1300+p.ph)*8)*dt;p.y+=p.vy*dt;if(p.y<-30){Object.assign(p,make(),{y:h+20})}
         const tw=.55+.45*Math.sin(now/600+p.ph*3),alpha=p.a*tw*(p.bokeh?.16:1),col=p.warm?rgb:[220,235,255],r=p.bokeh?p.r:p.r*3.2;
         const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r);g.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},${alpha})`);g.addColorStop(p.bokeh?.7:.35,`rgba(${col[0]},${col[1]},${col[2]},${alpha*(p.bokeh?.6:.3)})`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(p.x-r,p.y-r,r*2,r*2)}};
-    raf=requestAnimationFrame(frame);addEventListener('resize',resize);
-    return{stop(){cancelAnimationFrame(raf);removeEventListener('resize',resize)}};
+    const suspend=()=>{if(raf)cancelAnimationFrame(raf);raf=0};
+    const resume=()=>{if(playing&&!document.hidden&&!raf){last=performance.now();resize();raf=requestAnimationFrame(frame)}};
+    const visibility=()=>document.hidden?suspend():resume();
+    raf=requestAnimationFrame(frame);addEventListener('resize',resize);document.addEventListener('visibilitychange',visibility);
+    return{pause(){playing=false;suspend()},play(){playing=true;resume()},stop(){playing=false;suspend();removeEventListener('resize',resize);document.removeEventListener('visibilitychange',visibility)}};
   }
 
   function buildTitle(){
@@ -172,6 +175,7 @@
       if(!first)stage.classList.add('nk-swapping');
       lobbyLive.setSource(path,record.id,scene.tint).then(()=>setTimeout(()=>stage.classList.remove('nk-swapping'),first?0:60));
     }
+    if(document.querySelector('.screen.active')?.id!=='home'){lobbyLive?.pause();lobbyFx?.pause()}
   }
 
   function tapCharacter(event){
@@ -196,7 +200,7 @@
     root.openLobbyShop=openLobbyShop;
     addEventListener('resize',()=>requestAnimationFrame(reserveSystemBar));
     wrap('renderLobby',()=>syncLobby());
-    wrap('showScreen',(result,[id])=>{if(id==='home')enterLobby(false);else lobbyLive?.pause();if(id==='home')lobbyLive?.play()});
+    wrap('showScreen',(result,[id])=>{if(id==='home'){enterLobby(false);lobbyLive?.play();lobbyFx?.play()}else{lobbyLive?.pause();lobbyFx?.pause()}});
     root.TRIAD_TITLE=Object.freeze({version:VERSION,show:()=>show({instant:true}),hide:leave,get open(){return Boolean(titleNode)}});
     const automated=navigator.webdriver===true&&!params.has('title');
     if(!params.has('notitle')&&!automated&&document.querySelector('.screen.active')?.id==='home')show();

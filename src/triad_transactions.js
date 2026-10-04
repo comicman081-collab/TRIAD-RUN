@@ -14,7 +14,7 @@ return Object.freeze({ensureLedger,id,isCommitted,commit,pending,isPending,resto
 /* Full-resolution battle optimization: source assets and frame quality are unchanged. */
 if(typeof window!=='undefined'&&typeof document!=='undefined'){
 const installPerf=()=>{
-const VERSION='2026-10-04-entry-warm-v6';if(window.TRIAD_RUNTIME_PERF?.version===VERSION||typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
+const VERSION='2026-10-04-combat-fps-v7';if(window.TRIAD_RUNTIME_PERF?.version===VERSION||typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
 const metrics={loads:0,evictions:0,draws:0,skips:0},MAX=3,path=(a,n)=>a?.manifest?.assets?.[n]?.path||a?.manifest?.clips?.[n]?.atlas||'',active=()=>!document.hidden&&document.getElementById('combat')?.classList.contains('active');
 const warmed=new Map();
 function warmParty(characters=[]){
@@ -37,7 +37,26 @@ p.ensureClip=function(name){if(!this.manifest||this._perfDead)return Promise.res
 p._perfActivate=function(n){if(!this.atlases?.[n])return false;const timing=window.TRIAD_SD_ACTION_TIMING?.timeline(this.manifest.clips[n],n);this.clip=n;this.frame=timing?.startFrame||0;this.started=performance.now()-(timing?.startMs||0);this.eventFrames.clear();this._lastClip='';this._lastFrame=-1;this.canvas.dataset.currentClip=n;this.canvas.dataset.currentAtlas=path(this,n);this.canvas.dataset.pendingAtlas='';this.canvas.dataset.loadStatus='PASS';return true};
 p.load=function(){if(!this.manifest)return;this._perfDead=false;this._perfJobs=new Map();const n=this.normalizeClip(this.pendingState||'idle');this.ready=this._perfEnsure(n).then(img=>{if(!img||this._perfDead)return false;this._perfActivate(n);this.raf=requestAnimationFrame(t=>this.tick(t));if(n!=='idle'&&this.manifest.clips.idle)setTimeout(()=>!this._perfDead&&this._perfEnsure('idle').catch(()=>{}),180);return true}).catch(e=>{this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_SD_ATLAS_LOAD_FAIL',this.characterId,e);return false});return this.ready};
 p.play=function(name){if(!this.manifest||this._perfDead)return false;this.pendingState=name;const n=this.normalizeClip(name),token=(this._perfToken||0)+1;this._perfToken=token;if(this.atlases?.[n]){const ok=this._perfActivate(n);this.ready=Promise.resolve(ok);return this.ready}this.canvas.dataset.pendingAtlas=n;this.ready=this._perfEnsure(n).then(img=>Boolean(img&&!this._perfDead&&token===this._perfToken&&this._perfActivate(n))).catch(e=>{console.error('TRIAD_SD_ATLAS_LOAD_FAIL',this.characterId,n,e);return false});return this.ready};
-p.tick=function(now){if(this._perfDead)return;if(active()){const c=this.manifest?.clips?.[this.clip],a=this.atlases?.[this.clip];if(c&&a){const raw=Math.floor(Math.max(0,now-this.started)*c.fps/1000),ended=!c.loop&&raw>=c.frames;if(ended&&!c.holdLastFrame)this.play('idle');else{const f=ended?c.frames-1:c.loop?raw%c.frames:Math.min(raw,c.frames-1);this.frame=f;if(this._lastClip!==this.clip||this._lastFrame!==f){this.draw(a,c,f);this._lastClip=this.clip;this._lastFrame=f;metrics.draws++;for(const [ev,at] of Object.entries(c.events||{}))if(f===at&&!this.eventFrames.has(ev)){this.eventFrames.add(ev);this.canvas.dispatchEvent(new CustomEvent('triad-sd-event',{bubbles:true,detail:{characterId:this.characterId,clip:this.clip,event:ev,frame:f}}))}}else metrics.skips++}}}this.raf=requestAnimationFrame(t=>this.tick(t))};
+p.tick=function(now){
+  if(this._perfDead)return;
+  if(active()){
+    const c=this.manifest?.clips?.[this.clip],a=this.atlases?.[this.clip];
+    if(c&&a){
+      const raw=Math.floor(Math.max(0,now-this.started)*c.fps/1000),ended=!c.loop&&raw>=c.frames;
+      // A slow frame may cross both release and impact, or even the end of a
+      // clip. Dispatch each crossed marker once before returning to idle.
+      for(const [event,at] of Object.entries(c.events||{}))if(raw>=at&&!this.eventFrames.has(event)){
+        this.eventFrames.add(event);this.canvas.dispatchEvent(new CustomEvent('triad-sd-event',{bubbles:true,detail:{characterId:this.characterId,clip:this.clip,event,frame:at}}));
+      }
+      if(ended&&!c.holdLastFrame)this.play('idle');
+      else{
+        const f=ended?c.frames-1:c.loop?raw%c.frames:Math.min(raw,c.frames-1);this.frame=f;
+        if(this._lastClip!==this.clip||this._lastFrame!==f){this.draw(a,c,f);this._lastClip=this.clip;this._lastFrame=f;metrics.draws++}else metrics.skips++;
+      }
+    }
+  }
+  this.raf=requestAnimationFrame(t=>this.tick(t));
+};
 p.draw=function(a,c,f){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,sw=Number(a?.naturalWidth||a?.width)||w,cols=c.columns||Math.max(1,Math.floor(sw/w)),cell=c.frameMap?.[f]??f,sx=(cell%cols)*w,sy=Math.floor(cell/cols)*h,old=this.ctx.globalCompositeOperation;this.canvas.dataset.currentFrame=String(f);this.canvas.dataset.atlasColumns=String(cols);this.canvas.dataset.atlasRows=String(c.rows||Math.ceil(c.frames/cols));if(window.TRIAD_SD_NORMALIZATION?.draw(this,a,this.clip,f,sx,sy,w,h))return;this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(a,sx,sy,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
 p.destroy=function(){this._perfDead=true;this._perfToken=(this._perfToken||0)+1;if(this.raf)cancelAnimationFrame(this.raf);new Set(Object.values(this.atlases||{})).forEach(close);this.atlases={}};
 const ep=EnemyBattleActor.prototype,oldPlay=ep.play;

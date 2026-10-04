@@ -46,10 +46,19 @@
   preview.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();preview.click();}});
   panel.appendChild(preview);
  }
+ let handWidth=0,cardWidth=148,observedCard=null,arrangeQueued=false;
+ function scheduleArrange(){if(arrangeQueued)return;arrangeQueued=true;requestAnimationFrame(()=>{arrangeQueued=false;arrange()});}
+ // ResizeObserver delivers completed layout measurements. Rebuilding the hand
+ // must not force layout by reading clientWidth/offsetWidth in a mutation callback.
+ const cardResize=new ResizeObserver(entries=>{
+  const entry=entries.find(e=>e.target===observedCard);if(!entry)return;
+  const size=entry.borderBoxSize?.[0]?.inlineSize||entry.target.offsetWidth;
+  if(size>0&&Math.abs(size-cardWidth)>.1){cardWidth=size;scheduleArrange();}
+ });
+ function observeCard(){const card=hand.querySelector('.hand-card');if(card===observedCard)return;cardResize.disconnect();observedCard=card;if(card)cardResize.observe(card);}
  function arrange(){
   if(inspected&&!inspected.isConnected)clear();
-  const cards=[...hand.querySelectorAll('.hand-card')],width=hand.clientWidth;
-  const cardWidth=cards[0]?.offsetWidth||148;
+  const cards=[...hand.querySelectorAll('.hand-card')],width=handWidth;
   const step=Math.max(0,Math.min(cardWidth*.88,(width*.66-cardWidth)/Math.max(1,cards.length-1)));
   cards.forEach((card,i)=>{
    const offset=i-(cards.length-1)/2,normalized=offset/Math.max(1,(cards.length-1)/2);
@@ -74,6 +83,7 @@
  hand.addEventListener('keydown',event=>{const card=event.target.closest('.hand-card');if(card&&(event.key==='Enter'||event.key===' ')){event.preventDefault();card.click();}if(event.key==='Escape')clear();});
  panel.addEventListener('pointermove',event=>{if(event.pointerType==='mouse'&&!event.target.closest('.hand-card,.hand-inspection-preview'))clear();});
  document.addEventListener('keydown',event=>{if(event.key==='Escape')clear();});
- new MutationObserver(arrange).observe(hand,{childList:true});
- new ResizeObserver(arrange).observe(panel);addEventListener('resize',arrange,{passive:true});arrange();
+ new MutationObserver(()=>{observeCard();scheduleArrange()}).observe(hand,{childList:true});
+ new ResizeObserver(entries=>{const width=entries[0]?.contentRect.width||0;if(width!==handWidth){handWidth=width;scheduleArrange()}}).observe(hand);
+ addEventListener('resize',scheduleArrange,{passive:true});observeCard();scheduleArrange();
 })();

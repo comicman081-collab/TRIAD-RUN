@@ -1,6 +1,7 @@
 /* Cinematic combat layer: additive light canvas, stage dimming, letterbox,
    signature cut-ins, boss warnings and intros.  Presentation only; nothing
    here intercepts input. */
+#combat .battle-stage{will-change:transform}
 .battle-cinematic-canvas{position:absolute;inset:0;z-index:7;width:100%;height:100%;pointer-events:none}
 .cine-dim{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;background:radial-gradient(ellipse at var(--cine-fx,50%) var(--cine-fy,55%),rgba(0,0,0,.08) 0,rgba(2,3,8,.62) 55%,rgba(0,0,2,.82) 100%);transition:opacity var(--cine-in,160ms) ease-out}
 .cine-dim.is-on{opacity:1}

@@ -14,7 +14,7 @@ return Object.freeze({ensureLedger,id,isCommitted,commit,pending,isPending,resto
 /* Full-resolution battle optimization: source assets and frame quality are unchanged. */
 if(typeof window!=='undefined'&&typeof document!=='undefined'){
 const installPerf=()=>{
-const VERSION='2026-10-04-combat-fps-v7';if(window.TRIAD_RUNTIME_PERF?.version===VERSION||typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
+const VERSION='2026-10-05-combat-1080p-v9';if(window.TRIAD_RUNTIME_PERF?.version===VERSION||typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
 const metrics={loads:0,evictions:0,draws:0,skips:0},MAX=3,path=(a,n)=>a?.manifest?.assets?.[n]?.path||a?.manifest?.clips?.[n]?.atlas||'',active=()=>!document.hidden&&document.getElementById('combat')?.classList.contains('active');
 const warmed=new Map();
 function warmParty(characters=[]){
@@ -65,6 +65,28 @@ ep.play=function(state,options){const r=oldPlay.call(this,state,options);if(r!==
 ep.tick=function(now){if(this._perfDead)return;if(active()){const c=this.manifest?.clips?.[this.state];if(this.image&&c){const g=this.generation,raw=Math.floor(Math.max(0,now-this.started)*c.fps/1000),ended=!c.loop&&raw>=c.frames;if(ended&&!c.holdLastFrame){if(g===this.generation)this.play('IDLE',{force:true,reason:'complete'})}else{const f=ended?c.frames-1:c.loop?raw%c.frames:Math.min(raw,c.frames-1);this.frame=f;if(this._lastState!==this.state||this._lastFrame!==f){this.draw(c,f);this._lastState=this.state;this._lastFrame=f;metrics.draws++}else metrics.skips++}}}this.raf=requestAnimationFrame(t=>this.tick(t))};
 ep.draw=function(c,f){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,old=this.ctx.globalCompositeOperation;this.canvas.dataset.currentFrame=String(f);this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(this.image,f*w,c.row*h,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
 ep.destroy=function(){this._perfDead=true;if(this.raf)cancelAnimationFrame(this.raf);close(this.image);this.image=null};
+const preparedImages=new WeakSet(),preparingActors=new WeakSet(),preparedCombats=new WeakSet();
+async function prepareHand(combat,cards){
+  const current=()=>typeof run!=='undefined'&&run?.combat===combat&&run.stats.cardsPlayed===cards&&active();
+  if(!current())return;
+  for(const actor of sdBattleActors.values()){
+    if(!current())return;
+    if(preparingActors.has(actor))continue;
+    const owner=run.party.find(p=>p.characterId===actor.characterId)?.id;
+    if(!owner)continue;
+    const clips=[...new Set(combat.hand.map(s=>ALL_CARDS[s.id]).filter(c=>c&&c.owner===owner).map(c=>actor.normalizeClip(combatCardAnimationState(c))).filter(clip=>clip!=='idle'))].slice(0,2);
+    if(!clips.length)continue;preparingActors.add(actor);
+    try{await actor.ready;if(!current())return;if(actor._perfDead)continue;
+      for(const clip of clips){
+        if(!current())return;if(actor._perfDead)break;
+        if(!await actor.ensureClip(clip)||actor._perfDead||!current())continue;
+        const image=actor.atlases[clip];if(preparedImages.has(image))continue;
+        if(window.TRIAD_BATTLE_LIVE_MOTION?.prepareAtlas(actor,clip)){preparedImages.add(image);metrics.actorPreparations=(metrics.actorPreparations||0)+1;}
+      }
+    }catch{}finally{preparingActors.delete(actor);}
+  }
+}
+const render=window.renderCombat;window.renderCombat=function(...args){const result=render.apply(this,args);const combat=typeof run!=='undefined'?run?.combat:null;if(combat&&!preparedCombats.has(combat)){preparedCombats.add(combat);const cards=run.stats.cardsPlayed;setTimeout(()=>prepareHand(combat,cards),150);}return result;};
 window.TRIAD_RUNTIME_PERF={version:VERSION,sourceQuality:'UNCHANGED_FULL_RESOLUTION',playerAtlasLimit:MAX,metrics,warmParty,snapshot:()=>({version:VERSION,sourceQuality:'UNCHANGED_FULL_RESOLUTION',metrics:{...metrics},players:[...sdBattleActors].map(([id,a])=>({id,clip:a.clip,cached:Object.keys(a.atlases||{})}))})};
 };
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',installPerf,{once:true}):installPerf();

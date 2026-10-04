@@ -52,9 +52,14 @@
       if(used){gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.bindTexture(gl.TEXTURE_2D,glow);upload(data.subarray(0,used),used/8);}
       metrics.frames++;metrics.glows+=used/48;
     }
+    function prepare(draw){
+      const started=performance.now();begin();ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,scratch.width,scratch.height);draw(ctx);ctx.restore();flush();
+      gl.readPixels(0,0,1,1,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array(4));
+      ctx.clearRect(0,0,scratch.width,scratch.height);begin();flush();begin();metrics.preparationMs=performance.now()-started;
+    }
     const loss=event=>{event.preventDefault();lost=true;onLost?.()};canvas.addEventListener('webglcontextlost',loss);
     function destroy(){canvas.removeEventListener('webglcontextlost',loss);gl.deleteTexture(base);gl.deleteTexture(glow);gl.deleteBuffer(buffer);gl.deleteProgram(program);gl.deleteShader(vertex);gl.deleteShader(fragment);}
-    return{ctx,resize,begin,add,flush,destroy,metrics};
+    return{ctx,resize,begin,add,flush,prepare,destroy,metrics};
   }
-  root.TRIAD_GLOW_BATCH=Object.freeze({version:'glow-batch-1.0.0',create});
+  root.TRIAD_GLOW_BATCH=Object.freeze({version:'glow-batch-1.0.1',create});
 })(globalThis);

@@ -212,9 +212,10 @@ void main(){
       host.appendChild(this.canvas);
       // The pointer is read relative to the face so the head turns toward it.
       this.onMove=event=>{
-        if(!this.ready||!this.origin)return;const r=this.canvas.getBoundingClientRect();if(!r.width)return;
-        const hx=r.left+this.origin[0]+this.rig.head[0]*this.scale,hy=r.top+this.origin[1]+this.rig.head[1]*this.scale;
-        this.motion.point((event.clientX-hx)/(r.width*.5),(event.clientY-hy)/(r.height*.5));
+        if(!this.ready||!this.origin)return;const r=root.TRIAD_LAYOUT?.rect?.(this.canvas)||this.canvas.getBoundingClientRect();if(!r.width||!r.height)return;
+        const point=root.TRIAD_LAYOUT?.point?.(event.clientX,event.clientY)||{x:event.clientX,y:event.clientY},sx=r.width/this.cssW,sy=r.height/this.cssH;
+        const hx=r.left+(this.origin[0]+this.rig.head[0]*this.scale)*sx,hy=r.top+(this.origin[1]+this.rig.head[1]*this.scale)*sy;
+        this.motion.point((point.x-hx)/(r.width*.5),(point.y-hy)/(r.height*.5));
       };
       this.onLeave=()=>{this.motion.pointerAt=-10};
       if(this.options.interactive){addEventListener('pointermove',this.onMove,{passive:true});document.addEventListener('pointerleave',this.onLeave)}
@@ -258,8 +259,8 @@ void main(){
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     }
     resize(){
-      const w=this.host.clientWidth,h=this.host.clientHeight;if(!w||!h)return;
-      const dpr=Math.min(root.devicePixelRatio||1,2);this.cssW=w;this.cssH=h;
+      const w=Math.min(1920,this.host.clientWidth),h=Math.min(1080,this.host.clientHeight);if(!w||!h)return;
+      const dpr=root.TRIAD_LAYOUT?.density?.()||1;this.cssW=w;this.cssH=h;
       this.canvas.width=Math.round(w*dpr);this.canvas.height=Math.round(h*dpr);this.dpr=dpr;
       // Frame the figure by head-to-feet height so every pose sits the same way.
       const rig=this.rig,o=this.options,span=Math.max(rig.feetSpan||0,rig.feet-rig.head[1],900);

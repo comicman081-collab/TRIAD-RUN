@@ -1,7 +1,7 @@
 /* Cinematic combat layer: additive light canvas, stage dimming, letterbox,
    signature cut-ins, boss warnings and intros.  Presentation only; nothing
    here intercepts input. */
-#combat .battle-stage{will-change:transform}
+#combat .battle-stage{will-change:filter,transform}
 .battle-cinematic-canvas{position:absolute;inset:0;z-index:7;width:100%;height:100%;pointer-events:none}
 .cine-dim{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;background:radial-gradient(ellipse at var(--cine-fx,50%) var(--cine-fy,55%),rgba(0,0,0,.08) 0,rgba(2,3,8,.62) 55%,rgba(0,0,2,.82) 100%);transition:opacity var(--cine-in,160ms) ease-out}
 .cine-dim.is-on{opacity:1}
@@ -17,7 +17,7 @@
 @keyframes cineFlash{0%{opacity:var(--cine-peak,.7)}100%{opacity:0}}
 
 /* Signature cut-in: a diagonal band that sweeps across the upper stage. */
-.cine-cutin{--cine-color:#ff7a3c;--cine-accent:#ffd36b;position:absolute;left:-8%;right:-8%;top:13%;height:31%;z-index:13;pointer-events:none;transform:skewY(-6deg);animation:cineCutinBand var(--cine-duration,760ms) cubic-bezier(.2,.75,.2,1) forwards;overflow:hidden}
+.cine-cutin{--cine-color:#ff7a3c;--cine-accent:#ffd36b;position:absolute;left:-8%;right:-8%;top:13%;height:31%;z-index:13;pointer-events:none;transform:skewY(-6deg);animation:cineCutinBand var(--cine-duration,760ms) cubic-bezier(.2,.75,.2,1) forwards;overflow:hidden;will-change:clip-path,opacity}
 .cine-cutin .band{position:absolute;inset:0;background:linear-gradient(90deg,transparent 0,color-mix(in srgb,var(--cine-color) 55%,#05070d) 12%,color-mix(in srgb,var(--cine-color) 30%,#05070d) 50%,color-mix(in srgb,var(--cine-color) 55%,#05070d) 88%,transparent 100%);box-shadow:inset 0 3px 0 color-mix(in srgb,var(--cine-accent) 80%,#fff),inset 0 -3px 0 color-mix(in srgb,var(--cine-accent) 80%,#fff)}
 .cine-cutin .band:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(100deg,transparent 0 22px,rgba(255,255,255,.09) 22px 25px,transparent 25px 64px);animation:cineCutinLines 480ms linear infinite}
 .cine-cutin .band:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,rgba(255,255,255,.34) 48%,transparent 62%);transform:translateX(-100%);animation:cineCutinSheen 700ms 120ms ease-out forwards}
@@ -26,7 +26,7 @@
 .cine-cutin .kicker{font-size:clamp(11px,1.1vw,16px);font-weight:900;letter-spacing:.34em;color:var(--cine-accent);text-shadow:0 0 12px var(--cine-color)}
 .cine-cutin .name{font-size:clamp(30px,4.3vw,68px);font-weight:900;font-style:italic;letter-spacing:-.02em;line-height:1.02;color:#fff;text-shadow:0 0 2px color-mix(in srgb,var(--cine-color) 60%,#000),0 0 18px var(--cine-color),0 0 42px color-mix(in srgb,var(--cine-color) 70%,transparent),4px 5px 0 rgba(0,0,0,.55)}
 .cine-cutin .owner{font-size:clamp(12px,1.2vw,18px);font-weight:800;color:#e9f0ff;opacity:.9;letter-spacing:.08em}
-@keyframes cineCutinBand{0%{clip-path:polygon(0 42%,0 42%,0 58%,0 58%);opacity:1}14%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}78%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);opacity:1}100%{clip-path:polygon(100% 0,100% 0,100% 100%,100% 100%);opacity:.6}}
+@keyframes cineCutinBand{0%{clip-path:inset(42% 100% 42% 0);opacity:1}14%{clip-path:inset(0);opacity:1}78%{clip-path:inset(0);opacity:1}100%{clip-path:inset(0 0 0 100%);opacity:.6}}
 @keyframes cineCutinPortrait{0%{transform:skewY(6deg) translateX(-60%);opacity:0}16%{transform:skewY(6deg) translateX(0);opacity:1}80%{transform:skewY(6deg) translateX(9%);opacity:1}100%{transform:skewY(6deg) translateX(40%);opacity:0}}
 @keyframes cineCutinTitle{0%{transform:skewY(6deg) translate(40%,-50%);opacity:0}18%{transform:skewY(6deg) translate(0,-50%);opacity:1}80%{transform:skewY(6deg) translate(-4%,-50%);opacity:1}100%{transform:skewY(6deg) translate(-30%,-50%);opacity:0}}
 @keyframes cineCutinLines{to{background-position:64px 0}}

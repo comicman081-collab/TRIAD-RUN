@@ -26,7 +26,7 @@
 <script src="combat_vfx_skill_assets_v5.js?v=5.0.0-enemy-spectrum-grammar"></script>
 <script src="combat_vfx_pipeline_v2.js?v=5.0.0-enemy-spectrum-grammar"></script>
 <script src="src/triad_architecture.js"></script>
-<script src="src/triad_transactions.js?v=20261004-combat-fps-v7"></script>
+<script src="src/triad_transactions.js?v=20261005-combat-1080p-v9"></script>
 <script src="src/triad_meta_progression.js?v=1.3.0-recruit-mileage"></script>
 <script src="src/triad_stage_progression.js?v=1.0.1-open-ended-overflow-hardening"></script>
 <script src="src/triad_exploration.js?v=2.0.0-sparse-roads"></script>
@@ -288,7 +288,7 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 
 /* CZN-style combat: one theatrical battlefield with combatants and cards as the focus. */
 .combat-panel-v05{padding:12px;background:#090d16}.combat-panel-v05 #combatMap{display:none}.jrpg-topbar{position:relative;z-index:3;margin:0 0 8px;padding:6px 8px}.jrpg-topbar .muted{color:#8fa6c9}.jrpg-topbar h2{font-size:25px;letter-spacing:-.05em}.jrpg-meta .resource{border-color:#45587a;background:rgba(8,13,24,.8)}
-.battle-stage{position:relative;display:block;min-height:500px;padding:0;overflow:hidden;border:1px solid #3c506f;border-radius:18px;background:#101827 center/cover no-repeat;box-shadow:inset 0 -170px 90px rgba(1,4,10,.85),inset 0 0 70px rgba(0,0,0,.45)}
+.battle-stage{position:relative;display:block;will-change:filter,transform;min-height:500px;padding:0;overflow:hidden;border:1px solid #3c506f;border-radius:18px;background:#101827 center/cover no-repeat;box-shadow:inset 0 -170px 90px rgba(1,4,10,.85),inset 0 0 70px rgba(0,0,0,.45)}
 .battle-stage:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,8,16,.38),rgba(3,7,14,.05) 42%,rgba(3,6,12,.8) 100%);pointer-events:none}.battle-lane{position:absolute;z-index:1;min-height:0;border:0;border-radius:0;padding:0;background:none}.battle-lane>.small{display:none}.ally-side{left:4%;bottom:42px;width:52%;height:320px}.enemy-side{right:5%;top:38px;width:42%;height:380px}.sd-party{height:100%;min-height:0;gap:10px;align-items:flex-end;justify-content:flex-start;flex-wrap:nowrap}.sd-enemy-wrap{height:100%;min-height:0;align-items:center;justify-content:center}.battle-vs{display:none}
 .sd-card{position:relative;width:150px;flex:0 0 150px;padding:0;border:0;border-radius:0;background:none;box-shadow:none}.sd-card img{height:245px;width:100%;object-fit:contain;filter:drop-shadow(0 16px 16px rgba(0,0,0,.75))}.sd-card .sd-name{display:inline-block;padding:4px 7px;margin:0;background:rgba(4,8,16,.76);border-left:2px solid var(--accent);font-size:11px;text-shadow:0 1px 3px #000}.sd-mini-bar{height:7px;margin-top:4px;background:rgba(1,4,9,.75);border-color:rgba(180,218,255,.55)}.sd-atlas-canvas[data-faction="PLAYER"][data-battle-lane="LEFT"][data-facing="RIGHT"]{transform:none!important}
 /* Normalized SD canvases carry a 128px margin around the 512 frame (768 total); scaling by 768/512 about the centre keeps the frame on the layout box. Uniform scale, never a mirror. */
@@ -299,7 +299,7 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 .battle-stage.impact-enemy{animation:battleImpactEnemy .24s ease-out}.battle-stage.impact-player{animation:battleImpactPlayer .28s ease-out}@keyframes battleImpactEnemy{30%{transform:translateX(3px);filter:brightness(1.16)}60%{transform:translateX(-2px)}}@keyframes battleImpactPlayer{30%{transform:translateX(-4px);filter:brightness(1.12) saturate(1.18)}65%{transform:translateX(2px)}}
 @keyframes triadEnemyAura{0%,100%{transform:scale(.94);opacity:calc(.12 * var(--enemy-aura))}50%{transform:scale(1.06);opacity:calc(.22 * var(--enemy-aura))}}
 .sd-projectile{position:absolute;z-index:3;pointer-events:none;object-fit:contain;mix-blend-mode:screen;filter:drop-shadow(0 0 10px rgba(255,162,42,.92)) drop-shadow(0 0 28px rgba(255,72,18,.65));will-change:left,top,opacity,transform;transform:translate(-50%,-50%)}
-.battle-vfx-layer{position:absolute;z-index:6;inset:0;overflow:hidden;pointer-events:none;isolation:isolate}
+.battle-vfx-layer{position:absolute;z-index:6;inset:0;overflow:hidden;pointer-events:none;isolation:isolate;contain:layout style}
 .battle-vfx{--vfx-color:#ffb05f;--vfx-hue:0deg;--vfx-rotation:0deg;position:absolute;display:block;width:clamp(132px,19vw,278px);height:clamp(132px,19vw,278px);object-fit:contain;object-position:center;opacity:0;mix-blend-mode:screen;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--vfx-color) 78%,transparent)) drop-shadow(0 0 24px color-mix(in srgb,var(--vfx-color) 48%,transparent));will-change:transform,opacity,filter;transform:translate(-50%,-50%) scale(var(--vfx-scale,1));animation:triadCombatVfx var(--vfx-duration,700ms) cubic-bezier(.15,.74,.25,1) forwards}
 .battle-vfx[data-motion="TRAVEL"]{width:clamp(230px,31vw,520px);height:clamp(96px,12vw,188px);z-index:7;transform-origin:50% 50%;animation-name:triadCombatVfxTravel}.battle-vfx[data-motion="TRAVEL"][data-travel-profile="plume"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="judgment"]{width:clamp(116px,15vw,234px);height:clamp(176px,25vw,360px);transform-origin:50% 76%}.battle-vfx[data-motion="TRAVEL"][data-travel-profile="orb"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="arcane-orb"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="seal"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="nova-ember"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="singularity"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="psychic-orb"]{width:clamp(124px,17vw,286px);height:clamp(124px,17vw,286px)}.battle-vfx[data-motion="TRAVEL"][data-travel-profile="crescent"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="void-crescent"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="plasma-wing"],.battle-vfx[data-motion="TRAVEL"][data-travel-profile="lance"]{width:clamp(218px,29vw,490px);height:clamp(105px,14vw,216px)}.battle-vfx[data-motion="TRAVEL"][data-travel-profile="domination-slice"]{width:clamp(230px,31vw,530px);height:clamp(132px,18vw,278px)}
 .battle-vfx[data-phase="IMPACT"]{z-index:9;width:clamp(220px,27vw,430px);height:clamp(220px,27vw,430px);animation-name:triadCombatVfxImpact!important}
@@ -526,8 +526,8 @@ p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-br
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 </style>
-<link rel="stylesheet" href="src/presentation/landscape_layout.css?v=20260908-1">
-<script defer src="src/presentation/landscape_layout.js?v=20260908-1"></script>
+<link rel="stylesheet" href="src/presentation/landscape_layout.css?v=20261005-1080p">
+<script defer src="src/presentation/landscape_layout.js?v=20261005-1080p"></script>
 <script defer src="src/presentation/enemy_scene_layout.js?v=20261004-combat-fit"></script>
 <script defer src="src/presentation/shade_m15_replacement.js?v=20260913-clean-v2"></script>
 <script defer src="src/presentation/boss_art_replacement_geometry.js?v=20260913-all18"></script>
@@ -538,22 +538,23 @@ p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-br
 <link rel="stylesheet" href="src/presentation/desktop_landscape.css?v=20260923-pc-window">
 <link rel="stylesheet" href="src/presentation/exploration_scene.css?v=20260923-scenic-map">
 <link rel="stylesheet" href="src/presentation/run_difficulty.css?v=20260923-mode-before-party">
-<link rel="stylesheet" href="src/presentation/combat_cinematic_fx.css?v=20261004-composite">
+<link rel="stylesheet" href="src/presentation/combat_cinematic_fx.css?v=20261005-1080p">
 <link rel="stylesheet" href="src/presentation/combat_tactics.css?v=combat-tactics-1.0.0">
 <link rel="stylesheet" href="src/presentation/build_archive.css?v=build-archive-1.0.0">
 <script defer src="src/presentation/battle_hand_layout.js?v=20261004-low-hand"></script>
-<script defer src="src/presentation/vfx_raster_cache.js?v=20261004-low"></script>
-<script defer src="src/presentation/cinematic_glow_batch.js?v=20261004-low"></script>
-<script defer src="src/presentation/combat_cinematic_fx.js?v=20261004-low"></script>
+<script defer src="src/presentation/vfx_raster_cache.js?v=20261005-1080p"></script>
+<script defer src="src/presentation/combat_vector_batch.js?v=20261005-1080p"></script>
+<script defer src="src/presentation/cinematic_glow_batch.js?v=20261005-1080p"></script>
+<script defer src="src/presentation/combat_cinematic_fx.js?v=20261005-1080p"></script>
 <script defer src="src/presentation/combat_tactics.js?v=combat-tactics-1.0.0"></script>
-<script defer src="src/presentation/battle_live_motion.js?v=battle-live-motion-1.0.4"></script>
+<script defer src="src/presentation/battle_live_motion.js?v=battle-live-motion-1.0.5"></script>
 <link rel="stylesheet" href="src/presentation/ui_theme.css?v=ui-theme-1.1.2-combat-low">
-<script defer src="src/presentation/ui_theme.js?v=ui-theme-1.1.0"></script>
+<script defer src="src/presentation/ui_theme.js?v=20261005-1080p"></script>
 <link rel="stylesheet" href="src/presentation/title_lobby.css?v=title-lobby-1.0.0">
-<script defer src="src/presentation/live_illustration.js?v=live-illustration-2.2.1"></script>
-<script defer src="src/presentation/title_lobby.js?v=title-lobby-1.0.3"></script>
+<script defer src="src/presentation/live_illustration.js?v=20261005-1080p"></script>
+<script defer src="src/presentation/title_lobby.js?v=20261005-1080p"></script>
 <link rel="stylesheet" href="src/presentation/gacha_fx.css?v=gacha-fx-1.1.0">
-<script defer src="src/presentation/gacha_fx.js?v=gacha-fx-1.1.1"></script>
+<script defer src="src/presentation/gacha_fx.js?v=20261005-1080p"></script>
 </head>
 <body>
 <div id="app">
@@ -1824,7 +1825,7 @@ function combatHitOffsets(key,hits){return SFX.hitOffsets?.(key,hits)||Array.fro
 function presentCombatVfxSequence(event,offsets,generation,leadMs=0){if(!event)return false;(offsets?.length?offsets:[0]).forEach(offset=>scheduleCombatPresentation(()=>presentCombatVfx(event),leadMs+offset,generation));return true}
 function combatActorActionTiming(actor,state){const name=actor?.normalizeClip?.(state)||state;return globalThis.TRIAD_SD_ACTION_TIMING?.timeline(actor?.manifest?.clips?.[name],name)||{cueMs:0,durationMs:0}}
 function renderEnemyHpPresentation(hp,maxHp=run?.combat?.enemy?.maxHp||1){const value=Math.max(0,Number(hp)||0),maximum=Math.max(1,Number(maxHp)||1),ratio=100*value/maximum,text=$('#enemyHpText'),bar=$('#enemyHpBar'),mini=document.querySelector('#enemySpriteWrap .sd-mini-bar i');if(text)text.textContent=`HP ${value} / ${maximum}`;if(bar)bar.style.width=`${ratio}%`;if(mini)mini.style.width=`${ratio}%`}
-function renderPartyMemberPresentation(snapshot){const member=run?.party?.find(p=>p.id===snapshot?.targetId);if(!member)return false;const hp=Math.max(0,Number(snapshot.hpAfter??member.hp)||0),shield=Math.max(0,Number(snapshot.shieldAfter??member.shield)||0),sprite=document.querySelector(`#partySprites [data-core-id="${member.id}"]`),status=document.querySelector(`#partyCombat [data-core-id="${member.id}"]`),spriteBars=sprite?.querySelectorAll('.sd-mini-bar i'),statusLabels=status?.querySelectorAll('.small.muted'),statusBars=status?.querySelectorAll('.bar i'),statusTag=status?.querySelector('.tag');sprite?.classList.toggle('dead',hp<=0);status?.classList.toggle('dead',hp<=0);if(statusTag)statusTag.textContent=hp>0?'생존':'전투불능';if(spriteBars?.[0])spriteBars[0].style.width=`${100*hp/member.maxHp}%`;if(spriteBars?.[1])spriteBars[1].style.width=`${Math.min(100,shield*3)}%`;if(statusLabels?.[0])statusLabels[0].textContent=`HP ${hp}/${member.maxHp}`;if(statusLabels?.[1])statusLabels[1].textContent=`보호막 ${shield}`;if(statusBars?.[0])statusBars[0].style.width=`${100*hp/member.maxHp}%`;if(statusBars?.[1])statusBars[1].style.width=`${Math.min(100,shield*3)}%`;return true}
+function renderPartyMemberPresentation(snapshot){const member=run?.party?.find(p=>p.id===snapshot?.targetId);if(!member)return false;const hp=Math.max(0,Number(snapshot.hpAfter??member.hp)||0),shield=Math.max(0,Number(snapshot.shieldAfter??member.shield)||0),sprite=document.querySelector(`#partySprites [data-core-id="${member.id}"]`),status=document.querySelector(`#partyCombat [data-core-id="${member.id}"]`),spriteBars=sprite?.querySelectorAll('.sd-mini-bar i'),statusLabels=status?.querySelectorAll('.small.muted'),statusBars=status?.querySelectorAll('.bar i'),statusTag=status?.querySelector('.tag');if(status?.parentElement)combatMarkup.delete(status.parentElement);sprite?.classList.toggle('dead',hp<=0);status?.classList.toggle('dead',hp<=0);if(statusTag)statusTag.textContent=hp>0?'생존':'전투불능';if(spriteBars?.[0])spriteBars[0].style.width=`${100*hp/member.maxHp}%`;if(spriteBars?.[1])spriteBars[1].style.width=`${Math.min(100,shield*3)}%`;if(statusLabels?.[0])statusLabels[0].textContent=`HP ${hp}/${member.maxHp}`;if(statusLabels?.[1])statusLabels[1].textContent=`보호막 ${shield}`;if(statusBars?.[0])statusBars[0].style.width=`${100*hp/member.maxHp}%`;if(statusBars?.[1])statusBars[1].style.width=`${Math.min(100,shield*3)}%`;return true}
 function presentPartyImpact(result){const member=run?.party?.find(p=>p.id===result?.targetId);if(!member)return false;renderPartyMemberPresentation(result);const state=result.hpAfter<=0?'ko':result.blocked>0?'guard':'hit';run.battleSpriteState=run.battleSpriteState||{};run.battleSpriteState[member.id]=state;const actor=sdBattleActors.get(member.characterId);if(actor)actor.play(state);return true}
 function settleResolvedCard(c,state,card,exhaust){return COMBAT_ENGINE.settleResolvedCard(combatEnv(),state,card,exhaust)}
 function replacePlayedCard(c,state,card,exhaust){
@@ -2347,7 +2348,7 @@ function renderCombat(){
   $('#enemyHpBar').style.width=`${100*e.hp/e.maxHp}%`;
   renderCombatTactics(c,e);
 
-  $('#partyCombat').innerHTML=run.party.map(p=>partyStatusCard(p)).join('');
+  setCombatMarkup($('#partyCombat'),run.party.map(p=>partyStatusCard(p)).join(''));
   const inputOpen=c.phase==='PLAYER'&&!c.inputLocked&&!COMBAT_ENGINE.enemyDefeated(combatEnv());
   const endTurnOpen=inputOpen,endTurnHint=tutorial?TUTORIAL.checkEndTurn(run.tutorial):{recommended:false};
   setCombatMarkup($('#endTurnControl'),`<button class="primary ${endTurnHint.recommended&&TUTORIAL.requirement(run.tutorial)==='END_TURN'?'tutorial-focus-ap':''}" ${endTurnOpen?'':'disabled'} onclick="endTurnAuthoritative(${c.actionToken})">턴 종료</button>`);
@@ -2379,12 +2380,12 @@ function renderCombatTactics(c,e){
   const intent=c.intent||{},view=COMBAT_ENGINE.describeIntent(env,intent),threat=COMBAT_ENGINE.threatFor(env,intent),gauge=c.breakGauge;
   const lethal=Object.values(threat.byMember).some(item=>item.lethal);
   const intentChips=[...view.tags.map(tag=>['tag',tag]),...(threat.total?[[lethal?'lethal':'threat',`예상 피해 ${threat.total}${lethal?' · 전투불능 위험':''}`]]:[]),...chips];
-  $('#enemyStatus').innerHTML=chips.map(([kind,text])=>`<span class="tag" data-tactic="${kind}">${esc(text)}</span>`).join(' ')||'<span class="muted small">상태이상 없음</span>';
+  setCombatMarkup($('#enemyStatus'),chips.map(([kind,text])=>`<span class="tag" data-tactic="${kind}">${esc(text)}</span>`).join(' ')||'<span class="muted small">상태이상 없음</span>');
   const intentEl=$('#enemyIntent');
   if(intentEl){
     intentEl.dataset.intentKind=intent.kind||'attack';
     const gaugeHtml=gauge&&!gauge.broken?`<span class="intent-break" role="meter" aria-label="브레이크 게이지" aria-valuemin="0" aria-valuemax="${gauge.threshold}" aria-valuenow="${Math.min(gauge.threshold,gauge.dealt)}"><i style="width:${Math.min(100,100*gauge.dealt/Math.max(1,gauge.threshold))}%"></i><b>BREAK ${Math.min(gauge.dealt,gauge.threshold)} / ${gauge.threshold}</b></span>`:'';
-    intentEl.innerHTML=`<span class="intent-text">다음 행동: ${esc(view.text)}</span>${intentChips.length?`<span class="intent-chips">${intentChips.map(([kind,text])=>`<em data-tactic="${kind}">${esc(text)}</em>`).join('')}</span>`:''}${gaugeHtml}`
+    setCombatMarkup(intentEl,`<span class="intent-text">다음 행동: ${esc(view.text)}</span>${intentChips.length?`<span class="intent-chips">${intentChips.map(([kind,text])=>`<em data-tactic="${kind}">${esc(text)}</em>`).join('')}</span>`:''}${gaugeHtml}`)
   }
   const stage=$('.battle-stage');if(stage)stage.dataset.enemyIntent=intent.kind||'attack';
   document.querySelectorAll('#partySprites [data-core-id]').forEach(node=>{const attack=['attack','charge'].includes(intent.kind),targeted=attack&&(intent.target==='all'||intent.targetId===node.dataset.coreId);if(targeted)node.dataset.intentTarget=intent.kind==='charge'?'charge':'attack';else delete node.dataset.intentTarget})

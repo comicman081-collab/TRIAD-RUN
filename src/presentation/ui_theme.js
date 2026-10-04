@@ -106,7 +106,7 @@
     if(reducedMotion())return;
     const canvas=document.createElement('canvas');canvas.id='uiAmbient';canvas.setAttribute('aria-hidden','true');document.body.prepend(canvas);
     const ctx=canvas.getContext('2d');let w=0,h=0,last=0;const motes=[];
-    const resize=()=>{const dpr=Math.min(1.5,root.devicePixelRatio||1);w=innerWidth;h=innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0)};
+    const resize=()=>{const size=root.TRIAD_LAYOUT?.size?.()||{width:Math.min(1920,innerWidth),height:Math.min(1080,innerHeight)},dpr=root.TRIAD_LAYOUT?.density?.()||1;w=size.width;h=size.height;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0)};
     resize();addEventListener('resize',resize);
     for(let i=0;i<46;i++)motes.push({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.6,s:Math.random()*.018+.006,d:Math.random()*Math.PI*2,warm:Math.random()<.35});
     const tick=now=>{

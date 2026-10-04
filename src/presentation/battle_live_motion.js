@@ -15,7 +15,7 @@
    missing the actor's own renderer keeps drawing. */
 (function(root){
   'use strict';
-  const VERSION='battle-live-motion-1.0.4';
+  const VERSION='battle-live-motion-1.0.5';
   const STRIPS=18;
   const FRAME_MS=1000/30;
   const TAU=Math.PI*2;
@@ -98,6 +98,38 @@
     return paint(actor,s,key,A,B,samePose?0:blend.w,SD_CLIP_LIFE[actor.clip]??.4,now,dt,blend.a);
   }
 
+  function prepareAtlas(actor,clipName){
+    if(!actor.atlases?.[clipName])return false;
+    const clip=actor.manifest?.clips?.[clipName],timing=root.TRIAD_SD_ACTION_TIMING?.timeline(clip,clipName);
+    const startMs=Math.max(0,Number(timing?.startMs)||0);
+    const canvas=actor.canvas,ctx=actor.ctx;if(!clip||!canvas?.width||!canvas.height||!ctx)return false;
+    const backup=document.createElement('canvas');backup.width=canvas.width;backup.height=canvas.height;
+    const copy=backup.getContext('2d',{willReadFrequently:false});
+    const facade=Object.create(actor);Object.assign(facade,{canvas,ctx,clip:clipName,started:-startMs,_materialPreparation:true});
+    // Prepare the actual actor context's full-size strip/upload path. Restore
+    // its visible pixels synchronously so no preparation pose reaches a RAF.
+    states.set(facade,{phase:0,phase2:0,period:3.5,leanPeriod:5.5,spring:0,springV:0,lastKey:'',fade:null,last:null,life:SD_CLIP_LIFE[clipName]??.4,nextPaint:null,paintedAt:null});
+    let sampleMs=90;
+    if(clip?.frameMap){
+      const blend=poseBlend(startMs+sampleMs,clip,Boolean(clip.loop));
+      if(clip.frameMap[blend.a]===clip.frameMap[blend.b]){
+        const fps=Math.max(1,Number(clip.fps)||10),step=Math.max(1,Math.round(fps/Math.max(1,Number(clip.authoredPoseCadenceFps)||fps)));
+        for(let next=blend.a+step;next<clip.frames;next+=step)if(clip.frameMap[next]!==clip.frameMap[blend.a]){
+          sampleMs=Math.max(0,(next-step*.1)*1000/fps-startMs);break;
+        }
+      }
+    }
+    let saved=false;
+    const neutral=()=>{ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.filter='none';ctx.shadowColor='rgba(0,0,0,0)';ctx.shadowBlur=0;ctx.shadowOffsetX=ctx.shadowOffsetY=0;};
+    try{
+      if(!copy)return false;copy.drawImage(canvas,0,0);ctx.save();saved=true;neutral();
+      const ok=renderSd(facade,sampleMs,1/60);if(ok)ctx.getImageData(0,0,1,1);return ok;
+    }finally{
+      try{if(saved)try{neutral();ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(backup,0,0);}finally{ctx.restore();}}
+      finally{states.delete(facade);backup.width=backup.height=0;}
+    }
+  }
+
   /* ------------------------------------------------------------------ monsters */
   function enemyLayer(actor,frame){
     const clip=actor.manifest?.clips?.[actor.state];if(!clip||!actor.image)return null;
@@ -132,7 +164,7 @@
     catch{ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;return false}
     ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;
     s.last=w>=.5&&B?B:A;
-    canvas.dataset.currentFrame=String(frame);canvas.dataset.liveMotion='1';
+    if(!actor._materialPreparation){canvas.dataset.currentFrame=String(frame);canvas.dataset.liveMotion='1';}
     return true;
   }
 
@@ -190,7 +222,7 @@
     guard(typeof SdBattleActor!=='undefined'?SdBattleActor:null,'sd');
     guard(typeof EnemyBattleActor!=='undefined'?EnemyBattleActor:null,'enemy');
     requestAnimationFrame(frame);
-    root.TRIAD_BATTLE_LIVE_MOTION=Object.freeze({version:VERSION,poseBlend,rowWarp,setEnabled(value){enabled=Boolean(value);return enabled},get enabled(){return enabled}});
+    root.TRIAD_BATTLE_LIVE_MOTION=Object.freeze({version:VERSION,poseBlend,rowWarp,prepareAtlas,setEnabled(value){enabled=Boolean(value);return enabled},get enabled(){return enabled}});
   }
   // The runtime performance layer replaces SdBattleActor/EnemyBattleActor
   // draw() on DOMContentLoaded; install after it so we wrap the final draw.

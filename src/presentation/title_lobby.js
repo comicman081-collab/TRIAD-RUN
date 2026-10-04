@@ -7,7 +7,7 @@
    (navigator.webdriver) skips the title unless the URL carries ?title. */
 (function(root){
   'use strict';
-  const VERSION='title-lobby-1.0.3';
+  const VERSION='title-lobby-1.0.4';
   const SCENES=Object.freeze({
     FIRE:{bg:'stage07_b_collapsed_megabridge',tint:'#ff8a4a'},
     LIGHTNING:{bg:'stage09_b_offshore_platform',tint:'#7fdcff'},
@@ -16,7 +16,7 @@
     NATURE:{bg:'stage08_b_quarantine_greenhouse',tint:'#8ff0b0'},
     RIFT:{bg:'stage10_b_orbital_sanctum',tint:'#c890ff'}
   });
-  const NOTES=['PC 첫 실행과 전투 진입 로딩 최적화','0 AP 공격 · 퀵 액션과 매복은 같은 캐릭터의 같은 카드 종류당 턴에 1회','전투 연출 강화 · 필살기 컷인, 보스 경고와 격파 연출','캐릭터 라이브 모션 · 로비 캐릭터가 숨 쉬고 반응합니다','지휘 로비 개편 · 한 화면에서 출격과 성장 메뉴를 바로 선택','전투 HUD · 아군과 적의 HP 수치 표시'];
+  const NOTES=['PC 게임 해상도 1920×1080 고정 · 고해상도 화면에서도 1080p 렌더링','PC 첫 실행과 전투 진입 로딩 최적화','0 AP 공격 · 퀵 액션과 매복은 같은 캐릭터의 같은 카드 종류당 턴에 1회','전투 연출 강화 · 필살기 컷인, 보스 경고와 격파 연출','캐릭터 라이브 모션 · 로비 캐릭터가 숨 쉬고 반응합니다','지휘 로비 개편 · 한 화면에서 출격과 성장 메뉴를 바로 선택','전투 HUD · 아군과 적의 HP 수치 표시'];
   const params=new URLSearchParams(location.search);
   const reducedMotion=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch{return false}};
   const call=(name,...args)=>{const fn=root[name];return typeof fn==='function'?fn(...args):undefined};
@@ -37,8 +37,8 @@
 <path class="core" d="M0-17 15 0 0 17-15 0Z"/></svg>`;
 
   function particles(canvas,tint,count=150){
-    const ctx=canvas.getContext('2d');let w=0,h=0,raf=0,last=performance.now(),playing=true;const dpr=Math.min(1.5,root.devicePixelRatio||1);
-    const resize=()=>{if(!playing||document.hidden)return;w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)};resize();
+    const ctx=canvas.getContext('2d');let w=0,h=0,raf=0,last=performance.now(),playing=true;
+    const resize=()=>{if(!playing||document.hidden)return;const box=root.TRIAD_LAYOUT?.rect?.(canvas),dpr=root.TRIAD_LAYOUT?.density?.()||1;w=box?.width??Math.min(1920,canvas.clientWidth);h=box?.height??Math.min(1080,canvas.clientHeight);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)};resize();
     const hex=tint.replace('#',''),rgb=[0,2,4].map(i=>parseInt(hex.slice(i,i+2),16));
     const make=()=>{const kind=Math.random();return{x:Math.random()*w,y:h*(.3+Math.random()*.8),r:kind<.12?Math.random()*18+10:Math.random()*2.2+.6,vy:-(Math.random()*26+8),vx:Math.random()*14-7,a:Math.random()*.6+.25,ph:Math.random()*6.28,bokeh:kind<.12,warm:Math.random()<.7}};
     const list=Array.from({length:reducedMotion()?Math.min(30,count):count},make);
@@ -62,7 +62,7 @@
 <div class="ts-logo">${EMBLEM}<div class="ts-word">TRIAD</div><div class="ts-sub"><b><em>//</em>RUN</b></div><div class="ts-tag">TACTICAL DECK RPG</div></div>
 <div class="ts-start"><div class="ts-loading"><div class="bar"><i></i></div><span>데이터 동기화 중 0%</span></div><div class="ts-tap"><b>화면을 터치하여 시작</b><small>TOUCH TO START</small></div></div>
 <div class="ts-sys"><button type="button" class="ts-notice-btn" aria-label="업데이트 소식">✉</button><button type="button" class="ts-sound" aria-label="배경음악 켜기/끄기">♫</button></div>
-<div class="ts-foot"><span>VER 0.8 · BUILD 2026.10.04</span><span>© TRIAD // RUN</span></div>
+<div class="ts-foot"><span>VER 0.8 · BUILD 2026.10.05</span><span>© TRIAD // RUN</span></div>
 <div class="ts-layer ts-flash"></div><div class="ts-layer ts-black"></div>`;
     node.querySelector('.ts-bg').style.backgroundImage=`url("${new URL(`assets/battle_backgrounds/${scene.bg}.webp`,document.baseURI).href}")`;
     const host=node.querySelector('.ts-char');
@@ -88,7 +88,7 @@
       }
       node.classList.add('ts-ready');
     });
-    node.addEventListener('pointermove',event=>{if(reducedMotion())return;const x=event.clientX/innerWidth-.5,y=event.clientY/innerHeight-.5;node.querySelector('.ts-parallax').style.transform=`translate3d(${-x*18}px,${-y*10}px,0) scale(1.02)`});
+    node.addEventListener('pointermove',event=>{if(reducedMotion())return;const box=root.TRIAD_LAYOUT?.rect?.(node)||node.getBoundingClientRect(),point=root.TRIAD_LAYOUT?.point?.(event.clientX,event.clientY)||{x:event.clientX,y:event.clientY};if(!box.width||!box.height)return;const x=(point.x-box.left)/box.width-.5,y=(point.y-box.top)/box.height-.5;node.querySelector('.ts-parallax').style.transform=`translate3d(${-x*18}px,${-y*10}px,0) scale(1.02)`});
     node.querySelector('.ts-sound').addEventListener('click',event=>{event.stopPropagation();call('toggleBgm')});
     node.querySelector('.ts-notice-btn').addEventListener('click',event=>{event.stopPropagation();const open=node.querySelector('.ts-notice');if(open){open.remove();return}const panel=document.createElement('div');panel.className='ts-notice';panel.innerHTML='<h3>업데이트 소식 · VER 0.8</h3><ul></ul>';panel.querySelector('ul').innerHTML=NOTES.map(n=>`<li></li>`).join('');panel.querySelectorAll('li').forEach((li,i)=>li.textContent=NOTES[i]);panel.addEventListener('click',e=>e.stopPropagation());node.appendChild(panel)});
     const start=event=>{if(!node.classList.contains('ts-ready')||node.classList.contains('ts-leaving'))return;if(event?.type==='keydown'&&!['Enter',' ','Spacebar'].includes(event.key))return;event?.preventDefault?.();leave()};
@@ -138,7 +138,7 @@
   function reserveSystemBar(){
     const shell=document.getElementById('lobbyShell'),bar=document.querySelector('#app>.topbar');if(!shell||!bar||document.body.dataset.screen!=='home')return;
     const zoom=parseFloat(getComputedStyle(document.querySelector('#home .nk-header')||shell).zoom)||1;
-    shell.style.setProperty('--nk-sys',`${Math.ceil(bar.getBoundingClientRect().width/zoom)+18}px`);
+    shell.style.setProperty('--nk-sys',`${Math.ceil((root.TRIAD_LAYOUT?.rect?.(bar)||bar.getBoundingClientRect()).width/zoom)+18}px`);
   }
   // Recruit banner: rotate through the SSR characters of the recruit pool.
   let recruitTimer=0,recruitIndex=0;
@@ -152,7 +152,7 @@
     if(info)info.textContent=`SSR ${((META?.GACHA_SSR_RATE||.02)*100).toFixed(0)}% · 신호 ${signal}/${cost} · 마일리지 ${gameProfile()?.recruitMileage||0}/${META?.GACHA_MILEAGE_COST||200}`;
     if(name)name.textContent=record?`SSR ${record.name}${open.includes(record)?'':' · 보유'}`:'';
     const path=record&&call('lobbyCharacterAsset',record)?.path;if(!path)return;
-    const apply=()=>{const rig=root.TRIAD_LIVE_ILLUSTRATION?.RIGS?.[record.id]||{head:[512,220]},box=art.getBoundingClientRect(),h=box.height||140,w=box.width||230,k=h*2.35/1536;
+    const apply=()=>{const rig=root.TRIAD_LIVE_ILLUSTRATION?.RIGS?.[record.id]||{head:[512,220]},box=root.TRIAD_LAYOUT?.rect?.(art)||art.getBoundingClientRect(),h=box.height||140,w=box.width||230,k=h*2.35/1536;
       art.style.backgroundImage=`url("${path}")`;art.style.backgroundSize=`${1024*k}px ${1536*k}px`;art.style.backgroundPosition=`${-(rig.head[0]*k-w*.55)}px ${-(rig.head[1]*k-h*.3)}px`;art.classList.remove('swap')};
     if(swap){art.classList.add('swap');setTimeout(apply,420)}else apply();
   }
@@ -180,7 +180,8 @@
 
   function tapCharacter(event){
     const rect=lobbyLive?.figureRect();if(!rect)return;
-    const box=event.currentTarget.getBoundingClientRect(),x=event.clientX-box.left,y=event.clientY-box.top;
+    const box=root.TRIAD_LAYOUT?.rect?.(event.currentTarget)||event.currentTarget.getBoundingClientRect(),point=root.TRIAD_LAYOUT?.point?.(event.clientX,event.clientY)||{x:event.clientX,y:event.clientY};if(!box.width||!box.height)return;
+    const x=(point.x-box.left)*(event.currentTarget.clientWidth||box.width)/box.width,y=(point.y-box.top)*(event.currentTarget.clientHeight||box.height)/box.height;
     if(Math.abs(x-rect.chest[0])>rect.width*.28||y<rect.head[1]-rect.width*.2)return;
     lobbyLive.poke(1.2);
     const burst=document.createElement('i');burst.className='nk-tap-burst';burst.style.left=`${x}px`;burst.style.top=`${y}px`;event.currentTarget.appendChild(burst);setTimeout(()=>burst.remove(),650);

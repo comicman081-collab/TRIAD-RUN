@@ -1,9 +1,11 @@
 /* One landscape layout even when the physical viewport is portrait. */
 :root{--game-height:100dvh}
 #landscapeOverlays{display:contents}
+html.game-fixed-1080{overflow:hidden!important;background:#02040a}
+html.game-fixed-1080 #app{height:1080px;min-height:0;box-sizing:border-box;overflow:auto}
 @media(orientation:portrait) and (hover:none) and (pointer:coarse){
   body{overflow:hidden!important}
-  #app,#landscapeOverlays{position:fixed;top:0;left:0;width:100dvh;max-width:none;height:100dvw;transform-origin:0 0;transform:translateX(100dvw) rotate(90deg);margin:0;box-sizing:border-box}
+  #app,#landscapeOverlays{position:fixed;top:0;left:0;width:var(--game-width);max-width:none;height:var(--game-height);transform-origin:0 0;transform:translateX(var(--game-height)) rotate(90deg);margin:0;box-sizing:border-box}
   #app{overflow:auto}
   #landscapeOverlays{display:block;z-index:1000;pointer-events:none}
   #landscapeOverlays>.modal,#landscapeOverlays>.idle-reward-modal,#landscapeOverlays>.triad-artifact-modal{pointer-events:auto;overflow:auto}

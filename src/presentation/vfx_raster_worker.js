@@ -10,14 +10,21 @@ onmessage=async({data})=>{
     source=images.get(src);source.users++;images.delete(src);images.set(src,source);
     const image=await source.ready,w=Math.ceil((width+pad*2)*dpr),h=Math.ceil((height+pad*2)*dpr);
     const scale=Math.min(width/image.width,height/image.height),dw=image.width*scale,dh=image.height*scale;
-    const canvas=new OffscreenCanvas(w,h),ctx=canvas.getContext('2d'),bitmaps=[];ctx.imageSmoothingQuality='high';
+    const canvas=new OffscreenCanvas(w,h),ctx=canvas.getContext('2d',{willReadFrequently:true}),bitmaps=[];ctx.imageSmoothingQuality='high';
+    let minX=w,minY=h,maxX=-1,maxY=-1;
     for(const filter of filters){
       ctx.clearRect(0,0,w,h);ctx.filter=filter.replace(/(-?\d+(?:\.\d+)?)px/g,(_,n)=>`${Number(n)*dpr}px`);
       if(filter!=='none'&&ctx.filter==='none')throw Error('Worker filter unavailable');
       ctx.drawImage(image,(pad+(width-dw)/2)*dpr,(pad+(height-dh)/2)*dpr,dw*dpr,dh*dpr);
+      const pixels=ctx.getImageData(0,0,w,h).data;
+      for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(pixels[(y*w+x)*4+3]){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);}
       bitmaps.push(canvas.transferToImageBitmap());
     }
-    postMessage({id,bitmaps,contentWidth:dw,contentHeight:dh,bytes:w*h*4*bitmaps.length},bitmaps);
+    // Use the union across filter states, keeping a transparent texel around
+    // every nonzero-alpha pixel. No glow pixel or source resolution is removed.
+    const cropX=maxX<0?0:Math.max(0,minX-1),cropY=maxY<0?0:Math.max(0,minY-1),cropWidth=maxX<0?1:Math.min(w,maxX+2)-cropX,cropHeight=maxY<0?1:Math.min(h,maxY+2)-cropY;
+    const cropped=await Promise.all(bitmaps.map(bitmap=>createImageBitmap(bitmap,cropX,cropY,cropWidth,cropHeight)));bitmaps.forEach(bitmap=>bitmap.close());
+    postMessage({id,bitmaps:cropped,contentWidth:dw,contentHeight:dh,cropX,cropY,cropWidth,cropHeight,bytes:cropWidth*cropHeight*4*cropped.length},cropped);
   }catch(error){if(source&&!source.image)images.delete(src);postMessage({id,error:String(error.message||error)});}
   finally{if(source)source.users--;trimSources();}
 };

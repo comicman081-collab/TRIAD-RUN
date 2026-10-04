@@ -66,7 +66,7 @@
       this.resize();addEventListener('resize',this.resize);this.raf=requestAnimationFrame(this.frame);
     }
     resize(){
-      const dpr=Math.min(1.25,root.devicePixelRatio||1);this.w=innerWidth;this.h=innerHeight;
+      const size=root.TRIAD_LAYOUT?.size?.()||{width:Math.min(1920,innerWidth),height:Math.min(1080,innerHeight)},dpr=root.TRIAD_LAYOUT?.density?.()||1;this.w=size.width;this.h=size.height;
       this.canvas.width=Math.round(this.w*dpr);this.canvas.height=Math.round(this.h*dpr);this.ctx.setTransform(dpr,0,0,dpr,0,0);
       this.cx=this.w/2;this.cy=this.h*.46;this.reach=Math.hypot(this.w,this.h)*.56;
     }
@@ -238,9 +238,9 @@
     }
     deal(){
       // Cards sit untranslated until now, so their box centre is the slot centre.
-      const center=[innerWidth/2,innerHeight*.46];
+      const center=[this.fx.cx,this.fx.cy];
       for(const card of this.cards){
-        const box=card.getBoundingClientRect();
+        const box=root.TRIAD_LAYOUT?.rect?.(card)||card.getBoundingClientRect();
         card.style.setProperty('--from-x',`${center[0]-(box.left+box.width/2)}px`);card.style.setProperty('--from-y',`${center[1]-(box.top+box.height/2)}px`);
       }
       this.node.style.setProperty('--gx-deal',`${this.t.deal}ms`);this.node.style.setProperty('--gx-stagger',`${this.t.dealStagger}ms`);
@@ -255,7 +255,7 @@
           card.classList.add('charging');sfx('ultimateCharge',{volume:.36});
           await this.sleep(this.t.ssrCharge);if(this.skipped||this.closed)return;
           card.classList.remove('charging');this.open(card);
-          const box=card.getBoundingClientRect();this.fx.shock(GOLD,.55,box.left+box.width/2,box.top+box.height/2);
+          const box=root.TRIAD_LAYOUT?.rect?.(card)||card.getBoundingClientRect();this.fx.shock(GOLD,.55,box.left+box.width/2,box.top+box.height/2);
           sfx('ultimateImpact',{volume:.5});
           await this.sleep(420);if(this.skipped||this.closed)return;
           await this.cutIn(view);
@@ -352,7 +352,7 @@
     const record=list[heroIndex%list.length],path=call('metaCharacterThumbnail',record)||record.lobbyArt?.path;if(!path)return;
     const cores=typeof CORES!=='undefined'?CORES:[],tint=cores.find(core=>core.id===record.coreId)?.color;
     const apply=()=>{
-      const box=art.getBoundingClientRect(),h=box.height||320,w=box.width||420,k=h*1.62/1536,head=root.TRIAD_LIVE_ILLUSTRATION?.RIGS?.[record.id]?.head||[512,220];
+      const box=root.TRIAD_LAYOUT?.rect?.(art)||art.getBoundingClientRect(),h=box.height||320,w=box.width||420,k=h*1.62/1536,head=root.TRIAD_LIVE_ILLUSTRATION?.RIGS?.[record.id]?.head||[512,220];
       art.style.backgroundImage=`url("${path}")`;art.style.backgroundSize=`${1024*k}px ${1536*k}px`;art.style.backgroundPosition=`${w*.56-head[0]*k}px ${h*.17-head[1]*k}px`;
       if(name)name.innerHTML=`<b>SSR</b>${esc(record.name)}<small>${esc(record.role||'')}</small>`;
       if(panel&&tint)panel.style.setProperty('--rc-tint',tint);

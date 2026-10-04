@@ -91,9 +91,8 @@ body.ui-theme #metaShop .meta-grid>.meta-card:hover,body.ui-theme #lobbyBackgrou
 body.ui-theme #metaShop .meta-card h3{margin:10px 2px 3px;font-size:17px;font-weight:900}
 body.ui-theme #metaShop .meta-card .small.muted{margin:0 2px;color:var(--ui-dim)}
 body.ui-theme #metaShop .background-preview{border-radius:12px;border:1px solid rgba(150,196,255,.12);background-color:#070b14;background-image:radial-gradient(ellipse at 50% 80%,rgba(126,231,255,.16),transparent 65%),linear-gradient(180deg,#101a2c,#060a12)}
-/* breakthrough portraits: bust crop on the live rig's eye line (--hx/--hy from rosterArtFrame) */
-body.ui-theme #characterBreakthroughGrid .character-face-preview{container-type:size;height:190px}
-body.ui-theme #characterBreakthroughGrid .character-face-preview img[data-roster-art]{height:300cqh!important;width:auto!important;max-width:none!important;left:calc(50cqw - var(--hx,.5) * 200cqh)!important;top:calc(20cqh - var(--hy,.12) * 300cqh)!important}
+/* Body-aware portrait framing is shared with selection in triad_roster_art_layout.js. */
+body.ui-theme #characterBreakthroughGrid .character-face-preview{height:190px}
 body.ui-theme #metaShop .card-face-preview{background-size:cover;background-position:center 20%}
 body.ui-theme #metaShop .meta-card button{width:100%;margin-top:10px;border-color:rgba(255,211,122,.4);background:linear-gradient(180deg,rgba(60,48,20,.9),rgba(30,24,12,.9));color:var(--ui-gold);font-weight:900}
 body.ui-theme #metaShop .meta-card button:disabled{color:#8d8a80;border-color:rgba(255,255,255,.08);background:rgba(20,22,28,.8)}

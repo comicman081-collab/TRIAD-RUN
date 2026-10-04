@@ -34,7 +34,7 @@
 <script src="src/triad_audio_director.js?v=1.2.0-native-autoplay-gain20"></script>
 <script src="src/triad_combat_sfx.js?v=1.5.1-demand-pools"></script>
 <script src="assets/characters/roster/triad_character_roster.js?v=1.0.20-gacha-six-complete"></script>
-<script src="src/triad_roster_art_layout.js?v=1.0.0-alpha-bounds"></script>
+<script src="src/triad_roster_art_layout.js?v=1.1.0-body-framing"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sd_manifest.js?v=55-codex-keypose&entry=20261004"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sd_manifest.js?v=28-codex-keypose&entry=20261004"></script>
 <script src="assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sd_manifest.js?v=24-codex-keypose&entry=20261004"></script>
@@ -545,7 +545,7 @@ p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-br
 <script defer src="src/presentation/combat_cinematic_fx.js?v=cinematic-fx-1.2.0"></script>
 <script defer src="src/presentation/combat_tactics.js?v=combat-tactics-1.0.0"></script>
 <script defer src="src/presentation/battle_live_motion.js?v=battle-live-motion-1.0.2"></script>
-<link rel="stylesheet" href="src/presentation/ui_theme.css?v=ui-theme-1.1.0">
+<link rel="stylesheet" href="src/presentation/ui_theme.css?v=ui-theme-1.1.1-roster-framing">
 <script defer src="src/presentation/ui_theme.js?v=ui-theme-1.1.0"></script>
 <link rel="stylesheet" href="src/presentation/title_lobby.css?v=title-lobby-1.0.0">
 <script defer src="src/presentation/live_illustration.js?v=live-illustration-2.2.1"></script>
@@ -1113,9 +1113,9 @@ function lobbyCharacterAsset(record){
 function metaCharacterThumbnail(record){return lobbyCharacterAsset(record)?.path||''}
 // Eye-line anchor of the live rig, so portrait crops centre on the face.
 function rosterHeadVars(record){const head=window.TRIAD_LIVE_ILLUSTRATION?.RIGS?.[record.id]?.head;return head?`--hx:${(head[0]/1024).toFixed(4)};--hy:${(head[1]/1536).toFixed(4)}`:''}
-function rosterArtFrame(record,extraClass=''){
+function rosterArtFrame(record,extraClass='',mode='contain'){
   const path=metaCharacterThumbnail(record);
-  return `<div class="${extraClass}" data-roster-art-frame="${record.id}" style="${rosterHeadVars(record)}">${path?`<img data-roster-art loading="lazy" decoding="async" src="${path}" alt="${esc(record.name)} 일러스트">`:''}</div>`
+  return `<div class="${extraClass}" data-roster-art-frame="${record.id}" data-roster-art-mode="${mode}" style="${rosterHeadVars(record)}">${path?`<img data-roster-art loading="lazy" decoding="async" src="${path}" alt="${esc(record.name)} 일러스트">`:''}</div>`
 }
 let rosterArtFitQueued=false;
 function queueRosterArtFit(){
@@ -1268,7 +1268,7 @@ function renderCharacterBreakthroughs(){
   grid.innerHTML=owned.length?owned.map(record=>{
     const level=META.characterBreakthrough(profile,record.id),maxed=level>=META.BREAKTHROUGH_MAX,cost=maxed?0:META.breakthroughCost(level),stats=CARD_DATA.characterStats(record.coreId,level);
     const statLine=stats?`HP ${stats.maxHp} · ATK ${stats.physicalAttack}/${stats.magicAttack} · DEF ${stats.defense} · REC ${stats.recovery}`:'능력치 데이터 없음';
-    return`<div class="meta-card ${maxed?'selected':''}">${rosterArtFrame(record,'background-preview character-face-preview')}<h3>${esc(record.name)} · 돌파 ${level}/${META.BREAKTHROUGH_MAX}</h3><div class="small muted">${esc(stats?.specialty||record.coreId||'전투원')}<br>${statLine}</div><button ${maxed?'disabled':''} onclick="upgradeProfileCharacter('${record.id}')">${maxed?'최대 돌파 완료':`◈ ${cost.toLocaleString()} 돌파`}</button></div>`
+    return`<div class="meta-card ${maxed?'selected':''}">${rosterArtFrame(record,'background-preview character-face-preview','portrait')}<h3>${esc(record.name)} · 돌파 ${level}/${META.BREAKTHROUGH_MAX}</h3><div class="small muted">${esc(stats?.specialty||record.coreId||'전투원')}<br>${statLine}</div><button ${maxed?'disabled':''} onclick="upgradeProfileCharacter('${record.id}')">${maxed?'최대 돌파 완료':`◈ ${cost.toLocaleString()} 돌파`}</button></div>`
   }).join(''):'<div class="muted">보유한 캐릭터가 없습니다.</div>';
   queueRosterArtFit();
 }
@@ -1391,7 +1391,7 @@ function renderVisualSlotGrid(){
   $('#difficultySummary').textContent=setup.difficulty==='hard'?'HARD · 악몽 탐사':'NORMAL · 일반 탐사';
   grid.innerHTML=ROSTER.records.filter(record=>record.enabled&&profile.ownedCharacterIds.includes(record.id)).map(record=>{const selectedIndex=setup.characters.findIndex(character=>character.id===record.id),core=coreBy(record.coreId);return `<button class="core-card visual-slot roster-card ${selectedIndex>=0?'selected':''}" onclick="toggleRosterCharacter('${record.id}')">
     ${selectedIndex>=0?`<span class="roster-order">${selectedIndex+1}</span>`:''}
-    <div class="visual-slot-stage" data-roster-art-frame="${record.id}"><img data-roster-art loading="lazy" decoding="async" src="${metaCharacterThumbnail(record)}" alt="${esc(record.name)} 투명 로비 일러"><span class="source-badge">${record.id}</span></div>
+    <div class="visual-slot-stage" data-roster-art-frame="${record.id}" data-roster-art-mode="selection"><img data-roster-art loading="lazy" decoding="async" src="${metaCharacterThumbnail(record)}" alt="${esc(record.name)} 투명 로비 일러"><span class="source-badge">${record.id}</span></div>
     <div class="core-art-meta"><div><h3>${esc(record.name)}</h3><div class="muted small">${core?.emoji||'◈'} ${esc(record.role)} · ${esc(record.signatureCardId)}</div></div><span class="badge">${esc(record.coreId)}</span></div>
   </button>`}).join('');
   queueRosterArtFit();

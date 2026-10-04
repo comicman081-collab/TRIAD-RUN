@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
-  "canonicalCommit": "e9c072c0cf60e7904392481ce29329b8b504ba5f",
-  "siteCommit": "0900b64f536c1da1e42cfddbac6330a017df5626",
-  "runtimeBytes": 284349100,
+  "canonicalCommit": "5087a493198061c9c4b969afd98f66e26fc2d2ee",
+  "siteCommit": "e309b36e10bed097271cd0ca416b4243cbff53f9",
+  "runtimeBytes": 284350640,
   "files": [
     {
       "path": "assets/artifacts/candidates/v1/TRIAD-ART-FIRST_ZERO-V1.svg",
@@ -5331,8 +5331,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 340499,
-      "sha256": "2ebf8fe37f3cba5bfbc15bfeb8d6e4231b80b0ba75347e69b632fd9cb8387909"
+      "bytes": 340604,
+      "sha256": "ee9a1b2a4f7ac29ecc2df1bd32582d3ec8661fbd98fa5da38f9c2e717167c7cb"
     },
     {
       "path": "sounds/triad_run_music/ending/roguelike_ending_10_the_run_becomes_a_story.ogg",
@@ -5591,8 +5591,8 @@
     },
     {
       "path": "src/presentation/ui_theme.css",
-      "bytes": 26961,
-      "sha256": "195f16acb87b5398361cc3863984e991ff3e523391076fa1712de9fc72d33000"
+      "bytes": 26673,
+      "sha256": "4de43332f46e9e0d0a574e3a8f7742b4f9da670d94520a8ff9c29a9b91ac22f4"
     },
     {
       "path": "src/presentation/ui_theme.js",
@@ -5656,8 +5656,8 @@
     },
     {
       "path": "src/triad_roster_art_layout.js",
-      "bytes": 2100,
-      "sha256": "75299722d316e5fcaa41279f9b0849f1021e22d42b800e7458a10a155c760a40"
+      "bytes": 3823,
+      "sha256": "3b5f791775e3d073f5f10a1306ff7f13f7e5a085c7dd815b538527b6a59ef3fb"
     },
     {
       "path": "src/triad_stage_progression.js",

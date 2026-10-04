@@ -163,7 +163,8 @@
         this.setVolume(Number(volumeElement.value) / 100);
         volumeElement.addEventListener('input', event => this.setVolume(Number(event.target.value) / 100));
       }
-      Object.keys(CATALOG).forEach(key => this.preload(key));
+      // Unused effects must not compete with title art and the first encounter.
+      // play()/playNow() load each effect pool on demand, including scheduled hits.
       const unlock = () => this.unlockFromGesture();
       this.document?.addEventListener('pointerdown', unlock, { capture: true });
       this.document?.addEventListener('keydown', unlock, { capture: true });

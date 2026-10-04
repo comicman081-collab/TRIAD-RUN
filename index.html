@@ -6,11 +6,12 @@
 <script>(function(){try{var q=new URLSearchParams(location.search);if(!q.has('notitle')&&!(navigator.webdriver&&!q.has('title'))){document.documentElement.classList.add('ts-boot');setTimeout(function(){document.documentElement.classList.remove('ts-boot')},6000)}}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>TRIAD // RUN V0.8 — Deck Building RPG</title>
-<link rel="preload" href="assets/fonts/NotoSansKR-VF.woff?v=2.04" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/fonts/TRIAD-UI-VF.woff?v=20261004" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="assets/fonts/triad-runtime-font.css?v=20261004">
 <link rel="preload" href="sounds/triad_run_music/title/roguelike_title_07_below_the_broken_moon.ogg" as="audio" type="audio/mpeg" fetchpriority="high">
 <script src="combat_data.js"></script>
-<script src="card_character_data.js"></script>
-<script src="src/triad_combat_engine.js?v=combat-engine-1.0.0"></script>
+<script src="card_character_data.js?v=20261004-free-attacks"></script>
+<script src="src/triad_combat_engine.js?v=combat-engine-1.0.1"></script>
 <script src="src/triad_build_archive.js?v=build-archive-1.0.0"></script>
 <script src="src/triad_event_boss.js?v=event-boss-1.0.0"></script>
 <script src="enemy_animation_data.js?v=1.0.0-active-frame-mvp"></script>
@@ -25,35 +26,28 @@
 <script src="combat_vfx_skill_assets_v5.js?v=5.0.0-enemy-spectrum-grammar"></script>
 <script src="combat_vfx_pipeline_v2.js?v=5.0.0-enemy-spectrum-grammar"></script>
 <script src="src/triad_architecture.js"></script>
-<script src="src/triad_transactions.js?v=20261001-action-clock-v5"></script>
+<script src="src/triad_transactions.js?v=20261004-entry-warm-v6"></script>
 <script src="src/triad_meta_progression.js?v=1.3.0-recruit-mileage"></script>
 <script src="src/triad_stage_progression.js?v=1.0.1-open-ended-overflow-hardening"></script>
 <script src="src/triad_exploration.js?v=2.0.0-sparse-roads"></script>
 <script src="src/triad_tutorial.js?v=1.0.0-guided-prestage"></script>
 <script src="src/triad_audio_director.js?v=1.2.0-native-autoplay-gain20"></script>
-<script src="src/triad_combat_sfx.js?v=1.5.0-public-cc0-gain20"></script>
+<script src="src/triad_combat_sfx.js?v=1.5.1-demand-pools"></script>
 <script src="assets/characters/roster/triad_character_roster.js?v=1.0.20-gacha-six-complete"></script>
 <script src="src/triad_roster_art_layout.js?v=1.0.0-alpha-bounds"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sd_manifest.js?v=55-codex-keypose"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sd_manifest.js?v=28-codex-keypose"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sd_manifest.js?v=24-codex-keypose"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-004/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js?v=11-codex-keypose"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js?v=11-codex-keypose"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-006/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js?v=11-codex-keypose"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-007/sd/revisions/r001_gpt_web_v4_keypose_atlases/sd_manifest.js?v=1-seraph-v4"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-008/sd/revisions/r001_gpt_web_v1_keypose_atlases/sd_manifest.js?v=1-lyra-v1"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-009/sd/revisions/r001_authority_texture_atlases/sd_manifest.js?v=1-kaia-v1"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.js?v=2-nox-true-alpha"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.js?v=2-sena-true-alpha"></script>
-<script src="assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sd_manifest.js?v=1-vela-true-alpha"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sd_manifest.js?v=55-codex-keypose&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sd_manifest.js?v=28-codex-keypose&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sd_manifest.js?v=24-codex-keypose&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-004/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js?v=11-codex-keypose&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js?v=11-codex-keypose&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-006/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js?v=11-codex-keypose&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-007/sd/revisions/r001_gpt_web_v4_keypose_atlases/sd_manifest.js?v=1-seraph-v4&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-008/sd/revisions/r001_gpt_web_v1_keypose_atlases/sd_manifest.js?v=1-lyra-v1&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-009/sd/revisions/r001_authority_texture_atlases/sd_manifest.js?v=1-kaia-v1&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.js?v=2-nox-true-alpha&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.js?v=2-sena-true-alpha&entry=20261004"></script>
+<script src="assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sd_manifest.js?v=1-vela-true-alpha&entry=20261004"></script>
 <style>
-@font-face{
-  font-family:"TRIAD Sans";
-  src:url("assets/fonts/NotoSansKR-VF.woff?v=2.04") format("woff");
-  font-style:normal;
-  font-weight:100 900;
-  font-display:swap;
-}
 :root{
   --bg:#0b0d13; --panel:#141824; --panel2:#1b2030; --line:#2b344b;
   --text:#f8faff; --muted:#aebbd1; --accent:#7ee7ff; --good:#8bf0ad;
@@ -550,12 +544,12 @@ p,.muted,.small,.card-desc,.tutorial-lesson p,.tutorial-combat-copy span{word-br
 <script defer src="src/presentation/battle_hand_layout.js?v=20260911-red-zone-hp-top"></script>
 <script defer src="src/presentation/combat_cinematic_fx.js?v=cinematic-fx-1.2.0"></script>
 <script defer src="src/presentation/combat_tactics.js?v=combat-tactics-1.0.0"></script>
-<script defer src="src/presentation/battle_live_motion.js?v=battle-live-motion-1.0.1"></script>
+<script defer src="src/presentation/battle_live_motion.js?v=battle-live-motion-1.0.2"></script>
 <link rel="stylesheet" href="src/presentation/ui_theme.css?v=ui-theme-1.1.0">
 <script defer src="src/presentation/ui_theme.js?v=ui-theme-1.1.0"></script>
 <link rel="stylesheet" href="src/presentation/title_lobby.css?v=title-lobby-1.0.0">
 <script defer src="src/presentation/live_illustration.js?v=live-illustration-2.2.1"></script>
-<script defer src="src/presentation/title_lobby.js?v=title-lobby-1.0.0"></script>
+<script defer src="src/presentation/title_lobby.js?v=title-lobby-1.0.1"></script>
 <link rel="stylesheet" href="src/presentation/gacha_fx.css?v=gacha-fx-1.1.0">
 <script defer src="src/presentation/gacha_fx.js?v=gacha-fx-1.1.1"></script>
 </head>
@@ -1007,7 +1001,7 @@ const CORES=[
 const CARD_PATTERNS=[
 {key:'strike',name:'기본 타격',cost:1,kind:'attack',base:7,text:'피해 {v}'},
 {key:'guard',name:'방어 전개',cost:1,kind:'shield',base:7,text:'아군 전체 보호막 {v}'},
-{key:'quick',name:'퀵 액션',cost:0,kind:'attack',base:4,text:'피해 {v}. 카드 1장 드로우'},
+{key:'quick',name:'퀵 액션',cost:0,kind:'attack',base:4,text:'피해 {v}. 카드 1장 드로우. 캐릭터당 턴에 1회'},
 {key:'heavy',name:'중량 타격',cost:2,kind:'attack',base:15,text:'피해 {v}'},
 {key:'focus',name:'집중 전환',cost:1,kind:'draw',base:2,text:'카드 {v}장 드로우'},
 {key:'battery',name:'에너지 변환',cost:0,kind:'energy',base:1,text:'에너지 +{v}. 전투 중 소멸'},
@@ -1028,7 +1022,7 @@ CARD_PATTERNS.push(
   {key:'inferno',name:'Inferno',cost:2,kind:'attack',base:14,text:'Damage {v}. Burn 2'},
   {key:'volley',name:'Volley',cost:1,kind:'multi',base:4,text:'3 hits × Damage {v}'},
   {key:'bastion',name:'Bastion',cost:2,kind:'shield',base:10,text:'Party shield {v}. Reflect next hit'},
-  {key:'ambush',name:'Ambush',cost:0,kind:'attack',base:9,text:'Damage {v}. Critical when first'},
+  {key:'ambush',name:'Ambush',cost:0,kind:'attack',base:9,text:'피해 {v}. 표식 추가 피해. 캐릭터당 턴에 1회'},
   {key:'renewal',name:'Renewal',cost:1,kind:'heal',base:8,text:'Recover HP {v}. Remove burn'},
   {key:'overload',name:'Overload',cost:2,kind:'energy',base:2,text:'Energy +{v}. Next effect ×2'}
 );
@@ -1121,7 +1115,7 @@ function metaCharacterThumbnail(record){return lobbyCharacterAsset(record)?.path
 function rosterHeadVars(record){const head=window.TRIAD_LIVE_ILLUSTRATION?.RIGS?.[record.id]?.head;return head?`--hx:${(head[0]/1024).toFixed(4)};--hy:${(head[1]/1536).toFixed(4)}`:''}
 function rosterArtFrame(record,extraClass=''){
   const path=metaCharacterThumbnail(record);
-  return `<div class="${extraClass}" data-roster-art-frame="${record.id}" style="${rosterHeadVars(record)}">${path?`<img data-roster-art src="${path}" alt="${esc(record.name)} 일러스트">`:''}</div>`
+  return `<div class="${extraClass}" data-roster-art-frame="${record.id}" style="${rosterHeadVars(record)}">${path?`<img data-roster-art loading="lazy" decoding="async" src="${path}" alt="${esc(record.name)} 일러스트">`:''}</div>`
 }
 let rosterArtFitQueued=false;
 function queueRosterArtFit(){
@@ -1397,7 +1391,7 @@ function renderVisualSlotGrid(){
   $('#difficultySummary').textContent=setup.difficulty==='hard'?'HARD · 악몽 탐사':'NORMAL · 일반 탐사';
   grid.innerHTML=ROSTER.records.filter(record=>record.enabled&&profile.ownedCharacterIds.includes(record.id)).map(record=>{const selectedIndex=setup.characters.findIndex(character=>character.id===record.id),core=coreBy(record.coreId);return `<button class="core-card visual-slot roster-card ${selectedIndex>=0?'selected':''}" onclick="toggleRosterCharacter('${record.id}')">
     ${selectedIndex>=0?`<span class="roster-order">${selectedIndex+1}</span>`:''}
-    <div class="visual-slot-stage" data-roster-art-frame="${record.id}"><img data-roster-art src="${metaCharacterThumbnail(record)}" alt="${esc(record.name)} 투명 로비 일러"><span class="source-badge">${record.id}</span></div>
+    <div class="visual-slot-stage" data-roster-art-frame="${record.id}"><img data-roster-art loading="lazy" decoding="async" src="${metaCharacterThumbnail(record)}" alt="${esc(record.name)} 투명 로비 일러"><span class="source-badge">${record.id}</span></div>
     <div class="core-art-meta"><div><h3>${esc(record.name)}</h3><div class="muted small">${core?.emoji||'◈'} ${esc(record.role)} · ${esc(record.signatureCardId)}</div></div><span class="badge">${esc(record.coreId)}</span></div>
   </button>`}).join('');
   queueRosterArtFit();
@@ -1521,6 +1515,7 @@ function pickUnique(arr,n,used=new Set()){
   const out=[]; for(const x of shuffle(arr)){if(!used.has(x.id)){out.push(x);used.add(x.id);if(out.length===n)break}} return out;
 }
 function buildStartDraft(){
+  window.TRIAD_RUNTIME_PERF?.warmParty(setup.characters);
   if(setup.characters.length!==ROSTER.selectionCount){toast('출전 캐릭터 3명을 선택해 주세요');return}
   if(setup.characters.some(c=>!c.confirmed)){toast('세 캐릭터의 일러를 모두 확정해 주세요');return}
   if(setup.characters.some(c=>!c.coreId)){toast('세 캐릭터의 전투 빌드를 모두 골라 주세요');return}
@@ -1697,8 +1692,9 @@ function tutorialDrawPile(){
 }
 function startCombat(type){
   cancelCombatPresentation();
+  window.TRIAD_RUNTIME_PERF?.warmParty(run.party);
   const combatLog=$('#combatLog');if(combatLog)combatLog.innerHTML='';
-  run.battleSpriteState=Object.fromEntries(run.party.map(character=>[character.id,'enter']));
+  run.battleSpriteState=Object.fromEntries(run.party.map(character=>[character.id,'idle']));
   if(type==='eventBoss')EVENT_BOSS.beginEventCombat(eventBossDeps(),combatEnv(),run.eventBoss.season);
   else{
     const tutorial=type==='tutorial',e=tutorial?tutorialEnemyForBattle():enemyFor(run.stage,type);
@@ -1844,6 +1840,7 @@ function playCardAuthoritative(idx,expectedCardId,expectedToken){
   const card=ALL_CARDS[state.id];if(!card)return false;
   const owner=run.party.find(p=>p.id===card.owner);
   if(!owner||owner.hp<=0){c.actionToken++;retireKoOwnerCards(card.owner);renderCombat();saveRun();toast(`${owner?.name||card.owner} 전투불능`);return false}
+  if(COMBAT_ENGINE.cardTurnBlocked(combatEnv(),card)){toast('이 캐릭터는 이번 턴에 같은 0 AP 공격을 이미 사용했습니다');return false}
   const cost=COMBAT_ENGINE.cardCost(combatEnv(),card);if(cost>c.energy){toast('AP가 부족합니다');return false}
   if(!takeUiInputFence())return false;
   c.inputLocked=true;c.actionToken++;cancelAutoBattleStep();
@@ -2316,8 +2313,9 @@ function renderCombat(){
   $('#hand').innerHTML=c.hand.map((state,i)=>{
     const card=ALL_CARDS[state.id];
     const cost=COMBAT_ENGINE.cardCost(combatEnv(),card);
-    const tutorialHint=tutorial?TUTORIAL.checkCard(run.tutorial,card):{recommended:false},ownerAlive=isPlayableOwner(card.owner),playable=inputOpen&&ownerAlive&&cost<=c.energy,tutorialFocus=tutorial&&tutorialHint.recommended&&Boolean(TUTORIAL.requirement(run.tutorial));
-    const footer=`<div class="small muted" style="margin-top:6px">${ownerAlive?`Lv.${state.level}`:'전투불능 · 카드 비활성'}</div>`;
+    const turnBlocked=COMBAT_ENGINE.cardTurnBlocked(combatEnv(),card);
+    const tutorialHint=tutorial?TUTORIAL.checkCard(run.tutorial,card):{recommended:false},ownerAlive=isPlayableOwner(card.owner),playable=inputOpen&&ownerAlive&&!turnBlocked&&cost<=c.energy,tutorialFocus=tutorial&&tutorialHint.recommended&&Boolean(TUTORIAL.requirement(run.tutorial));
+    const footer=`<div class="small muted" style="margin-top:6px">${!ownerAlive?'전투불능 · 카드 비활성':turnBlocked?'이번 턴 사용 완료':`Lv.${state.level}`}</div>`;
     return `<div class="hand-card ${playable?'playable':'unplayable'} ${ownerAlive?'':'owner-ko'} ${tutorialFocus?'tutorial-focus-ap':''}" data-card-id="${esc(state.id)}" data-card-owner="${esc(card.owner)}"${playable?` onclick="playCardAuthoritative(${i},'${esc(state.id)}',${c.actionToken})"`:''} aria-disabled="${playable?'false':'true'}">${cardHtml(card,state.level,footer)}</div>`
   }).join('');
   renderTutorialCombatCoach();

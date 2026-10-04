@@ -15,7 +15,7 @@
 })(typeof window !== 'undefined' ? window : globalThis, function () {
   'use strict';
 
-  const VERSION = 'combat-engine-1.0.0';
+  const VERSION = 'combat-engine-1.0.1';
 
   const RULES = Object.freeze({
     baseEnergy: 3,
@@ -149,6 +149,11 @@
     return c?.firstCard && hasArtifact(e, 'firstZero') ? 0 : card.cost;
   }
   function isPlayableOwner(e, ownerId) { return e.run.party.some(member => member.id === ownerId && member.hp > 0); }
+  function cardTurnBlocked(e, card) {
+    const c = combatOf(e);
+    return Boolean(c && isLimitedFreeAttack(card) && c.freeActionTurns?.[card.owner + ':' + card.pattern.key] === c.turn);
+  }
+  function isLimitedFreeAttack(card) { return card?.cost === 0 && card.pattern?.kind === 'attack'; }
 
   function retireKoOwnerCards(e, ownerId) {
     const c = combatOf(e); if (!c) return 0;
@@ -286,6 +291,7 @@
     c.partyStatus = { weak: Math.max(0, Number(c.partyStatus?.weak) || 0), exposed: Math.max(0, Number(c.partyStatus?.exposed) || 0) };
     c.scriptIndex = Math.max(0, Math.floor(Number(c.scriptIndex) || 0));
     c.counter = Math.max(0, Number(c.counter) || 0);
+    if (!c.freeActionTurns || typeof c.freeActionTurns !== 'object' || Array.isArray(c.freeActionTurns)) c.freeActionTurns = {};
     c.mode = c.mode || c.enemy.mode || 'run';
     if (c.intent && !c.intent.kind) c.intent = { ...c.intent, kind: 'attack', base: c.intent.damage, targetId: null };
     if (!c.engineVersion) c.engineVersion = VERSION;
@@ -447,7 +453,7 @@
   function createCombat(e, { type, enemy, encounterVariant = 'normal', zoneTier = 1, mode = 'run', difficulty = 'normal', drawPile = [], eventRules = null }) {
     return {
       engineVersion: VERSION, type, mode, difficulty, encounterVariant, zoneTier, phase: 'PLAYER', inputLocked: false, actionToken: 0,
-      enemy, turn: 1, energy: e.baseEnergy, draw: drawPile, discard: [], hand: [], exhaust: [], firstCard: true, turnDamage: 0,
+      enemy, turn: 1, energy: e.baseEnergy, draw: drawPile, discard: [], hand: [], exhaust: [], firstCard: true, turnDamage: 0, freeActionTurns: {},
       intent: null, counter: 0, scriptIndex: 0, partyStatus: { weak: 0, exposed: 0 }, breakGauge: null, breaks: 0,
       score: mode === 'eventBoss' ? 0 : undefined, eventRules, actionLog: mode === 'eventBoss' ? [] : undefined
     };
@@ -497,10 +503,12 @@
     const card = e.cards[state.id]; if (!card) return { ok: false, reason: 'UNKNOWN' };
     const owner = e.run.party.find(member => member.id === card.owner);
     if (!owner || owner.hp <= 0) { retireKoOwnerCards(e, card.owner); return { ok: false, reason: 'KO', card, owner }; }
+    if (cardTurnBlocked(e, card)) return { ok: false, reason: card.pattern.key === 'quick' ? 'QUICK_USED' : 'FREE_ACTION_USED', card, owner };
     const cost = cardCost(e, card);
     if (cost > c.energy) return { ok: false, reason: 'ENERGY', card, cost };
     recordAction(c, { t: 'card', turn: c.turn, index, id: state.id });
     const enemyHpBefore = c.enemy.hp;
+    if (isLimitedFreeAttack(card)) { c.freeActionTurns ??= {}; c.freeActionTurns[card.owner + ':' + card.pattern.key] = c.turn; }
     c.energy -= cost; c.hand.splice(index, 1); e.run.stats.cardsPlayed++;
     const previousOwner = e.run.lastOwner; e.run.lastOwner = card.owner;
     c.activeCard = { ownerId: card.owner, cardKey: card.pattern.key };
@@ -517,7 +525,8 @@
     switch (key) {
       case 'strike': case 'heavy': hitFor(v + comboBonus); break;
       case 'guard': addShield(e, v); break;
-      case 'quick': hitFor(v + comboBonus); drawCards(e, 1); break;
+      case 'quick':
+        hitFor(v + comboBonus); drawCards(e, 1); break;
       case 'focus': drawCards(e, v); if (secondary) addShield(e, secondary); break;
       case 'battery': c.energy += v; if (secondary) addShield(e, secondary); exhaust = true; break;
       case 'mark': hitFor(secondary + comboBonus); addEnemyStatus(e, 'mark', v + statusBonus + (perk?.statusBonus || 0)); break;
@@ -745,14 +754,14 @@
     const c = combatOf(e); if (!c) return null;
     return c.hand.map((state, index) => {
       const card = e.cards[state.id]; if (!card || !isPlayableOwner(e, card.owner)) return null;
-      if (cardCost(e, card) > c.energy) return null;
+      if (cardTurnBlocked(e, card) || cardCost(e, card) > c.energy) return null;
       return scoreAutoCard(e, card, state, index);
     }).filter(Boolean).sort((a, b) => b.score - a.score)[0] || null;
   }
 
   return Object.freeze({
     VERSION, RULES, TUNING, PROFILES,
-    env, hasArtifact, starFor, cardValue, cardCost, isPlayableOwner,
+    env, hasArtifact, starFor, cardValue, cardCost, isPlayableOwner, cardTurnBlocked,
     retireKoOwnerCards, enforceKoCardInvariant, drawOne, drawCards, settleResolvedCard, replacePlayedCard,
     addShieldToMember, addShield, healLowest, healAllies,
     archetypeKey, encounterRank, tuneMonster, createEnemy, normalizeCombat, planIntent, refreshIntent,

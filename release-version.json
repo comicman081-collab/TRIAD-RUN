@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-02",
-  "canonicalCommit": "b84b39e28aa9e09174eec9901d3f3939d0166045",
-  "siteCommit": "abf45b8a0784e81aa7fd83c8e921c6f62dc10a55",
-  "runtimeBytes": 266481979,
+  "date": "2026-10-04",
+  "canonicalCommit": "d0b119c667f3f76f8143588529f9c21a0b0d7bc1",
+  "siteCommit": "fff1088569f8591515362dc032f99a37d0a59d38",
+  "runtimeBytes": 284348735,
   "files": [
     {
       "path": "assets/artifacts/candidates/v1/TRIAD-ART-FIRST_ZERO-V1.svg",
@@ -491,13 +491,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sd_manifest.js",
-      "bytes": 8737,
-      "sha256": "56562eae39b1248877158738c670c88f97cc63a95a621f0c7a53be0793b198c6"
+      "bytes": 8759,
+      "sha256": "555d52ee9e74f2315aedb3bf80382b55e33d535e3f081306591a07dc4f33a369"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sd_manifest.json",
-      "bytes": 8634,
-      "sha256": "8220235c39d9b17dad0630528af069d412e3bd5d39888c2ae94e9d1e3989d41e"
+      "bytes": 8656,
+      "sha256": "e2223985b45a1a7f945a467eb116bcdb9d80986db09367c9cc8e6ec7e67b4bd3"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 2174858,
+      "sha256": "77831381c968e81d2343aa3f4addbb97d87877e6e3e475feb6b06fb9281a154a"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 136628,
+      "sha256": "4311f1562b8462dc167569e4dac278505c83e53bacac1f00da8c61906b0eee2a"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-001/sd/revisions/r055_codex_keypose_atlases/sites_shared_q92.webp",
@@ -516,13 +526,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sd_manifest.js",
-      "bytes": 8438,
-      "sha256": "60ac5974db7cea7ecd79d45cc55919fa08d4f65c5de5f06c73c833f3212c67f5"
+      "bytes": 8457,
+      "sha256": "e9de46b1cb315dfe14d3b0e70b4356207a3e9a23d69c37b0f59af4e74bc94c33"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sd_manifest.json",
-      "bytes": 8335,
-      "sha256": "b64dcc4ad9cdc4e9ee6b98cc55c9a23c0b8ded19fcfd1f51eff8f330971960aa"
+      "bytes": 8354,
+      "sha256": "3d6e41897e5a564113ce8203ccaa29d1512df5dfb9dda1cff962fcd5a3b44b63"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 1618378,
+      "sha256": "ae585557a6284fcdc05d40d90f8d655bcf212d991aa53dd086fb6ef688331e45"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 102840,
+      "sha256": "184d7654f6ce4d5c70fe5cff1195ad4bb39262d1ad1491ebe3f0fc7f8991a6aa"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-002/sd/revisions/r028_codex_keypose_atlases/sites_shared_q92.webp",
@@ -536,13 +556,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sd_manifest.js",
-      "bytes": 8436,
-      "sha256": "633e15c7e8ea3d30b97668d33c02aa3ec6ece8359811ffb60d038963a515860b"
+      "bytes": 8455,
+      "sha256": "276de2ae88fb2f2d9b602b24086e642c61086d33d78bec4bba5d4a516a1f5da9"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sd_manifest.json",
-      "bytes": 8333,
-      "sha256": "59d00c442b08a1bea8f6b7adb96b7cebb5dd1c114d55217ecabb8368ad6699ee"
+      "bytes": 8352,
+      "sha256": "7279e3b8b909ccd8c16be75634b67115613da717c42c16aa9e9b746ba7d1a358"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 2257528,
+      "sha256": "c3764408c7653430a521c51f9cbe426e78854e3d1073825df80061aa255f4bbd"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 157942,
+      "sha256": "622fce869595883a4fc9b1ede2b18a2f410e380e06b6d2ce8e72241cd4c59034"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-003/sd/revisions/r024_codex_keypose_atlases/sites_shared_q92.webp",
@@ -556,13 +586,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-004/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js",
-      "bytes": 8502,
-      "sha256": "e7ca9bdfad4ecc071ca24ae33d0a0491cb2134a78c4cba5da0af7da2222c39f2"
+      "bytes": 8521,
+      "sha256": "a2d8bb91fc11b1a0b0f5a6c32e1a055fc44682902c53110215186d9a1ff314a0"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-004/sd/revisions/r011_codex_keypose_atlases/sd_manifest.json",
-      "bytes": 8399,
-      "sha256": "ac7b2af3e38c3194d906d992b1bd63f4b34e692f8f733a4f8285dad3f456773a"
+      "bytes": 8418,
+      "sha256": "848fa93ca79c088b224a9f15ebbe1d6a01945a0c2e6b132958976adb7ce74b89"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-004/sd/revisions/r011_codex_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 2179162,
+      "sha256": "89cf4de2b95424f4a576d5e3e39edb487c574c51954d3b14720918f42870d7b9"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-004/sd/revisions/r011_codex_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 145332,
+      "sha256": "6bf63f2327298d3ca817f011ae2219712847f06f9afdb08cb6ca8dc8cff8356b"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-004/sd/revisions/r011_codex_keypose_atlases/sites_shared_q92.webp",
@@ -576,13 +616,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js",
-      "bytes": 8492,
-      "sha256": "ab2708b452d1cc1ed65a237f8a67df19bb7eee39e03793c0941d4681d76f07ac"
+      "bytes": 8511,
+      "sha256": "c4a955cbb8798cba61d757c5df38665109467155380a36a8823593370a597f21"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r011_codex_keypose_atlases/sd_manifest.json",
-      "bytes": 8389,
-      "sha256": "9c9e85a5753892b7b65ce5b6a0e74cd205738f03ed7b788ba523bbc4598a0a56"
+      "bytes": 8408,
+      "sha256": "2762afb992cb9f4fcac5a4798e76dae1b0eb2255a90a77958e8d13d26119c406"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r011_codex_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 1768442,
+      "sha256": "85f578bd28c2127a4068b8415c1ca4ef18f4c3c2b1fdd411c10ae1b354a77933"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r011_codex_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 115938,
+      "sha256": "b5b31eba8c0e77d0ba8b5c6409c69e52f39aa0359826584dc6d787002b94c38c"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-005/sd/revisions/r011_codex_keypose_atlases/sites_shared_q92.webp",
@@ -596,13 +646,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-006/sd/revisions/r011_codex_keypose_atlases/sd_manifest.js",
-      "bytes": 8472,
-      "sha256": "7357e3db148d50862779d9e803edc2657c8ef9098b480ef681dd4cce83bde95f"
+      "bytes": 8491,
+      "sha256": "d7930b4ba3627cb5f86e0a02f6c868862a2f65be637131c432670aab5b02f677"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-006/sd/revisions/r011_codex_keypose_atlases/sd_manifest.json",
-      "bytes": 8369,
-      "sha256": "d670c9aad4921f728e895af15333666967da735bedcd59b7d88379a1b343497f"
+      "bytes": 8388,
+      "sha256": "d3150c6c37644d9ef2821d5fdbc49482eb9d02137ae405434d71e4b64a2661a8"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-006/sd/revisions/r011_codex_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 2315916,
+      "sha256": "9c9aa8507cca04d748f342165bce173549b67b0bcb7d0a2d4beab1f963121aaf"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-006/sd/revisions/r011_codex_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 157700,
+      "sha256": "0840fd5fb9617ed35a58543df4709e659ab19df39b0aabe06642e2bcd88c9911"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-006/sd/revisions/r011_codex_keypose_atlases/sites_shared_q92.webp",
@@ -616,13 +676,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-007/sd/revisions/r001_gpt_web_v4_keypose_atlases/sd_manifest.js",
-      "bytes": 5794,
-      "sha256": "f76bc89001d18c7867fdcce7a46c44a353141c86ee622bb3b2c47857ca4a6d0b"
+      "bytes": 5843,
+      "sha256": "2ac162d3a03b69dde3f7383ddfb44812ee678f3716fd2b4ed900ac68b4661575"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-007/sd/revisions/r001_gpt_web_v4_keypose_atlases/sd_manifest.json",
-      "bytes": 5691,
-      "sha256": "2b4df37e41758b7084e2917c22a472ef6a2c0cc3d7a27fb12e3905ceb8549493"
+      "bytes": 5740,
+      "sha256": "4891ef2bb6672dedbafc79c623277cbee259019de78d0ffdf50c9e304220474a"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-007/sd/revisions/r001_gpt_web_v4_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 1068106,
+      "sha256": "c65afc43f5a50009fa66b3b9b455e4699fb8838008b2c647cd05b6d109bf214c"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-007/sd/revisions/r001_gpt_web_v4_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 349032,
+      "sha256": "2899e930318747e8a45e5960244601ebd562d96a73f05fd46bab67c9308a2ee9"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-007/sd/revisions/r001_gpt_web_v4_keypose_atlases/sites_shared_q98.webp",
@@ -636,13 +706,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-008/sd/revisions/r001_gpt_web_v1_keypose_atlases/sd_manifest.js",
-      "bytes": 5794,
-      "sha256": "51397f871847b705c33334a5a3157a251035526374df15189cc6a74184edafc6"
+      "bytes": 5843,
+      "sha256": "0c115cb73f3463fd9aa2927589f5db06e46392995e82ee2a96b29043c7b3e0e5"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-008/sd/revisions/r001_gpt_web_v1_keypose_atlases/sd_manifest.json",
-      "bytes": 5691,
-      "sha256": "dd30da337d679e5a95c66796c158bcf7f9934294c30d8d428931ab42254ce2a7"
+      "bytes": 5740,
+      "sha256": "814928fe42984629a79c25d06d865388eebf96b762af3bd38fa9902ceed6bbfa"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-008/sd/revisions/r001_gpt_web_v1_keypose_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 1171418,
+      "sha256": "87073be14e85109a8d2ca54c8d6127ac1765dc856d697de3dcf777373108e9cb"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-008/sd/revisions/r001_gpt_web_v1_keypose_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 360890,
+      "sha256": "5d3998351e4258d68aa74359b3f95bca2ae4cb9afaf9023d05b83d8ed7f0fbe2"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-008/sd/revisions/r001_gpt_web_v1_keypose_atlases/sites_shared_q95.webp",
@@ -656,13 +736,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-009/sd/revisions/r001_authority_texture_atlases/sd_manifest.js",
-      "bytes": 5884,
-      "sha256": "5188b0696dd9ec4dc4617924cf322d2c9ec8ea20a94ffbd9579ada40ff4e8663"
+      "bytes": 5897,
+      "sha256": "830a178a904ee0962b2b5296a4380b4057fb3ba3cc171c164f8c611aaaca9443"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-009/sd/revisions/r001_authority_texture_atlases/sd_manifest.json",
-      "bytes": 5781,
-      "sha256": "32e86fbcb360424a52175e17adf11a4f84681fb4820d03a7096095ea889e861f"
+      "bytes": 5794,
+      "sha256": "9c24d1582223e9f7f455587c84994777519fba254289602d449d50f269f73ccd"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-009/sd/revisions/r001_authority_texture_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 92934,
+      "sha256": "92771a86ebb7e20138fbeaacf8653bdfc2b7f72bf998b2b5c086a139bd730c22"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-009/sd/revisions/r001_authority_texture_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 92934,
+      "sha256": "92771a86ebb7e20138fbeaacf8653bdfc2b7f72bf998b2b5c086a139bd730c22"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-009/sd/revisions/r001_authority_texture_atlases/sites_shared_qLOSSLESS.webp",
@@ -676,13 +766,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.js",
-      "bytes": 5902,
-      "sha256": "712fa0902fb2394126657f66a49d7882390827eb05280766f332ae5d6ad14a20"
+      "bytes": 5915,
+      "sha256": "63dfdb546ef21eb2fe9ef0f57758bc40f8ceaec6c447beb54a52cd2e92472378"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.json",
-      "bytes": 5799,
-      "sha256": "477bd3c3923978af6b96a82bf34e77061f613d956421cbb2bd621f78bd346513"
+      "bytes": 5812,
+      "sha256": "b6a7e1636d4a0e3ff58cb5b46aa55e8273ea8494633a23d64919d5b7f9cb4337"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r002_gpt_web_true_alpha_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 206626,
+      "sha256": "8b7ff233a4f4ea553775dfe3c63dd861635de2a3aa6d213defa10000f51dbb80"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r002_gpt_web_true_alpha_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 206626,
+      "sha256": "8b7ff233a4f4ea553775dfe3c63dd861635de2a3aa6d213defa10000f51dbb80"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-010/sd/revisions/r002_gpt_web_true_alpha_atlases/sites_shared_qLOSSLESS.webp",
@@ -696,13 +796,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.js",
-      "bytes": 5794,
-      "sha256": "b99da967f45c3e3b6b89b9712186bc94abf8a69ee08bc3fbc026b8803d9c705a"
+      "bytes": 5843,
+      "sha256": "36dd346a38be7370721e3b6a9a1f64303acb561fc9f9d4dfd4e6ad2917ef9e09"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sd_manifest.json",
-      "bytes": 5691,
-      "sha256": "54cb75be0d8bbf3df309838616ffe9c259177b6d574ba77e1b892f9c589d1fe5"
+      "bytes": 5740,
+      "sha256": "3993e448f02e0d1518cdea5b130eb9378e9e9b4395735763b5819757ede2727f"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 249420,
+      "sha256": "598510d1fc42d5c5573f06d562567da500d570b448381e6a9a5e41d75d84aa4a"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 249420,
+      "sha256": "598510d1fc42d5c5573f06d562567da500d570b448381e6a9a5e41d75d84aa4a"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-011/sd/revisions/r002_gpt_web_true_alpha_atlases/sites_shared_q92.webp",
@@ -716,13 +826,23 @@
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sd_manifest.js",
-      "bytes": 5902,
-      "sha256": "c737d215c29cb73d56b4f9263077ee4d96ab9ff088d70de5caa42f95d4ad4a1d"
+      "bytes": 5915,
+      "sha256": "eb15eab26db36f5f2f993f66e517467ac2705e1eb748a1e5160eec5e79ba3c21"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sd_manifest.json",
-      "bytes": 5799,
-      "sha256": "61ea6b67719776dd00b96029c3dac6b3a28f3546dc4b50d868923fcb1393b4fc"
+      "bytes": 5812,
+      "sha256": "886e016af360e2a76df216f65a9a28cf707b75e1cdfa056518fa35f3ee9b2d60"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sites_entry_lossless_v2.webp",
+      "bytes": 250492,
+      "sha256": "9747cc84dc0b4abf669d7adf25dac918fb544b3013584ceaf0ce304e0c63885b"
+    },
+    {
+      "path": "assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sites_idle_lossless_v3.webp",
+      "bytes": 250492,
+      "sha256": "9747cc84dc0b4abf669d7adf25dac918fb544b3013584ceaf0ce304e0c63885b"
     },
     {
       "path": "assets/characters/roster/TRIAD-CHAR-012/sd/revisions/r001_gpt_web_true_alpha_atlases/sites_shared_qLOSSLESS.webp",
@@ -1273,6 +1393,16 @@
       "path": "assets/fonts/README.md",
       "bytes": 515,
       "sha256": "8e4c9b47fc78e49ac3231014c3c24ed4e3c13d1b945facbde2934e5d13f5a0e4"
+    },
+    {
+      "path": "assets/fonts/TRIAD-UI-VF.woff",
+      "bytes": 134056,
+      "sha256": "8b1d4b3e9a18dc339df4cabe4f4180c17c35620a8d2d828acc83878289df3a4c"
+    },
+    {
+      "path": "assets/fonts/triad-runtime-font.css",
+      "bytes": 51718,
+      "sha256": "bac2a7de63ab88a404836851b104747e1e9cee0a655df1f5b86604ebf1e6a72e"
     },
     {
       "path": "assets/vendor/pixi-8.20.1/LICENSE",
@@ -5156,8 +5286,8 @@
     },
     {
       "path": "card_character_data.js",
-      "bytes": 11657,
-      "sha256": "f7fefc4c8459e0ecbd00fe28dc23ef5e607279a430a845b07fb88d015863ff5a"
+      "bytes": 11554,
+      "sha256": "3012ea504ef95f0869ffe7e1e0824d26ccc51fdccb14f8e3d959c4ab3075af06"
     },
     {
       "path": "combat_data.js",
@@ -5201,8 +5331,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 339891,
-      "sha256": "c27dd05bf600703819c6fb46248346876dfde6fbfaff191f4cc7f53737eb2ab3"
+      "bytes": 340499,
+      "sha256": "de2665afdaa6b7244c0b99f5d7e192199d379d93a5b8c02bb38dcba837e2343c"
     },
     {
       "path": "sounds/triad_run_music/ending/roguelike_ending_10_the_run_becomes_a_story.ogg",
@@ -5321,8 +5451,8 @@
     },
     {
       "path": "src/presentation/battle_live_motion.js",
-      "bytes": 10982,
-      "sha256": "fde4e661542eb9994337e9eef83cc0b06a4ec76d01035dfa9ff5ca52f5e09b3c"
+      "bytes": 11193,
+      "sha256": "85fc962e7cd2e4c0731a56b17887d966c78cd422d75d2b54949abb76b3c9dd26"
     },
     {
       "path": "src/presentation/boss_art_replacement_geometry.js",
@@ -5456,8 +5586,8 @@
     },
     {
       "path": "src/presentation/title_lobby.js",
-      "bytes": 17313,
-      "sha256": "7c9faa3b111e803c98cfb399dfab35fdd8649d196abe42b6ce3f2c298a1fec2c"
+      "bytes": 17434,
+      "sha256": "615d318d8b31a785587cdb394eab296f59840d99d67e3ec433da34950765db63"
     },
     {
       "path": "src/presentation/ui_theme.css",
@@ -5491,13 +5621,13 @@
     },
     {
       "path": "src/triad_combat_engine.js",
-      "bytes": 47200,
-      "sha256": "a94c22eb6cdc78fd4b1349390e5e89a98d3d6fff4c6389650e481e1904897465"
+      "bytes": 47206,
+      "sha256": "78e847164dfe5bdce16e09f0a88e6a177f7d67fca448317c52037bc36b789d2e"
     },
     {
       "path": "src/triad_combat_sfx.js",
-      "bytes": 24359,
-      "sha256": "15e7f30f58e8ef942feef87c5335488a76e6ed1916999723412179446014f0a6"
+      "bytes": 24080,
+      "sha256": "b819ef25e291f6aed6cfcad5868e5fc34d889f15f6d8de7509d1a70ccbe79c38"
     },
     {
       "path": "src/triad_event_boss.js",
@@ -5536,8 +5666,8 @@
     },
     {
       "path": "src/triad_transactions.js",
-      "bytes": 23450,
-      "sha256": "cf074402da6143282c4846900983a6e77eb7ef6d43269f5dcebaf1b565a4e321"
+      "bytes": 24208,
+      "sha256": "9948081c1109506c48aaca786f29f2176915e4ad75c3e10b5c3d71076d5fa5bb"
     },
     {
       "path": "src/triad_tutorial.js",

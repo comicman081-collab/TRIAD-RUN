@@ -7,7 +7,7 @@
    (navigator.webdriver) skips the title unless the URL carries ?title. */
 (function(root){
   'use strict';
-  const VERSION='title-lobby-1.0.0';
+  const VERSION='title-lobby-1.0.1';
   const SCENES=Object.freeze({
     FIRE:{bg:'stage07_b_collapsed_megabridge',tint:'#ff8a4a'},
     LIGHTNING:{bg:'stage09_b_offshore_platform',tint:'#7fdcff'},
@@ -16,7 +16,7 @@
     NATURE:{bg:'stage08_b_quarantine_greenhouse',tint:'#8ff0b0'},
     RIFT:{bg:'stage10_b_orbital_sanctum',tint:'#c890ff'}
   });
-  const NOTES=['전투 연출 강화 · 필살기 컷인, 보스 경고와 격파 연출','캐릭터 라이브 모션 · 로비 캐릭터가 숨 쉬고 반응합니다','지휘 로비 개편 · 한 화면에서 출격과 성장 메뉴를 바로 선택','전투 HUD · 아군과 적의 HP 수치 표시'];
+  const NOTES=['PC 첫 실행과 전투 진입 로딩 최적화','0 AP 공격 · 퀵 액션과 매복은 같은 캐릭터의 같은 카드 종류당 턴에 1회','전투 연출 강화 · 필살기 컷인, 보스 경고와 격파 연출','캐릭터 라이브 모션 · 로비 캐릭터가 숨 쉬고 반응합니다','지휘 로비 개편 · 한 화면에서 출격과 성장 메뉴를 바로 선택','전투 HUD · 아군과 적의 HP 수치 표시'];
   const params=new URLSearchParams(location.search);
   const reducedMotion=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch{return false}};
   const call=(name,...args)=>{const fn=root[name];return typeof fn==='function'?fn(...args):undefined};
@@ -59,7 +59,7 @@
 <div class="ts-logo">${EMBLEM}<div class="ts-word">TRIAD</div><div class="ts-sub"><b><em>//</em>RUN</b></div><div class="ts-tag">TACTICAL DECK RPG</div></div>
 <div class="ts-start"><div class="ts-loading"><div class="bar"><i></i></div><span>데이터 동기화 중 0%</span></div><div class="ts-tap"><b>화면을 터치하여 시작</b><small>TOUCH TO START</small></div></div>
 <div class="ts-sys"><button type="button" class="ts-notice-btn" aria-label="업데이트 소식">✉</button><button type="button" class="ts-sound" aria-label="배경음악 켜기/끄기">♫</button></div>
-<div class="ts-foot"><span>VER 0.8.0 · BUILD 2026.09</span><span>© TRIAD // RUN</span></div>
+<div class="ts-foot"><span>VER 0.8 · BUILD 2026.10.04</span><span>© TRIAD // RUN</span></div>
 <div class="ts-layer ts-flash"></div><div class="ts-layer ts-black"></div>`;
     node.querySelector('.ts-bg').style.backgroundImage=`url("${new URL(`assets/battle_backgrounds/${scene.bg}.webp`,document.baseURI).href}")`;
     const host=node.querySelector('.ts-char');
@@ -77,7 +77,7 @@
     let done=0;const bar=node.querySelector('.ts-loading i'),label=node.querySelector('.ts-loading span'),t0=performance.now();
     const tick=()=>{const pct=Math.round(done/loads.length*100);bar.style.width=pct+'%';label.textContent=`데이터 동기화 중 ${pct}%`};
     loads.forEach(p=>Promise.resolve(p).then(()=>{done++;tick()}));
-    Promise.all(loads).then(()=>new Promise(r=>setTimeout(r,Math.max(0,(options.instant?300:2300)-(performance.now()-t0))))).then(()=>{if(titleNode===node)node.classList.add('ts-ready')});
+    Promise.all(loads).then(()=>new Promise(r=>setTimeout(r,Math.max(0,300-(performance.now()-t0))))).then(()=>{if(titleNode===node)node.classList.add('ts-ready')});
     node.addEventListener('pointermove',event=>{if(reducedMotion())return;const x=event.clientX/innerWidth-.5,y=event.clientY/innerHeight-.5;node.querySelector('.ts-parallax').style.transform=`translate3d(${-x*18}px,${-y*10}px,0) scale(1.02)`});
     node.querySelector('.ts-sound').addEventListener('click',event=>{event.stopPropagation();call('toggleBgm')});
     node.querySelector('.ts-notice-btn').addEventListener('click',event=>{event.stopPropagation();const open=node.querySelector('.ts-notice');if(open){open.remove();return}const panel=document.createElement('div');panel.className='ts-notice';panel.innerHTML='<h3>업데이트 소식 · VER 0.8</h3><ul></ul>';panel.querySelector('ul').innerHTML=NOTES.map(n=>`<li></li>`).join('');panel.querySelectorAll('li').forEach((li,i)=>li.textContent=NOTES[i]);panel.addEventListener('click',e=>e.stopPropagation());node.appendChild(panel)});
@@ -191,10 +191,9 @@
     wrap('renderLobby',()=>syncLobby());
     wrap('showScreen',(result,[id])=>{if(id==='home')enterLobby(false);else lobbyLive?.pause();if(id==='home')lobbyLive?.play()});
     root.TRIAD_TITLE=Object.freeze({version:VERSION,show:()=>show({instant:true}),hide:leave,get open(){return Boolean(titleNode)}});
-    syncLobby();
     const automated=navigator.webdriver===true&&!params.has('title');
     if(!params.has('notitle')&&!automated&&document.querySelector('.screen.active')?.id==='home')show();
-    else document.documentElement.classList.remove('ts-boot');
+    else {syncLobby();document.documentElement.classList.remove('ts-boot')}
   }
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',install,{once:true}):install();
 })(globalThis);

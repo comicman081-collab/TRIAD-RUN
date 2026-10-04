@@ -15,8 +15,9 @@
    missing the actor's own renderer keeps drawing. */
 (function(root){
   'use strict';
-  const VERSION='battle-live-motion-1.0.1';
-  const STRIPS=36;
+  const VERSION='battle-live-motion-1.0.2';
+  const STRIPS=18;
+  const FRAME_MS=1000/30;
   const TAU=Math.PI*2;
   const reducedMotion=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch{return false}};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -92,8 +93,9 @@
     const clip=actor.manifest?.clips?.[actor.clip];if(!clip||!actor.atlases?.[actor.clip])return false;
     const s=stateFor(actor),key=actor.clip;
     const blend=poseBlend(now-actor.started,clip,Boolean(clip.loop));
-    const A=sdLayer(actor,blend.a),B=blend.w>0?sdLayer(actor,blend.b):null;if(!A)return false;
-    return paint(actor,s,key,A,B,blend.w,SD_CLIP_LIFE[actor.clip]??.4,now,dt,blend.a);
+    const samePose=(clip.frameMap?.[blend.a]??blend.a)===(clip.frameMap?.[blend.b]??blend.b);
+    const A=sdLayer(actor,blend.a),B=blend.w>0&&!samePose?sdLayer(actor,blend.b):null;if(!A)return false;
+    return paint(actor,s,key,A,B,samePose?0:blend.w,SD_CLIP_LIFE[actor.clip]??.4,now,dt,blend.a);
   }
 
   /* ------------------------------------------------------------------ monsters */
@@ -146,7 +148,7 @@
     try{if(typeof enemyBattleActor!=='undefined'&&enemyBattleActor)list.push(['enemy',enemyBattleActor])}catch{}
     return list;
   }
-  let last=performance.now(),enabled=true;
+  let last=performance.now(),lastPaint=0,enabled=true;
   function release(actor){
     // Hand drawing back to the actor's own renderer on its next tick.
     if(actor.canvas?.dataset)actor.canvas.dataset.liveMotion='0';
@@ -154,6 +156,8 @@
   }
   function frame(now){
     requestAnimationFrame(frame);
+    if(now-lastPaint<FRAME_MS)return;
+    lastPaint=now;
     const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;
     if(document.hidden||!document.getElementById('combat')?.classList.contains('active'))return;
     for(const [kind,actor] of actors()){

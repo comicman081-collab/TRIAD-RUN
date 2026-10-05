@@ -60,7 +60,9 @@
  function arrange(){
   if(inspected&&!inspected.isConnected)clear();
   const cards=[...hand.querySelectorAll('.hand-card')],width=handWidth;
-  const step=Math.max(0,Math.min(cardWidth*.88,(width*.66-cardWidth)/Math.max(1,cards.length-1)));
+  // Reserve the PC side controls even when a large hand reaches the fan limit.
+  const fanWidth=globalThis.TRIAD_LAYOUT?.snapshot?.().fixed1080?Math.min(width*.66,Math.max(cardWidth,width-832)):width*.66;
+  const step=Math.max(0,Math.min(cardWidth*.88,(fanWidth-cardWidth)/Math.max(1,cards.length-1)));
   cards.forEach((card,i)=>{
    const offset=i-(cards.length-1)/2,normalized=offset/Math.max(1,(cards.length-1)/2);
    card.style.setProperty('--fan-x',`${offset*step}px`);card.style.setProperty('--fan-y',`${Math.abs(normalized)*4}px`);card.style.setProperty('--fan-angle',`${normalized*3}deg`);card.style.setProperty('--fan-order',String(i+1));

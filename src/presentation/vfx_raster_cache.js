@@ -155,9 +155,24 @@
       result.particle.style.visibility='hidden';const state=acquire(result.particle);if(state){state.entry.warmKeys??=new Set();state.entry.warmKeys.add(key);}result.particle.getAnimations().forEach(a=>a.cancel());result.particle.remove();
     }
   }
+  function introSignatures(combat){
+    if(combat.turn!==1||(Number(combat.actionToken)||0)!==0||combat.phase!=='PLAYER'||combat.inputLocked)return[];
+    const party=new Set(run.party.map(member=>member.id)),owners=new Set(),selected=[];
+    // A selected signature can start in the deck instead of the opening hand.
+    // Read only this encounter's inventory; never invent an unowned card.
+    for(const pile of [combat.hand,run.deck,combat.draw])for(const state of pile||[]){
+      const card=ALL_CARDS[typeof state==='string'?state:state?.id];
+      if(!card||!party.has(card.owner)||owners.has(card.owner)||card.pattern?.key!=='signature')continue;
+      owners.add(card.owner);selected.push(card);if(selected.length===3)return selected;
+    }
+    return selected;
+  }
   function warmHand(){
     warmTimer=0;if(unavailable||typeof run==='undefined'||!run?.combat||!document.getElementById('combat')?.classList.contains('active'))return;
-    const cards=run.combat.hand.map(state=>root.combatCardVfxEvent(ALL_CARDS[state.id])),enemy=run.combat.enemy,enemyEvent=root.combatEnemyVfxEvent(enemy,run.party[0]?.id,run.combat.intent?.skillId||enemy.data?.skills?.[0]?.id);
+    const combat=run.combat,cards=combat.hand.map(state=>root.combatCardVfxEvent(ALL_CARDS[state.id])),enemy=combat.enemy,enemyEvent=root.combatEnemyVfxEvent(enemy,run.party[0]?.id,combat.intent?.skillId||enemy.data?.skills?.[0]?.id);
+    const openingIds=new Set(combat.hand.map(state=>state.id)),sequence=typeof battleVfxSequence==='number'?battleVfxSequence:null;
+    try{for(const card of introSignatures(combat))if(!openingIds.has(card.id))cards.push(root.combatCardVfxEvent(card));}
+    finally{if(sequence!==null)battleVfxSequence=sequence;}
     const needsWarm=event=>warmPlans(event,null).some(({event,asset,phase})=>asset?.path&&!warmed.has([asset.path,phase,event.elementId,event.uniqueAssetId,event.scope].join('|')));
     if(![...cards,enemyEvent].some(needsWarm))return;
     const counter=typeof battleVfxSequence==='number'?battleVfxSequence:null;
@@ -169,5 +184,5 @@
   const render=root.renderCombat;root.renderCombat=function(...args){const result=render.apply(this,args);if(!warmTimer)warmTimer=setTimeout(warmHand,100);return result;};
   root.addEventListener('resize',()=>{for(const [node,state]of nodes)restore(node,state);nodes.clear();ctx?.clear();resizeSurface();warmed.clear();warmHand();});
   root.addEventListener('pagehide',()=>{worker.terminate();for(const entry of cache.values())entry.bitmaps?.forEach(b=>b.close());cache.clear();},{once:true});
-  root.TRIAD_VFX_RASTER=Object.freeze({version:'vfx-raster-1.0.2',snapshot:()=>({...metrics,compositeMaxFps:60,renderer:unavailable?'native-css':'cached-rgba-webgl',nodes:nodes.size,pending:jobs.size,entries:cache.size}),cacheInfo:()=>[...cache.values()].map(e=>({key:e.key,ready:e.ready})),sample:node=>{const state=nodes.get(node);return state?.entry.ready?sampleState(state):null},animationMath:Object.freeze({motionTrack,sampleState,transformParts,ease}),warmHand});
+  root.TRIAD_VFX_RASTER=Object.freeze({version:'vfx-raster-1.0.3',snapshot:()=>({...metrics,compositeMaxFps:60,renderer:unavailable?'native-css':'cached-rgba-webgl',nodes:nodes.size,pending:jobs.size,pendingTextures:textureJobs.length,entries:cache.size}),cacheInfo:()=>[...cache.values()].map(e=>({key:e.key,ready:e.ready,filters:e.bitmaps?.length||0,uploaded:e.textures?.filter(Boolean).length||0,gpuReady:Boolean(e.ready&&e.bitmaps?.length&&e.bitmaps.every((_,i)=>e.textures?.[i]))})),sample:node=>{const state=nodes.get(node);return state?.entry.ready?sampleState(state):null},animationMath:Object.freeze({motionTrack,sampleState,transformParts,ease}),warmHand});
 })(globalThis);

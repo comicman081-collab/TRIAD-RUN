@@ -15,7 +15,7 @@
    missing the actor's own renderer keeps drawing. */
 (function(root){
   'use strict';
-  const VERSION='battle-live-motion-1.0.7';
+  const VERSION='battle-live-motion-1.0.8';
   const STRIPS=18;
   const FRAME_MS=1000/30;
   const TAU=Math.PI*2;
@@ -142,7 +142,13 @@
   function renderEnemy(actor,now,dt){
     const clip=actor.manifest?.clips?.[actor.state];if(!clip||!actor.image)return false;
     const s=stateFor(actor),key=actor.state;
-    const blend=poseBlend(now-actor.started,clip,Boolean(clip.loop));
+    // R2 idle cells include independent affine bobs and redrawn silhouettes.
+    // Dissolving those six cells every second shakes/ghosts the whole body,
+    // then adds the slower procedural breath on top. Use the authored neutral
+    // mesh for idle and deform it continuously around the feet instead. The
+    // actor clock, action cells, transitions and impact events stay intact.
+    const stableIdle=actor.detail?.sourceRevision==='IMAGEGEN_HD_R2'&&key==='IDLE'&&clip.loop;
+    const blend=stableIdle?{a:0,b:0,w:0}:poseBlend(now-actor.started,clip,Boolean(clip.loop));
     const A=enemyLayer(actor,blend.a),B=blend.w>0?enemyLayer(actor,blend.b):null;if(!A)return false;
     return paint(actor,s,key,A,B,blend.w,ENEMY_CLIP_LIFE[actor.state]??.4,now,dt,blend.a);
   }

@@ -1,8 +1,8 @@
 {
   "date": "2026-10-05",
-  "canonicalCommit": "f159c108b444d46103505b9224f7f1a50c9a4ce5",
-  "siteCommit": "48b3998902c68ce71f648de2df3dceaf40579983",
-  "runtimeBytes": 403953209,
+  "canonicalCommit": "16877a005669da3adb8510d92cf6704a6d5c4f37",
+  "siteCommit": "b37b188491d3d55219ff6b5aa9b07e94b970bffc",
+  "runtimeBytes": 403956530,
   "files": [
     {
       "path": "assets/artifacts/candidates/v1/TRIAD-ART-FIRST_ZERO-V1.svg",
@@ -5346,8 +5346,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 343668,
-      "sha256": "d2752585d5c4ccecc65450c154458f4281a89287eda4760a9b164d8c5d775fb3"
+      "bytes": 343682,
+      "sha256": "fa0142023dd4663e85222d8afe1e0d35bcbc843e428b19b3d4cda9e295635d90"
     },
     {
       "path": "sounds/triad_run_music/ending/roguelike_ending_10_the_run_becomes_a_story.ogg",
@@ -5466,8 +5466,8 @@
     },
     {
       "path": "src/presentation/battle_live_motion.js",
-      "bytes": 14520,
-      "sha256": "76cdc72ad30ffd9a39990122312325944a04207abb46d72603a084739bddf9e2"
+      "bytes": 15028,
+      "sha256": "efe6a63ca71178721b04af092ddda3704eb93ec536eea6bb01c064f74e1832d5"
     },
     {
       "path": "src/presentation/boss_art_replacement_geometry.js",
@@ -5536,8 +5536,8 @@
     },
     {
       "path": "src/presentation/enemy_scene_layout.js",
-      "bytes": 5253,
-      "sha256": "9fad75ca82d15d9c8b1cd1ca7327ecfed0a107ef20f74146d32753404852e900"
+      "bytes": 5464,
+      "sha256": "e012e2079a9cc299084b4a217d436c2efe7458f49747d266383e1f42bacd810e"
     },
     {
       "path": "src/presentation/exploration_scene.css",
@@ -5616,8 +5616,8 @@
     },
     {
       "path": "src/presentation/ui_theme.css",
-      "bytes": 27071,
-      "sha256": "b8e4e28aee11366388db05af23e712980e20f563d796d195f5261fc2703c2251"
+      "bytes": 27405,
+      "sha256": "9718a460b086f0a2b7d330ac22ee34a2a032eeb902d9fa4bcef83b4c2c4c7906"
     },
     {
       "path": "src/presentation/ui_theme.js",
@@ -5626,8 +5626,8 @@
     },
     {
       "path": "src/presentation/vfx_raster_cache.js",
-      "bytes": 19961,
-      "sha256": "cdf43be64c32b86911fa958b9e2d846989d34ceb64cd597781334e66bb12d96d"
+      "bytes": 21253,
+      "sha256": "f1d2c0721263a963addebf370053af2af1d068fad5235a8d4c92b9142266e9b3"
     },
     {
       "path": "src/presentation/vfx_raster_worker.js",
@@ -5701,8 +5701,8 @@
     },
     {
       "path": "src/triad_transactions.js",
-      "bytes": 30280,
-      "sha256": "ef98d9f85f842485989ddaa681a586d16ea292a92d384eace3a0321a83313b04"
+      "bytes": 31242,
+      "sha256": "487fdf6fa3f0ed3c04e1422080a1ffb7aab8e764b2328d163c16f5335ddb0965"
     },
     {
       "path": "src/triad_tutorial.js",

@@ -38,7 +38,7 @@ jobs:
             if (b.length !== f.bytes || crypto.createHash('sha256').update(b).digest('hex') !== f.sha256) throw Error('Release mismatch: ' + f.path);
             bytes += b.length;
           }
-          if (bytes !== m.runtimeBytes || bytes > 300000000) throw Error('Unexpected release size');
+          if (bytes !== m.runtimeBytes || bytes > 450000000) throw Error('Unexpected release size');
           if (fs.existsSync('quarantine') || fs.existsSync('source_assets') || fs.existsSync('tools')) throw Error('Non-runtime files in release');
           console.log(m.files.length + ' verified runtime files; ' + bytes + ' bytes; source ' + m.canonicalCommit);
           NODE

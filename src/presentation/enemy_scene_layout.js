@@ -18,7 +18,9 @@
       // Fitting during a shake or resize must not bake that zoom into the art.
       const local=node=>{const r=rect(node);return{left:(r.left-screen.left)/sx,right:(r.right-screen.left)/sx,top:(r.top-screen.top)/sy,bottom:(r.bottom-screen.top)/sy,width:r.width/sx,height:r.height/sy}};
       const h=local(host),s={top:0,height};if(!h.width)return;
-      const hud=[...host.querySelectorAll('.sd-name,.sd-mini-bar'),document.getElementById('enemyIntent')].filter(Boolean).map(local);
+      // The HP bar sits below the actor. Treating its bottom as a top HUD
+      // boundary leaves no fit area and silently keeps the oversized canvas.
+      const hud=[...host.querySelectorAll('.sd-name'),document.getElementById('enemyIntent')].filter(Boolean).map(local);
       const top=Math.max(h.top,...hud.map(r=>r.bottom))+Math.max(10,s.height*.014);
       const bottom=Math.min(h.bottom,s.top+s.height*.72),left=h.left+h.width*.02,right=h.right-h.width*.02;
       const availableWidth=right-left,availableHeight=bottom-top;if(availableHeight<24)return;

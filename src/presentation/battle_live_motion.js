@@ -15,7 +15,7 @@
    missing the actor's own renderer keeps drawing. */
 (function(root){
   'use strict';
-  const VERSION='battle-live-motion-1.0.5';
+  const VERSION='battle-live-motion-1.0.7';
   const STRIPS=18;
   const FRAME_MS=1000/30;
   const TAU=Math.PI*2;
@@ -48,15 +48,16 @@
     return{lift:life.breath*smooth(.04,.42,h),shear:life.lean*h,swell:1+life.breath*1.6*Math.exp(-Math.pow((h-.44)/.13,2))};
   }
 
-  function drawWarped(ctx,image,sx,sy,sw,sh,dx,dy,dw,dh,pivot,axisX,life,alpha){
+  function drawWarped(ctx,image,sx,sy,sw,sh,dx,dy,dw,dh,pivot,axisX,life,alpha,frameHeight=dh){
     if(!image||alpha<=.004)return;
     ctx.globalAlpha=alpha;
     const rows=life.still?1:STRIPS;
     for(let i=0;i<rows;i++){
       const v0=i/rows,v1=(i+1)/rows,vm=(v0+v1)/2;
-      const w0=rowWarp(v0,pivot,life),w1=rowWarp(v1,pivot,life),wm=rowWarp(vm,pivot,life);
-      const y0=dy+(v0-w0.lift)*dh,y1=dy+(v1-w1.lift)*dh;
-      const width=dw*wm.swell,x=axisX+(dx-axisX)*wm.swell+wm.shear*dh;
+      const whole=frameHeight!==dh;
+      const w0=rowWarp(whole?(dy+v0*dh)/frameHeight:v0,pivot,life),w1=rowWarp(whole?(dy+v1*dh)/frameHeight:v1,pivot,life),wm=rowWarp(whole?(dy+vm*dh)/frameHeight:vm,pivot,life);
+      const y0=dy+v0*dh-w0.lift*frameHeight,y1=dy+v1*dh-w1.lift*frameHeight;
+      const width=dw*wm.swell,x=axisX+(dx-axisX)*wm.swell+wm.shear*frameHeight;
       ctx.drawImage(image,sx,sy+v0*sh,sw,(v1-v0)*sh,x,y0,width,y1-y0);
     }
   }
@@ -134,6 +135,8 @@
   function enemyLayer(actor,frame){
     const clip=actor.manifest?.clips?.[actor.state];if(!clip||!actor.image)return null;
     const fw=actor.manifest.frameWidth,fh=actor.manifest.frameHeight,c=actor.canvas;
+    const index=clip.row*(actor.detail?.columns||6)+frame,rect=actor.detail?.frameRects?.[index],image=actor.frameImages?.[index]||actor.image;
+    if(rect)return{image,sx:actor.frameImages?0:rect[0],sy:actor.frameImages?0:rect[1],sw:rect[2],sh:rect[3],dx:rect[4],dy:rect[5],dw:rect[2],dh:rect[3],frameHeight:c.height,pivot:.95,axisX:c.width/2};
     return{image:actor.image,sx:frame*fw,sy:clip.row*fh,sw:fw,sh:fh,dx:0,dy:0,dw:c.width,dh:c.height,pivot:.95,axisX:c.width/2};
   }
   function renderEnemy(actor,now,dt){
@@ -157,9 +160,9 @@
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.globalCompositeOperation='lighter';
     try{
-      if(s.fade){const L=s.fade.layer;drawWarped(ctx,L.image,L.sx,L.sy,L.sw,L.sh,L.dx,L.dy,L.dw,L.dh,L.pivot,L.axisX,life,1-incoming)}
+      if(s.fade){const L=s.fade.layer;drawWarped(ctx,L.image,L.sx,L.sy,L.sw,L.sh,L.dx,L.dy,L.dw,L.dh,L.pivot,L.axisX,life,1-incoming,L.frameHeight)}
     }catch{s.fade=null}
-    const draw=(L,a)=>drawWarped(ctx,L.image,L.sx,L.sy,L.sw,L.sh,L.dx,L.dy,L.dw,L.dh,L.pivot,L.axisX,life,a);
+    const draw=(L,a)=>drawWarped(ctx,L.image,L.sx,L.sy,L.sw,L.sh,L.dx,L.dy,L.dw,L.dh,L.pivot,L.axisX,life,a,L.frameHeight);
     try{draw(A,incoming*(1-w));if(B)draw(B,incoming*w)}
     catch{ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;return false}
     ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;

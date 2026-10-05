@@ -1,8 +1,8 @@
 {
   "date": "2026-10-05",
-  "canonicalCommit": "4212023f55aa3c9b6c62bdc312702f2b4eb0108f",
-  "siteCommit": "b51dbccdbe0d13a0738a51d92506decc04cd177f",
-  "runtimeBytes": 298675085,
+  "canonicalCommit": "f159c108b444d46103505b9224f7f1a50c9a4ce5",
+  "siteCommit": "48b3998902c68ce71f648de2df3dceaf40579983",
+  "runtimeBytes": 403953209,
   "files": [
     {
       "path": "assets/artifacts/candidates/v1/TRIAD-ART-FIRST_ZERO-V1.svg",
@@ -861,8 +861,8 @@
     },
     {
       "path": "assets/characters/roster/triad_character_roster.js",
-      "bytes": 14783,
-      "sha256": "ddfe4ebafa27d2d39c40a90606406ab680e28cf3007f8cde04e38ff1d4a74987"
+      "bytes": 14535,
+      "sha256": "919ae9a2cff5fb6bf84fd9ff5f52b6651352e60e16aeb556b683df5da6690431"
     },
     {
       "path": "assets/enemies/archetypes_rgba_p1/apostle.webp",
@@ -1030,369 +1030,369 @@
       "sha256": "7222c49c1d39188cea1aa3f18f5bb9d38dadc3cf4eeb69db1260fd23cf8e2688"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/AEGIS_M01.webp",
-      "bytes": 714790,
-      "sha256": "8bf225227719aa79a4680fd941aafa9c6072a65b186202511e32b93754a51dec"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M01.webp",
+      "bytes": 3035204,
+      "sha256": "52b4392e100e9b6e76edd99f96575a3d2b857acb8e8038757778195a98b5de04"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/AEGIS_M02.webp",
-      "bytes": 702022,
-      "sha256": "abaffe58e30f187306b6924a63c5e7c9b27480e26fa1503ba44ff3da64fc331c"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M02.webp",
+      "bytes": 2447792,
+      "sha256": "b185de74a2e50ba03d1f68dd1cd18fea1236dabd77a985c4c865bf4911fed31d"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/AEGIS_M03.webp",
-      "bytes": 662924,
-      "sha256": "97d2909703aedb48694f41eb2700dafc67cc170c71d2d21835c2dc6840a92e1b"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M03.webp",
+      "bytes": 2649250,
+      "sha256": "d1acc5cce69fd3d720688e42728ebae3b0175e6e276a5d30e7a4deaed91b1fac"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/AEGIS_M04.webp",
-      "bytes": 1006078,
-      "sha256": "7ed9816713e3e32c4d3e1794d4c0ae0b6f16e71cedfc0a6ece31dcd82a5c2155"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M04.webp",
+      "bytes": 3765452,
+      "sha256": "ed25e3a61857a3d38015f57e95799f57ba7b55aa4db5dd86447cc215fa815a79"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/AEGIS_M05.webp",
-      "bytes": 745438,
-      "sha256": "06e2fe42f713a86d9db29c4cbb2af29e3523837cb7ab88894ec0ffc693dc792f"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M05.webp",
+      "bytes": 2532910,
+      "sha256": "ada22df5ffe95a739244a650efb5e608c0628220744254c4b9ed7044ea5550e5"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/AEGIS_M06.webp",
-      "bytes": 924250,
-      "sha256": "361254d85c69c1b089657ed31d4f5ad061dc744337df3eaf2bebc2add3c3fa49"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M06.webp",
+      "bytes": 3621706,
+      "sha256": "5e3752adcf1e578a20b69c32491616fe13fd783ea0be39453dd53bd5ea7456a1"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/BLOOM_M01.webp",
-      "bytes": 761696,
-      "sha256": "4f9ddffce8023f5ce42c5884859c832234d264b1ca9fac6e0f9ba2485ca9e812"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M07.webp",
+      "bytes": 790678,
+      "sha256": "61a3e4b747ccded0f35f74fd85719dbb0206695d2158111efa0ddfc596cfac37"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/BLOOM_M02.webp",
-      "bytes": 734758,
-      "sha256": "57ab162ea15c65fb6bb31a1d5fd283a06394e3ff3bac41a587791a9ad957ddcb"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M08.webp",
+      "bytes": 950590,
+      "sha256": "85175385f52a9bf481a5f24cd9fa416db1d96f49f419d776d87d2d37a366410d"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/BLOOM_M03.webp",
-      "bytes": 713046,
-      "sha256": "dd9ffaf695c86c0e62139b3aaca25332d2d52038cffa95e8451f6fcedd5bed09"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M09.webp",
+      "bytes": 848666,
+      "sha256": "caa3fdaa4641ca349d3f322f4be08c4e01546b5f24d4c6422166bcdafca08f89"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/BLOOM_M04.webp",
-      "bytes": 954974,
-      "sha256": "7f95da3bef041ea4a0c4c3ff50c9cd9416205bab9466726d389b8d88543e7883"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M10.webp",
+      "bytes": 780586,
+      "sha256": "1e41db2e3fd4b814871334c7601269bf2005ae2a1bd47533f4cb37005eeb3720"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/BLOOM_M05.webp",
-      "bytes": 891768,
-      "sha256": "1a206c674e6eb63441c99ac198e63c1ae0ef1c75d7e52734ab3bdb915c7f1038"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M11.webp",
+      "bytes": 742360,
+      "sha256": "ca044c968a2e65ce40c99d89f381ff224f8d746d9e706a3e2543dd7ed402f264"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/BLOOM_M06.webp",
-      "bytes": 902678,
-      "sha256": "0f004e56b5de0f3d3e941092d4c2a8bcd732831d1183125453b4e7d466a56feb"
+      "path": "assets/enemies/imagegen_hd_r2/AEGIS_M12.webp",
+      "bytes": 859626,
+      "sha256": "1ef3311c8231bb01771b951199dd42416a8eb84760c2e3965a7e50218c2db356"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/EMBER_M01.webp",
-      "bytes": 730300,
-      "sha256": "5029d6ad8a46a2a18a59e7554bbaec6eb5116f86bd1083e3cee4b95bf1e473e3"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M01.webp",
+      "bytes": 2992760,
+      "sha256": "5d25f9fe82fd667d8f98c68265cfcc1e6ec55eb826a1003aa68956f4b501d6b8"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/EMBER_M02.webp",
-      "bytes": 724740,
-      "sha256": "fe544d50a4a69ea1783ec55530df09353824389bca193d9d6445a535b57e6109"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M02.webp",
+      "bytes": 2659348,
+      "sha256": "2898a05e4fadd658def746724c2f51afe15b0f41312c97d2c47a24d039d0e632"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/EMBER_M03.webp",
-      "bytes": 713054,
-      "sha256": "c5337a9580890b9a7d7e7d48a639c87affa14f6df8375c8cef77772df8996382"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M03.webp",
+      "bytes": 2803566,
+      "sha256": "3a4dde4347318d0cd32f8816ef436a3f85b1d873f00364dd844d842dd06946a5"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/EMBER_M04.webp",
-      "bytes": 991646,
-      "sha256": "a2c8bceecf7306ec4c61b0db30c9c992c87b32e069fb77a87ac300abd523bbaf"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M04.webp",
+      "bytes": 3474356,
+      "sha256": "f1be7b762e8947cfa4dc4ab6fb49e9d356bc313d35f798c80cbe247e6987bd12"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/EMBER_M05.webp",
-      "bytes": 805996,
-      "sha256": "a424763143d25550e816764a5f9e1c004a44c086cea1b8448b402e530a77b4c0"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M05.webp",
+      "bytes": 2748876,
+      "sha256": "dcd1f9734bd2bbfd14b93cf394bde27478c4525513805d99a4a2feea292111c8"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/EMBER_M06.webp",
-      "bytes": 871748,
-      "sha256": "603606a223fbaeb84005511bde4335018cfad7760462735c0bf5266b697f28a3"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M06.webp",
+      "bytes": 3254668,
+      "sha256": "4c9dfa682269e2566af37c022ad39646500c32a7a4e8d3dbf00e24b3c49f5957"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/RIFT_M01.webp",
-      "bytes": 754746,
-      "sha256": "bb5254437094400824b6d60f124997a1aad013c4dce77c876a4b81f359418b3d"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M07.webp",
+      "bytes": 822092,
+      "sha256": "c235112b78377888a89ee004f646c197ffc1f1e763b96e243fd940a37288be70"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/RIFT_M02.webp",
-      "bytes": 726190,
-      "sha256": "2c28156a6dbac4b3f256cd4d1677d61bf99fc461a15167d5139a0cd7a06e746b"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M08.webp",
+      "bytes": 943168,
+      "sha256": "a92ed47ceb08824ac06d1dcce9db517fd22d420b9eb5d4f117949f2057bba31c"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/RIFT_M03.webp",
-      "bytes": 672572,
-      "sha256": "1ce050b9bd51861dfee6a56e7572577d1618675988787577d9e662a3a8b86bf7"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M09.webp",
+      "bytes": 1095014,
+      "sha256": "340b64674f04969e70e1aea3fec713eecd1a818fc4b11a836658048c9de54695"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/RIFT_M04.webp",
-      "bytes": 955170,
-      "sha256": "20b1c9c21a6a09076f9182b8c8a3dd49f6ee2d4fd5a3055ac98cc61f3404dd4c"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M10.webp",
+      "bytes": 822062,
+      "sha256": "0c0f6a3fd9432bae6ec31f3212ee0d65daaab346e1e31dbf588efe343f25b41c"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/RIFT_M05.webp",
-      "bytes": 683058,
-      "sha256": "0cbf22a1100463a4638e356937411b3bba6137688f0543e3f165c15516769d21"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M11.webp",
+      "bytes": 748428,
+      "sha256": "a1c89230b8c0050eb04cbcc848afe294f0f62f42f46553435f9bc28a11bb04d9"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/RIFT_M06.webp",
-      "bytes": 991592,
-      "sha256": "3c4474b62db3edd427692f207ff30ad5c6b1e3f4575f8a852e709e4eafa12f79"
+      "path": "assets/enemies/imagegen_hd_r2/BLOOM_M12.webp",
+      "bytes": 850810,
+      "sha256": "c49f2710954623a89622e5087a81078ec20299b165030561c6b8fa2490ab3268"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/SHADE_M02.webp",
-      "bytes": 682374,
-      "sha256": "4d366d30129f29cfa8bf8e0536a2bdd15bcbdfa64132e3aa8d9f63ee5c4107f5"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M01.webp",
+      "bytes": 3022176,
+      "sha256": "ec68076d137ff462dfee795f2a7b5521c11295b1f4c09cf6f990008441f753cf"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/SHADE_M03.webp",
-      "bytes": 702362,
-      "sha256": "6442a6ddaf18238119245b8a83a400b2b8484c24617ec32ee293d5aa38288951"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M02.webp",
+      "bytes": 2628688,
+      "sha256": "468e8d4603ff9fe02f09e03de265b0ef0a827c9bbd4973d47e2e462947c9e098"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/SHADE_M04.webp",
-      "bytes": 926892,
-      "sha256": "7e5119d1fd29e695fa29f6430d1ecfe5e76b44a2e69dec75210d007b7fc3f24c"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M03.webp",
+      "bytes": 2601380,
+      "sha256": "4ee05e587488db18abf6384b76e61cf27ade79efb970cde1f1bfd415c4f7347a"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/SHADE_M05.webp",
-      "bytes": 874768,
-      "sha256": "07f89d8195fb925c6dd090e44d2da75fefdd2035d96bf7becb0927c1038f4c44"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M04.webp",
+      "bytes": 3117376,
+      "sha256": "e6f0132556657e8edb8a8e225d6dd4f68ab4c16d516afee37ac0ba5e45c6ff3c"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/SHADE_M06.webp",
-      "bytes": 906396,
-      "sha256": "f7f558bf3d88a706f872e21d2425442c8ce0621651f45ffaac46ec7b6afea383"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M05.webp",
+      "bytes": 2643656,
+      "sha256": "59aedf80059aa0ccca6e1da1d7e6ff2598c68175c8377fcc43e92e791635a587"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/VOLT_M01.webp",
-      "bytes": 719446,
-      "sha256": "5c331d773bc3e25b6aca371626c1b1453dfcd77599bf72656ab703ee91710f8c"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M06.webp",
+      "bytes": 2998372,
+      "sha256": "ccfc32352e322ba25c521e6df0fb5444ffc9f962939b3dfd04333245b0569ff1"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/VOLT_M02.webp",
-      "bytes": 723926,
-      "sha256": "35b1c05a8091cdb300f917125624369b36badfbcf9fdc8479633ec7982eb69a6"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M07.webp",
+      "bytes": 903300,
+      "sha256": "be0a28cd8feee8449acfa1790cf624b2cdac59966185b1cde3ec7ea9c345b613"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/VOLT_M03.webp",
-      "bytes": 712492,
-      "sha256": "a1aab1206c5dfe24a72d9f29d1d4681528f46a0d4aeccabdc3e1b4e0fe6c5ed8"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M08.webp",
+      "bytes": 942410,
+      "sha256": "2645db89ebfba00f95c0a4358781bea20864344d279c5948c14358184b303d39"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/VOLT_M04.webp",
-      "bytes": 980586,
-      "sha256": "19cb44118027c3b4b3c97e7b4da9b9f28c7be60809327847294bb718eb824cdf"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M09.webp",
+      "bytes": 797484,
+      "sha256": "fc297b0200cc71552570eb8f7b071583bf9934101353e337cdebb760c5660b2b"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/VOLT_M05.webp",
-      "bytes": 921536,
-      "sha256": "eaba6bebecb56b3ad041497fb24287423039b1402eaf42863fa1873f5bb093e6"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M10.webp",
+      "bytes": 754300,
+      "sha256": "0562b681212e1a7b56094cff86603c610258c839522dc6cc3660ce5b7b0fa48c"
     },
     {
-      "path": "assets/enemies/monster_animation_p1/VOLT_M06.webp",
-      "bytes": 930916,
-      "sha256": "1267be0c044a026d7c79cee8ecd5e83b33f6f94ad33ca40f8ecd82262adbf030"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M11.webp",
+      "bytes": 788906,
+      "sha256": "17592f8428962de745c1cfa5e3f873bdc6c20e7944696b8e0126539daaceca81"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/AEGIS_M07/AEGIS_M07_PRODUCTION_PILOT_V4.webp",
-      "bytes": 411480,
-      "sha256": "d1bb24d0aa9a417bd0069d382bb57c11755470e43428db02bf14a705174b0e73"
+      "path": "assets/enemies/imagegen_hd_r2/EMBER_M12.webp",
+      "bytes": 880760,
+      "sha256": "6717b94899f19b359f15446f5eaa474f8edb8e211106a7a720051ab77f62801f"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/AEGIS_M08/AEGIS_M08_PRODUCTION_PILOT_V4.webp",
-      "bytes": 457542,
-      "sha256": "432babf0b05cd9cd114aa758057bbea56e55e831d28cce4f748d9693a4a52557"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M01.webp",
+      "bytes": 2821018,
+      "sha256": "ca68b01f0cd292b2019bf231c72224ed5b6d4c33669a49879fe47b30a103f89f"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/AEGIS_M09/AEGIS_M09_PRODUCTION_PILOT_V4.webp",
-      "bytes": 388060,
-      "sha256": "066965cd32ee9154250496f13c2e188bdbafe55bffc3de5b418db70c99db616a"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M02.webp",
+      "bytes": 2445364,
+      "sha256": "b7930a54a33e2595710d5c8f1631b5448c1a1bbb16137deaac942f050bf70605"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/AEGIS_M10/AEGIS_M10_PRODUCTION_PILOT_V4.webp",
-      "bytes": 413124,
-      "sha256": "36726ee75dbb7dc53434eeba0be9dc6833dc4dcf563ad62f2bdda9962551d271"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M03.webp",
+      "bytes": 2368896,
+      "sha256": "53fce31e30e82019f8257b248cbdd1469fd07d5e2a74388f92acdc953e820513"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/AEGIS_M11/AEGIS_M11_PRODUCTION_PILOT_V4.webp",
-      "bytes": 372108,
-      "sha256": "5716d9b99500c54cfc871a84caee2c26e4c26f02bf4e50a51a0fae92aed2381d"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M04.webp",
+      "bytes": 3456478,
+      "sha256": "1b48590014bbe246b6244542d43944e8bd326cedb32b5c436543c6f15a72344d"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/AEGIS_M12/AEGIS_M12_PRODUCTION_PILOT_V4.webp",
-      "bytes": 495020,
-      "sha256": "13569d6205a54e6410937d45fca9207d490468c18c53dafcadcb6671355f343b"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M05.webp",
+      "bytes": 2446408,
+      "sha256": "79e28cb3c25e6fbe1a4b2523e6860a9b8e797849bfd9171c59bf22fe80c860ef"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/BLOOM_M07/BLOOM_M07_PRODUCTION_PILOT_V4.webp",
-      "bytes": 415990,
-      "sha256": "8145b1b1a0554e68c6c91daaf4ba9626e5f0cafd9f330fcd605a13800d00139b"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M06.webp",
+      "bytes": 3282950,
+      "sha256": "972ced1e30e84a142656ecebe805bda5bcd36abaa6289f8a65d9c67f83c9ba43"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/BLOOM_M08/BLOOM_M08_PRODUCTION_PILOT_V4.webp",
-      "bytes": 481144,
-      "sha256": "38204ecda8c93662d06ce74c75d53c08248924cb024cf2dd30b7f2ed98baccf7"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M07.webp",
+      "bytes": 3407438,
+      "sha256": "908082cc313902cc18e5bc0d14d819ac84f9b1f0549e0ffe678b29dffb791de4"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/BLOOM_M09/BLOOM_M09_PRODUCTION_PILOT_V4.webp",
-      "bytes": 566462,
-      "sha256": "f93144301043265438a952bab59f507fe745349d723f5e6bc84e8ce6259142dd"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M08.webp",
+      "bytes": 3651696,
+      "sha256": "54a06078dc51928dfc2aaf89c9e6c53d553ffba2a55e9c9b095e7008457f8b2b"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/BLOOM_M10/BLOOM_M10_PRODUCTION_PILOT_V4.webp",
-      "bytes": 367020,
-      "sha256": "156cdc71040ee94abaafb2b790f55239e669bebc1beaacef07159d28272e3d34"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M09.webp",
+      "bytes": 3640634,
+      "sha256": "e28994df4dc842fa5d0551499d718d87123573adc5cf950a2b0f20a32f114f00"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/BLOOM_M11/BLOOM_M11_PRODUCTION_PILOT_V4.webp",
-      "bytes": 380902,
-      "sha256": "aa3c9bc6ed5b79a2a83250eddefeca6ee29c3ddafe51757a929cf2cc89e41839"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M10.webp",
+      "bytes": 3321044,
+      "sha256": "aec1b8cb937bc6951fdf07c4fe9fc3a0b6d15435e836fd212b644ab3afb7738d"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/BLOOM_M12/BLOOM_M12_PRODUCTION_PILOT_V4.webp",
-      "bytes": 444560,
-      "sha256": "64586e1f59f4b3a72ed069a8564c26c8959f38dd7d2579bb2f9dbe166a8d88ff"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M11.webp",
+      "bytes": 3823630,
+      "sha256": "82d13dba3fef4ef3ed9119ead39b30d25811d59254e40fffe816ca82becf195c"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/EMBER_M07/EMBER_M07_PRODUCTION_PILOT_V4.webp",
-      "bytes": 456110,
-      "sha256": "bc27197bedd29490f35fb51f279cb783c38fd4d6de4b5e8c90f190a7d0f3c54e"
+      "path": "assets/enemies/imagegen_hd_r2/RIFT_M12.webp",
+      "bytes": 3673142,
+      "sha256": "b060a343fc006206b5eb5c56f2351ec0c01f3d2c927531b2ca6ec6ebaf800b81"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/EMBER_M08/EMBER_M08_PRODUCTION_PILOT_V4.webp",
-      "bytes": 513976,
-      "sha256": "ec13f14d14846141ec1a87fd2d6726f8604a51dee6a77b8e7968e20ec5aff645"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M01.webp",
+      "bytes": 3600088,
+      "sha256": "17ddd0fb482850facc3ec3c5b796f08e26dc9f9e9ce81707c5fe08deb218ecbc"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/EMBER_M09/EMBER_M09_PRODUCTION_PILOT_V4.webp",
-      "bytes": 405600,
-      "sha256": "e16ce5f7b1b098a65583d7e9b05e45e8c2c8090cbaa93f23ac73bae137339b41"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M02.webp",
+      "bytes": 2346804,
+      "sha256": "159259f01275ed6e0cfed938e26fd8de456dc883010e3fb2dde49922274f757f"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/EMBER_M10/EMBER_M10_PRODUCTION_PILOT_V4.webp",
-      "bytes": 399296,
-      "sha256": "c4f1ccbf539e13227daff540e55d9626128df6370563e755a748e488d5b95912"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M03.webp",
+      "bytes": 2756682,
+      "sha256": "ecc7dec2b43c40194b22363a79f784debcd7df6fd541cd80a22cf81a066798b1"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/EMBER_M11/EMBER_M11_PRODUCTION_PILOT_V4.webp",
-      "bytes": 419578,
-      "sha256": "a87736b238803f3f17ae99ba93982e5a75b4302023d7240ac5b44858d385fc25"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M04.webp",
+      "bytes": 3069296,
+      "sha256": "6856684679925ffb239935f00ed69c992831661ddcaf239af8513110854b0f1c"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/EMBER_M12/EMBER_M12_PRODUCTION_PILOT_V4.webp",
-      "bytes": 498158,
-      "sha256": "5f3899e584a97fec7ddb508a8d0dd8419f9c82be493d8ffbd73b40630b35cd36"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M05.webp",
+      "bytes": 2644424,
+      "sha256": "52aaf99902cfbda5b4916ec1c1da787fc310da7cf781cf65f074543f943f485f"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/SHADE_M07/SHADE_M07_PRODUCTION_PILOT_V4.webp",
-      "bytes": 460882,
-      "sha256": "97c064bce1c3f1d6615761e3fcc4240d9ce4cf0469d5906fe59e82183913e839"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M06.webp",
+      "bytes": 3200660,
+      "sha256": "9ae194cef8b1bbb2e96d98e13418aa629e15465fa21ac8def234c0b33dd21a4c"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/SHADE_M08/SHADE_M08_PRODUCTION_PILOT_V4.webp",
-      "bytes": 495320,
-      "sha256": "3ae173bc142c24310066f4edba5567b98fdf74a0da5febae7f407f36ff634000"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M07.webp",
+      "bytes": 852244,
+      "sha256": "5e4e1ed383fa5b71821bfb8d3527b053215dafc07770d33080ee8c6a66d2c4ab"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/SHADE_M09/SHADE_M09_PRODUCTION_PILOT_V4.webp",
-      "bytes": 413100,
-      "sha256": "25dc8bae8845ef72cb54d5404f65b7a2dd1634776ed218f48276eb5aca4fa480"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M08.webp",
+      "bytes": 926706,
+      "sha256": "67b51452a3c50c3564fe51a3b9ea9fee2b6328fcedf3d2253e4ea2d5030cff45"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/SHADE_M10/SHADE_M10_PRODUCTION_PILOT_V4.webp",
-      "bytes": 426426,
-      "sha256": "67a42dcc43218260e6f3d609875746fb2e6242416521d4bda76fc9e0ba04fc6e"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M09.webp",
+      "bytes": 810248,
+      "sha256": "f413ee629bf411f60096cebd8eae7d70ff28fb210dc72a20eb5f16256a969f3b"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/SHADE_M11/SHADE_M11_PRODUCTION_PILOT_V4.webp",
-      "bytes": 427686,
-      "sha256": "7a3b80bc7aa9d20bf368690d327fea4fb33df90f0569bd6d14aca01c403aeb49"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M10.webp",
+      "bytes": 755102,
+      "sha256": "d021fbd803b49d93bd4deeb7a6755707fc497f3769fda22cf6d30f67a4acf295"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/SHADE_M12/SHADE_M12_PRODUCTION_PILOT_V4.webp",
-      "bytes": 385406,
-      "sha256": "f6b717d5b9531bfeb11793c2cc45146ef1ef6f9ecb0351afc3c8158006a22d5c"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M11.webp",
+      "bytes": 975450,
+      "sha256": "3514bd8e03dcc185991dfa3b447085721d581f225a45a85b37753068644cf1d8"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/VOLT_M07/VOLT_M07_PRODUCTION_PILOT_V4.webp",
-      "bytes": 446418,
-      "sha256": "12a05dbbb2099f889aa88215a9c985a38a9ca7cf78a0e05e38834fb048e67777"
+      "path": "assets/enemies/imagegen_hd_r2/SHADE_M12.webp",
+      "bytes": 867586,
+      "sha256": "30b82b09e83c7084e61ff8c22d929641af1d5690c192961b3c4aae847114d403"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/VOLT_M08/VOLT_M08_PRODUCTION_PILOT_V4.webp",
-      "bytes": 524454,
-      "sha256": "d5a1cabf580d800cbce1c8d01fb9845d5329837c029949923fa6fd4ffa60687b"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M01.webp",
+      "bytes": 2928568,
+      "sha256": "96e7354f458ff7b9123461f4656eb3feb0e329af4c7b5079e019baae49c37c42"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/VOLT_M09/VOLT_M09_PRODUCTION_PILOT_V4.webp",
-      "bytes": 378738,
-      "sha256": "47a5e62d79007dff5ef5c3505b483aa19ca5d60ca4c6f3bcefe527cac31b300f"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M02.webp",
+      "bytes": 2767142,
+      "sha256": "4920bb1ee01462cb22d058958ac230cefa882e3bb9d7799549e96d8db0e31864"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/VOLT_M10/VOLT_M10_PRODUCTION_PILOT_V4.webp",
-      "bytes": 451964,
-      "sha256": "ac80a7a0641d058b44fd559e612a26f8981531064f07911d0789b5b01ea0e89b"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M03.webp",
+      "bytes": 2488888,
+      "sha256": "d7bd5db8020b6704536bd66c40164ee7aa19bb74b42a0098b82e6663b4ff31fa"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/VOLT_M11/VOLT_M11_PRODUCTION_PILOT_V4.webp",
-      "bytes": 408914,
-      "sha256": "1b829b32d6ec18a75c77deeef1482472ee190d63846ade0994ac5d5417b800df"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M04.webp",
+      "bytes": 3593734,
+      "sha256": "4db2fdf496af871184e266cce68eb6e2cdd80e17d164513bb334775943a6aa36"
     },
     {
-      "path": "assets/enemies/production_pilot_v4/VOLT_M12/VOLT_M12_PRODUCTION_PILOT_V4.webp",
-      "bytes": 453776,
-      "sha256": "bd9f6a38bcd404bc33c3a150e3f395f3b7e4e365bf91eb52d3139ab9fbd67bb2"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M05.webp",
+      "bytes": 2754172,
+      "sha256": "28b56ce59c500267d839f29b02956f2fce9d20e1c16b3d39985c638c655fdc5a"
     },
     {
-      "path": "assets/enemies/production_pilot_v6/SHADE_M01/SHADE_M01_PRODUCTION_PILOT_V6_GPU_FINAL.webp",
-      "bytes": 719492,
-      "sha256": "45edae59afaa526fbc29619bf24958a5e0dfc901e22089650c6e7eca06bf09a2"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M06.webp",
+      "bytes": 3409408,
+      "sha256": "4ed10370d758418692b62b26cb3d497eebff2b3f2fa6b16ba5b70ec0c9b8787b"
     },
     {
-      "path": "assets/enemies/production_pilot_v7/RIFT_M07/RIFT_M07_PRODUCTION_PILOT_V7_GPU_FINAL.webp",
-      "bytes": 850012,
-      "sha256": "8cc8b959fb55486403a840d3ad5f4432404cccbadf586a0cc4dc32ee9b98bc26"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M07.webp",
+      "bytes": 748152,
+      "sha256": "cc3a5052ac33923bc0b45fa4e211f07d6469011284f0d6de2bc0170876001bed"
     },
     {
-      "path": "assets/enemies/production_pilot_v7/RIFT_M09/RIFT_M09_PRODUCTION_PILOT_V7_GPU_FINAL.webp",
-      "bytes": 738294,
-      "sha256": "7aa90167291cdd6cf680b3f862059645422dea226fe23e1364e6094be2a20a97"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M08.webp",
+      "bytes": 981464,
+      "sha256": "d43cdbd4401169b0d51c06fc187ed065553dbc9e28daa976b501b2fcf74e7247"
     },
     {
-      "path": "assets/enemies/production_pilot_v7/RIFT_M10/RIFT_M10_PRODUCTION_PILOT_V7_GPU_FINAL.webp",
-      "bytes": 728902,
-      "sha256": "a7c57ce7435b29c2a2b28b313ae4b7a73d376e23442ef6ad2a37be7e963fee35"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M09.webp",
+      "bytes": 796384,
+      "sha256": "307c674e3d8522731ab45e17e15d4361a5b781795a461a5cda9a683913b6bfc6"
     },
     {
-      "path": "assets/enemies/production_pilot_v7/RIFT_M11/RIFT_M11_PRODUCTION_PILOT_V7_GPU_FINAL.webp",
-      "bytes": 816820,
-      "sha256": "c20707cc4f1fd422148dc86a66b16bcf211e0a99283fd16a81cc53c31c0723f6"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M10.webp",
+      "bytes": 759488,
+      "sha256": "43efe6832cc154b8f7094890e461d2b7126448109521f2efca4314108c22a6d6"
     },
     {
-      "path": "assets/enemies/production_pilot_v7/RIFT_M12/RIFT_M12_PRODUCTION_PILOT_V7_GPU_FINAL.webp",
-      "bytes": 838184,
-      "sha256": "ef8d52e89aa93ecd10ae28daadeb9ba0e60252a18ed1c9cb9368206a0d455a3b"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M11.webp",
+      "bytes": 817134,
+      "sha256": "0df476b665ab5f735e73f3dabe425f47b9b599dbc9703e382c61bb4a2001772d"
     },
     {
-      "path": "assets/enemies/production_pilot_v8/RIFT_M08/RIFT_M08_PRODUCTION_PILOT_V8_GPU_FINAL.webp",
-      "bytes": 838108,
-      "sha256": "21e29dc047a575aa4d6a0bd5aafaccc461a8d1f404d2837049a2e36cfd925572"
+      "path": "assets/enemies/imagegen_hd_r2/VOLT_M12.webp",
+      "bytes": 840240,
+      "sha256": "1af49f92711702ab0af17a9ff97f00df6e2ce0c04140523dd6fd3e7cac239035"
     },
     {
       "path": "assets/fonts/NotoSansKR-OFL.txt",
-      "bytes": 4554,
-      "sha256": "228cd16a62216a75d22907b1fee901518b969a3cf51a9d460fa3a0828461681b"
+      "bytes": 4463,
+      "sha256": "00d730e0a8f0965d89f5b26fa6f4864771bba2edc0ec5a987a86a0545feb5830"
     },
     {
       "path": "assets/fonts/NotoSansKR-VF.woff",
@@ -1426,8 +1426,8 @@
     },
     {
       "path": "assets/vendor/pixi-8.20.1/pixi.min.js",
-      "bytes": 821214,
-      "sha256": "26f4ffaf5f99a9cdc39ac8fef3f2d417baf532a90f0ee37c44fe82585ec34079"
+      "bytes": 818874,
+      "sha256": "e537b134644a7b2242ff747e5439a9563323cd829fb65f8ac907308805575654"
     },
     {
       "path": "assets/vfx/derived_v4/cards/aegis_01_impact.webp",
@@ -5301,48 +5301,53 @@
     },
     {
       "path": "combat_data.js",
-      "bytes": 7131,
-      "sha256": "457aeb6dd33153b1757ff4abf2831d95979021e8d1ce30e3fb6a97c24f591a5a"
+      "bytes": 7012,
+      "sha256": "f927b708ee1bc04d992749a39cb5046a220b7d9e40ff6474c49fd9d0c7e2c43f"
     },
     {
       "path": "combat_vfx_data.js",
-      "bytes": 5341,
-      "sha256": "3ba99d5cc92f4d12477f2b4c76bbc632f265cbb65ef519eff03bd7daa7f8a748"
+      "bytes": 5275,
+      "sha256": "dc88c4deadc0ef8be1fb92a3336bf83d0a2d552b7a85e5d7644d1e20c1e0a84a"
     },
     {
       "path": "combat_vfx_pipeline_v2.js",
-      "bytes": 19079,
-      "sha256": "ccbe6589bc675f6006af8b15d318dd6d612c27f9dd1b1264c6ee62f46c3dfc3e"
+      "bytes": 18884,
+      "sha256": "f83f6a493175da5f94cbec019662dfedabf70f08821427d89f2c9e873f84825a"
     },
     {
       "path": "combat_vfx_skill_assets_v5.js",
-      "bytes": 898145,
-      "sha256": "e65eb896e15fad0e788083c37d1d1d76e14dbbbd6b58e72f013acd0a5b3f2ffe"
+      "bytes": 898144,
+      "sha256": "59c1112b44da061753863077eac02ed22436306eb2e637b45486be0a0ff8737a"
     },
     {
       "path": "enemy_animation_authority.js",
-      "bytes": 5257,
-      "sha256": "f8e292d08578523f5f07fbb60333e87069f7f09834f67980b8a7110999118607"
+      "bytes": 5836,
+      "sha256": "b212ad5ab20091854dc212eb5c2a21242984059d5b5781e0f80e8df9c2983676"
     },
     {
       "path": "enemy_animation_data.js",
-      "bytes": 41424,
-      "sha256": "12ed13d1c82a67d0128e452b96133808f1a6c69d22c525883f8169874851f4ab"
+      "bytes": 65446,
+      "sha256": "1898c5a0934870303912257a03392303532879671d637bac7efc7086310918de"
+    },
+    {
+      "path": "enemy_animation_detail_data.js",
+      "bytes": 67640,
+      "sha256": "c426477c0c5df003a0902533cf9992790b1f2dbce9b761d48a161f2f3a650535"
     },
     {
       "path": "enemy_animation_production_overrides.js",
-      "bytes": 60296,
-      "sha256": "ca229f85c49ed3d554055eb43248699f38ed71aa5b7ae4cae86803a9cbf5f2c7"
+      "bytes": 283,
+      "sha256": "42791b4a202515016a58191e2b063b17a5d3dea45a5cb6a35529840cf04a6045"
     },
     {
       "path": "enemy_visual_data.js",
-      "bytes": 5425,
-      "sha256": "757055efa094c773f9a23363550a71d1b98630cd1407fa82bb6c44161f582abc"
+      "bytes": 5320,
+      "sha256": "399ba2f65868f98e705dcd6cdf68ad5b3639769dabd8152e24327c10a23a0ef6"
     },
     {
       "path": "index.html",
-      "bytes": 343587,
-      "sha256": "22c7ee352009ac7b463420c3ed4dbbac956016f269fe6365927eec61f32b4ee1"
+      "bytes": 343668,
+      "sha256": "d2752585d5c4ccecc65450c154458f4281a89287eda4760a9b164d8c5d775fb3"
     },
     {
       "path": "sounds/triad_run_music/ending/roguelike_ending_10_the_run_becomes_a_story.ogg",
@@ -5451,8 +5456,8 @@
     },
     {
       "path": "src/presentation/battle_hand_layout.css",
-      "bytes": 18463,
-      "sha256": "240d3e0c39e071aa7d1355446a7060a294289501992d2383138b7d3756774024"
+      "bytes": 18291,
+      "sha256": "7757537143f5e222c5dd3332618ac9f2f51e9ab6c7fa6ec5219441658eb0be4d"
     },
     {
       "path": "src/presentation/battle_hand_layout.js",
@@ -5461,28 +5466,28 @@
     },
     {
       "path": "src/presentation/battle_live_motion.js",
-      "bytes": 13979,
-      "sha256": "6a8eec52998b9433b608b696c9daa7c10324357ac3870d9b83b66c07bd27ac79"
+      "bytes": 14520,
+      "sha256": "76cdc72ad30ffd9a39990122312325944a04207abb46d72603a084739bddf9e2"
     },
     {
       "path": "src/presentation/boss_art_replacement_geometry.js",
-      "bytes": 8286,
-      "sha256": "ce2181ae589446f5a4acebe5488826fe1e86d1f06a926595815d990ce9933113"
+      "bytes": 8157,
+      "sha256": "ee70bbe4f5bee08e0f2e94dc6170c0e729d4250329d8de32e7c079345bad20ca"
     },
     {
       "path": "src/presentation/boss_art_replacement_sources.js",
-      "bytes": 4115,
-      "sha256": "feeeb03847aa3b334c2cb2e3431cdec24ae14dea95ebde5b7916fba158c3a70d"
+      "bytes": 4005,
+      "sha256": "b0f003648db57d7edac2143a78948f23f288fc2c728d58014aa9663568a2c622"
     },
     {
       "path": "src/presentation/boss_art_replacement_specs.js",
-      "bytes": 1624,
-      "sha256": "0a05d71f4982b49810ba2e7cfef372665c063153337e7d2addba859988f7314f"
+      "bytes": 1604,
+      "sha256": "f7cf6055a0a5c9d8fd63c011751731661b5bdb25069d04e74ad044cad4077340"
     },
     {
       "path": "src/presentation/build_archive.css",
-      "bytes": 3817,
-      "sha256": "5d7db3a2fcf7be80f9d5a6530956c4c5191b296e930fb17cbb09453d98569594"
+      "bytes": 3779,
+      "sha256": "81d0022f2a549118d9f6f7e6a617b5dd94b8e8d6cf15e30ddfb0122b4843ce97"
     },
     {
       "path": "src/presentation/cinematic_glow_batch.js",
@@ -5496,23 +5501,23 @@
     },
     {
       "path": "src/presentation/combat_cinematic_fx.js",
-      "bytes": 50922,
-      "sha256": "dd5e4f4a7be68398fea380ff608fb4a4018a04ee24126e69ff79c3f80ecd383d"
+      "bytes": 56714,
+      "sha256": "c33f8a0b092b7f820a26b79c782dd47ceb9525f8302218fcc2799c534fa205a1"
     },
     {
       "path": "src/presentation/combat_geometry.js",
-      "bytes": 2411,
-      "sha256": "e6c02c0d68cdd991103b6af501739db5661b440914aed30c564776d5140379c2"
+      "bytes": 2377,
+      "sha256": "6ce427c3d34696c28595e367ab3b3f6209fd911821fa90f4e9846a45a6376224"
     },
     {
       "path": "src/presentation/combat_tactics.css",
-      "bytes": 4708,
-      "sha256": "a0800729869c20ffe04c2bcf73d50f2b1f2564b6c95c430e62c79c59e20dd1db"
+      "bytes": 4674,
+      "sha256": "9e64fb43c6419e2c4f5b6d81a65df0853c9bf24ee35d7a9b105369e009641916"
     },
     {
       "path": "src/presentation/combat_tactics.js",
-      "bytes": 1615,
-      "sha256": "c897221068c34d05de30ccb7706142ec03106ce531a522a59103c4d0b4c9232a"
+      "bytes": 1588,
+      "sha256": "c481800e74416fd8535b49e12f5d905079eef43b448b52a2f4e8758535b1892f"
     },
     {
       "path": "src/presentation/combat_vector_batch.js",
@@ -5526,13 +5531,13 @@
     },
     {
       "path": "src/presentation/distinct_boss_rig_factory.js",
-      "bytes": 9764,
-      "sha256": "5a0ffe9fc68c8304edbfaadc07180fca03e48a760c95107e9bd2f9ef291b0882"
+      "bytes": 9676,
+      "sha256": "8bc291a0246f235f3211cdf99c57dd251cb3d8ea17425c2525e21d9965d3334b"
     },
     {
       "path": "src/presentation/enemy_scene_layout.js",
-      "bytes": 5113,
-      "sha256": "9754d7aebe890e528e47a7565a29a4bf09a03e01fdc3e9094e366a3830d6683f"
+      "bytes": 5253,
+      "sha256": "9fad75ca82d15d9c8b1cd1ca7327ecfed0a107ef20f74146d32753404852e900"
     },
     {
       "path": "src/presentation/exploration_scene.css",
@@ -5566,8 +5571,8 @@
     },
     {
       "path": "src/presentation/part_rig.js",
-      "bytes": 3634,
-      "sha256": "4ecff2a9f68a3df1eda5b32ce80794e11de65b7fdc006ed1f68609e327d99690"
+      "bytes": 3581,
+      "sha256": "7f4a980e081ee1ca34168ce363832c81a925ec168e5e808c3174077303a5c45e"
     },
     {
       "path": "src/presentation/run_difficulty.css",
@@ -5576,8 +5581,8 @@
     },
     {
       "path": "src/presentation/scene_clock.js",
-      "bytes": 3572,
-      "sha256": "6fb4150c5858bb2bcde7ac34835d997ad3bc61c39c79f8004561edc10b638d08"
+      "bytes": 3512,
+      "sha256": "8e100ec3e3f1866c33a727e94a4a87c901ddd2435d851c713884aa90f4969330"
     },
     {
       "path": "src/presentation/sd_action_timing.js",
@@ -5596,8 +5601,8 @@
     },
     {
       "path": "src/presentation/shade_m15_replacement.js",
-      "bytes": 1815,
-      "sha256": "253ffa3aac264057c74e2c9a4e1a01ef5031da18c5bbdd65088c378a73389052"
+      "bytes": 1792,
+      "sha256": "521f98e3430d14d070aece40343fcd49356dae03db224ed86123bbcfb07f3467"
     },
     {
       "path": "src/presentation/title_lobby.css",
@@ -5631,23 +5636,23 @@
     },
     {
       "path": "src/triad_architecture.js",
-      "bytes": 16357,
-      "sha256": "47f82c1196856a3d9b31727008a8325dd0a90cdbb9ee0b8406b356647f00a475"
+      "bytes": 16027,
+      "sha256": "76602ad9e0441e423cbba64c7b65310b3e0b487f65f4883972923963def67db6"
     },
     {
       "path": "src/triad_audio_director.js",
-      "bytes": 17557,
-      "sha256": "8987c063fa285038565e09f02df1cba3a8c1b826da69445c258b4a4889ca5032"
+      "bytes": 17173,
+      "sha256": "6c465df4e31ee64c0ab33c27cffc79fab2c24c45dbc9f51fbfd33513b77e3f19"
     },
     {
       "path": "src/triad_boss_replacements.js",
-      "bytes": 7485,
-      "sha256": "54a6fba87b38d5b4ceb512aa462fd3972d8aecbf7deb2170500cf5bccdd47b69"
+      "bytes": 7376,
+      "sha256": "07a95d08ea2c98be190ecba6f930a76795507d57c897372de4eefa07b7048964"
     },
     {
       "path": "src/triad_build_archive.js",
-      "bytes": 8559,
-      "sha256": "6307ca07becef9e832753bfbbe6d0ed5a9b2fd76e893a0d7afbf1aff802cd425"
+      "bytes": 8401,
+      "sha256": "8dfed52e0dc5b717d9886f25792c50438979feb06df0866802d0a3619c80ea4b"
     },
     {
       "path": "src/triad_combat_engine.js",
@@ -5661,28 +5666,28 @@
     },
     {
       "path": "src/triad_event_boss.js",
-      "bytes": 15088,
-      "sha256": "95b81326b073986a4746a1a6d6bc0f88b3635044477c9c2af03125ccd6526cc9"
+      "bytes": 14856,
+      "sha256": "a5622e58a3d659c2c30f8e432b5e47e251e5bbb13ec0168ce98ed4e0f915cb2b"
     },
     {
       "path": "src/triad_exploration.js",
-      "bytes": 7590,
-      "sha256": "1b8889f2e0bf60ef585a84bbb57e05669567765a8f9af822f4fd444c2097cab0"
+      "bytes": 7465,
+      "sha256": "4ae4faa46f466ac8721dd53b5da5ece1c88337811aaa00e992c0d0acaa180e46"
     },
     {
       "path": "src/triad_meta_progression.js",
-      "bytes": 30737,
-      "sha256": "1aa08fe57ff551b895015a9e47619135f942904e14830fa4b1b68332ade4368a"
+      "bytes": 30201,
+      "sha256": "d944a3f744079d3c75ecc35505730c79cae903284283de795c9ee23e56347733"
     },
     {
       "path": "src/triad_recruit_art_fix.js",
-      "bytes": 3663,
-      "sha256": "d62e8ff019a21357eaa5c45c7b1b1438c5b58eef63976c1b720e851e2750c7fd"
+      "bytes": 3573,
+      "sha256": "8b0073c0c919793d3c238526667593fde2453a860ed22acfcede72d73d35a401"
     },
     {
       "path": "src/triad_relic_hud.js",
-      "bytes": 12320,
-      "sha256": "4189a805ee7bb154b95b4c11da041672e3dcf7c058a60ef58f3cdf587b9f6e3a"
+      "bytes": 12048,
+      "sha256": "967ccdadabe6af47a6d45e25a45e45ce2cf5a0bbbc62c0bce3e219dcecbe1a65"
     },
     {
       "path": "src/triad_roster_art_layout.js",
@@ -5691,18 +5696,18 @@
     },
     {
       "path": "src/triad_stage_progression.js",
-      "bytes": 4224,
-      "sha256": "bdefe007eb566ee6ba2439d1d60404a052a9a55215f075fa5da4cab4801ab216"
+      "bytes": 4116,
+      "sha256": "23b0ef69051bf336c82c962918bb729cffa075716860a8abf64a5904345e0e01"
     },
     {
       "path": "src/triad_transactions.js",
-      "bytes": 26082,
-      "sha256": "60a5817b9a074ed1f7fcaac1bb04b8b285b4202752f2734bb75b2e9b84ad32fa"
+      "bytes": 30280,
+      "sha256": "ef98d9f85f842485989ddaa681a586d16ea292a92d384eace3a0321a83313b04"
     },
     {
       "path": "src/triad_tutorial.js",
-      "bytes": 5363,
-      "sha256": "86dbee452f77b5b3a830a5f6e8d19919e5343989f5d91fe681c64068ba9e4660"
+      "bytes": 5220,
+      "sha256": "e2efa6f0101add1aa1ce08f060a2d71dd423a6b5e7b3d3741db32d60c5fadcda"
     }
   ]
 }

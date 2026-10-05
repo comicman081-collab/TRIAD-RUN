@@ -6,7 +6,7 @@
   // their registry record is explicitly final and points at a non-candidate
   // production atlas.  Historical/candidate assets are never selected by
   // the normal resolver.
-  const VERSION='1.2.0-per-actor-player-facing';
+  const VERSION='1.3.0-imagegen-native';
   const FRAME_MVP_ROOT='assets/enemies/monster_animation_p1/';
   const FRAME_PREVIEW_ROOT='assets/enemies/monsters_rgba_p1/';
   const PRODUCTION_ROOT='assets/enemies/production_pilot_v';
@@ -55,7 +55,17 @@
     const id=String(record.id);
     const atlas=stripQuery(record.atlas);
     const preview=stripQuery(record.preview);
-    if(record.status==='PASS_ACTIVE_FRAME_MVP'&&atlas===`${FRAME_MVP_ROOT}${id}.webp`&&preview===`${FRAME_PREVIEW_ROOT}${id}.webp`){
+    // Packed native frames are approved by the canonical registry, without
+    // allowing arbitrary generated files or historical review candidates.
+    if(record.status==='PASS_ACTIVE_FINAL'&&record.runtimeActive===true
+      &&record.productionRevision==='IMAGEGEN_HD_R2'
+      &&/^(AEGIS|BLOOM|EMBER|VOLT|SHADE|RIFT)_M(?:0[1-9]|1[0-2])$/.test(id)
+      &&atlas===`assets/enemies/imagegen_hd_r2/${id}.webp`
+      &&/^[a-f0-9]{64}$/.test(String(record.atlasSha256||''))
+      &&stripQuery(record.sourceManifest)===`source_assets/enemies/imagegen_hd_r2/${id}/manifest.json`){
+      return{ok:true,kind:'IMAGEGEN_NATIVE_FINAL',status:record.status,atlas,preview,qaOnly:false}
+    }
+    if(record.status==='PASS_ACTIVE_FRAME_MVP'&&atlas===`${FRAME_MVP_ROOT}${id}.webp`&&preview===`${FRAME_PREVIEW_ROOT}${id}.png`){
       return{ok:true,kind:'FROZEN_FRAME_MVP',status:record.status,atlas,preview,qaOnly:false}
     }
     if(record.status==='PASS_ACTIVE_FINAL'&&productionPathFor(id,record.atlas)&&(record.runtimeActive===true||isFrozenV4FinalCompatibility(record))){

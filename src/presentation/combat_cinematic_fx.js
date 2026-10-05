@@ -14,7 +14,7 @@
    something is alive. */
 (function(root){
   'use strict';
-  const VERSION='cinematic-fx-1.0.3';
+  const VERSION='cinematic-fx-1.0.4';
   const TAU=Math.PI*2;
   const COMPOSITE_MS=1000/60;
   const MAX_PARTICLES=1400;
@@ -77,7 +77,7 @@
   function ensure(){
     const stage=stageEl();if(!stage)return null;
     if(state.stage!==stage||!state.canvas?.isConnected){
-      state.stage=stage;
+      resetCutIns();state.stage=stage;
       state.canvas=stage.querySelector(':scope > .battle-cinematic-canvas')||Object.assign(document.createElement('canvas'),{className:'battle-cinematic-canvas'});
       state.canvas.setAttribute('aria-hidden','true');
       if(!state.canvas.isConnected)stage.appendChild(state.canvas);
@@ -91,7 +91,7 @@
     }
     // ResizeObserver refreshes dimensions after layout, rather than flushing
     // layout in every launch/contact hook after sprite nodes were appended.
-    preloadPortraits();
+    preloadPortraits();scheduleCutInPreparation();
     return stage;
   }
 
@@ -395,9 +395,9 @@
     if(event.pipeline==='SUPPORT')later(Math.max(620,contact),()=>{const pt=a.zone||a.source;flash(pt.x,pt.y,140,pal,.35,.9);screenFlash(pt,pal.main,.4,240);ring(pt.x,pt.y,20,260,pal.core,.6,{width:6,squash:.5});shake(6,300,.015);later(360,()=>{dim(false);letterbox(false)})});
   }
 
-  function cutIn(member,event,pal,duration){
+  function makeCutIn(member,event,pal,duration){
     const src=portraitFor(member);
-    overlay('cine-cutin',duration,node=>{
+    const node=document.createElement('div');node.className='cine-cutin';node.setAttribute('aria-hidden','true');node.dataset.cine='1';node.style.setProperty('--cine-duration',`${duration}ms`);
       node.style.setProperty('--cine-color',pal.main);node.style.setProperty('--cine-accent',pal.accent);
       const band=document.createElement('div');band.className='band';node.appendChild(band);
       if(src){
@@ -410,7 +410,72 @@
       const title=document.createElement('div');title.className='title';
       title.innerHTML='<span class="kicker">SIGNATURE ARTS</span><span class="name"></span><span class="owner"></span>';
       title.querySelector('.name').textContent=event.cardName||'필살기';title.querySelector('.owner').textContent=member?.name||'';node.appendChild(title);
-    });
+    return node;
+  }
+
+  const cutInPool=new Map(),cutInCombats=new WeakSet();
+  const cutInMetrics={prepared:0,reused:0};let cutInPreparation=null;
+  const cutInKey=(member,event,pal)=>JSON.stringify([member?.id,member?.characterId,member?.name,portraitFor(member),event.cardName||'필살기',pal.main,pal.accent]);
+  function cancelCutInPreparation(){
+    const job=cutInPreparation;cutInPreparation=null;if(!job)return;
+    if(job.timer)clearTimeout(job.timer);job.node?.remove();for(const animation of job.animations||[])animation.cancel();
+  }
+  function resetCutIns(){
+    cancelCutInPreparation();
+    for(const entry of cutInPool.values()){clearTimeout(entry.timer);entry.token++;entry.animations.forEach(animation=>animation.cancel());entry.node.remove();}
+    cutInPool.clear();
+  }
+  function cutInPreparationCurrent(job){
+    const run=game();return cutInPreparation===job&&enabled&&!document.hidden&&isCombatVisible()&&run?.combat===job.combat&&state.stage===job.stage&&job.stage.isConnected&&stageEl()===job.stage&&run.stats.cardsPlayed===job.cards&&run.combat.turn===1&&Number(run.combat.actionToken||0)===job.actionToken&&performance.now()<job.expires;
+  }
+  async function prepareCutIns(job){
+    try{
+      for(const {member,event,pal}of job.entries){
+        if(!cutInPreparationCurrent(job))break;
+        const key=cutInKey(member,event,pal);if(cutInPool.has(key))continue;
+        const node=makeCutIn(member,event,pal,760);job.node=node;
+        const portrait=node.querySelector('.portrait');if(portrait?.decode)await portrait.decode().catch(()=>{});
+        if(!cutInPreparationCurrent(job)){node.remove();break;}
+        // Materialize the real font, portrait and filter layout during entry.
+        // This sub-pixel composite is not a live launch and advances no RNG,
+        // card, combat clock or presentation sequence.
+        const layoutStarted=performance.now();node.style.setProperty('opacity','.0001','important');job.stage.appendChild(node);
+        const animations=node.getAnimations?.({subtree:true})||[];job.animations=animations;
+        for(const animation of animations){animation.pause();animation.currentTime=190;}
+        // Very low opacity can defer rasterization. Read the actual title box
+        // explicitly so its font shaping/layout cannot wait for first launch.
+        node.getBoundingClientRect?.();node.querySelector('.title')?.getBoundingClientRect?.();
+        cutInMetrics.layoutMs=(cutInMetrics.layoutMs||0)+performance.now()-layoutStarted;
+        await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+        if(!cutInPreparationCurrent(job)){node.remove();animations.forEach(animation=>animation.cancel());break;}
+        node.style.visibility='hidden';node.style.removeProperty('opacity');
+        cutInPool.set(key,{node,animations,active:false,token:0,timer:0});cutInMetrics.prepared++;job.node=null;job.animations=[];
+      }
+    }catch(error){job.node?.remove();for(const animation of job.animations||[])animation.cancel();console.warn('TRIAD_CINEMATIC_CUTIN_PREPARE',error);}
+    finally{if(cutInPreparation===job)cutInPreparation=null;}
+  }
+  function scheduleCutInPreparation(){
+    const run=game(),combat=run?.combat;
+    if(cutInPreparation&&!cutInPreparationCurrent(cutInPreparation))cancelCutInPreparation();
+    if(!enabled||reducedMotion()||!combat||combat.turn!==1||Number(combat.actionToken||0)!==0||cutInCombats.has(combat)||!state.stage?.isConnected||!isCombatVisible())return;
+    cutInCombats.add(combat);const cards=typeof ALL_CARDS!=='undefined'?Object.values(ALL_CARDS):[],entries=[];
+    for(const member of run.party||[]){const card=cards.find(card=>card.owner===member.id&&card.pattern?.key==='signature');if(!card)continue;
+      const event=root.combatCardVfxEvent?.(card);if(event)entries.push({member,event:{...event,cardName:card.displayName||card.name},pal:palette(event.elementId)});if(entries.length===3)break;
+    }
+    if(!entries.length)return;
+    const job={combat,stage:state.stage,cards:run.stats.cardsPlayed,actionToken:Number(combat.actionToken)||0,expires:performance.now()+2000,entries,node:null,animations:[],timer:0};cutInPreparation=job;
+    job.timer=setTimeout(()=>{job.timer=0;if(cutInPreparationCurrent(job))void prepareCutIns(job);else if(cutInPreparation===job)cancelCutInPreparation();},150);
+  }
+  function cutIn(member,event,pal,duration){
+    cancelCutInPreparation();const stage=state.stage;if(!stage)return;
+    const entry=cutInPool.get(cutInKey(member,event,pal));
+    if(entry?.node.isConnected&&!entry.active&&entry.animations.length){
+      entry.active=true;const token=++entry.token;clearTimeout(entry.timer);
+      entry.node.style.setProperty('--cine-duration',`${duration}ms`);entry.node.style.visibility='visible';
+      for(const animation of entry.animations){const target=animation.effect?.target;if(target===entry.node||target?.classList?.contains('portrait')||target?.classList?.contains('title'))animation.effect.updateTiming({duration});animation.currentTime=0;animation.play();}
+      entry.timer=setTimeout(()=>{if(entry.token!==token)return;entry.active=false;entry.node.style.visibility='hidden';entry.animations.forEach(animation=>animation.pause());},duration+60);cutInMetrics.reused++;return entry.node;
+    }
+    const node=makeCutIn(member,event,pal,duration);stage.appendChild(node);setTimeout(()=>node.remove(),duration+60);return node;
   }
 
   function supportCard(event,a,key,pal){
@@ -593,8 +658,8 @@
       if(event.kind==='ENEMY')enemyImpact(event,target,a);else cardImpact(event,target,a);
     });
     wrap('setEnemyVisualState',(result,[stateName])=>{if(String(stateName||'').toUpperCase()==='DEFEAT'&&isCombatVisible())defeatBurst()});
-    wrap('startCombat',()=>{cameraShake?.cancel();cameraShake=null;state.particles.length=0;dim(false);letterbox(false);later(0,encounterIntro)});
-    root.TRIAD_CINEMATIC_FX=Object.freeze({version:VERSION,setEnabled(value){enabled=Boolean(value);if(!enabled){state.particles.length=0;state.tasks.length=0;dim(false);letterbox(false)}return enabled},get enabled(){return enabled},snapshot:()=>({particles:state.particles.length,tasks:state.tasks.length,running:Boolean(state.raf),compositeMaxFps:60,paintedFrames:state.paintedFrames,renderer:state.batch?'WEBGL_GLOW_BATCH':'CANVAS_2D',glowBatch:state.batch?{...state.batch.metrics}:null})});
+    wrap('startCombat',()=>{resetCutIns();cameraShake?.cancel();cameraShake=null;state.particles.length=0;dim(false);letterbox(false);later(0,encounterIntro)});
+    root.TRIAD_CINEMATIC_FX=Object.freeze({version:VERSION,setEnabled(value){enabled=Boolean(value);if(!enabled){resetCutIns();state.particles.length=0;state.tasks.length=0;dim(false);letterbox(false)}return enabled},get enabled(){return enabled},snapshot:()=>({particles:state.particles.length,tasks:state.tasks.length,running:Boolean(state.raf),compositeMaxFps:60,paintedFrames:state.paintedFrames,renderer:state.batch?'WEBGL_GLOW_BATCH':'CANVAS_2D',glowBatch:state.batch?{...state.batch.metrics}:null,cutIns:{...cutInMetrics,pooled:cutInPool.size,pending:Boolean(cutInPreparation),active:[...cutInPool.values()].filter(entry=>entry.active).length}})});
   }
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',install,{once:true}):install();
 })(globalThis);

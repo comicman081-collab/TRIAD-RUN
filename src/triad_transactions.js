@@ -14,7 +14,7 @@ return Object.freeze({ensureLedger,id,isCommitted,commit,pending,isPending,resto
 /* Full-resolution battle optimization: source assets and frame quality are unchanged. */
 if(typeof window!=='undefined'&&typeof document!=='undefined'){
 const installPerf=()=>{
-const VERSION='2026-10-05-combat-1080p-v9';if(window.TRIAD_RUNTIME_PERF?.version===VERSION||typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
+const VERSION='2026-10-05-enemy-detail-v12';if(window.TRIAD_RUNTIME_PERF?.version===VERSION||typeof SdBattleActor==='undefined'||typeof EnemyBattleActor==='undefined')return;
 const metrics={loads:0,evictions:0,draws:0,skips:0},MAX=3,path=(a,n)=>a?.manifest?.assets?.[n]?.path||a?.manifest?.clips?.[n]?.atlas||'',active=()=>!document.hidden&&document.getElementById('combat')?.classList.contains('active');
 const warmed=new Map();
 function warmParty(characters=[]){
@@ -60,21 +60,64 @@ p.tick=function(now){
 p.draw=function(a,c,f){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,sw=Number(a?.naturalWidth||a?.width)||w,cols=c.columns||Math.max(1,Math.floor(sw/w)),cell=c.frameMap?.[f]??f,sx=(cell%cols)*w,sy=Math.floor(cell/cols)*h,old=this.ctx.globalCompositeOperation;this.canvas.dataset.currentFrame=String(f);this.canvas.dataset.atlasColumns=String(cols);this.canvas.dataset.atlasRows=String(c.rows||Math.ceil(c.frames/cols));if(window.TRIAD_SD_NORMALIZATION?.draw(this,a,this.clip,f,sx,sy,w,h))return;this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(a,sx,sy,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
 p.destroy=function(){this._perfDead=true;this._perfToken=(this._perfToken||0)+1;if(this.raf)cancelAnimationFrame(this.raf);new Set(Object.values(this.atlases||{})).forEach(close);this.atlases={}};
 const ep=EnemyBattleActor.prototype,oldPlay=ep.play;
-ep.load=function(){const src=this.manifest?.atlas;if(!src)return;this._perfDead=false;this.ready=decode(src).then(img=>{if(this._perfDead){close(img);return false}this.image=img;this.canvas.dataset.loadStatus='PASS';this.canvas.dataset.atlas=src;this.play(this.pendingState);this.raf=requestAnimationFrame(t=>this.tick(t));return true}).catch(e=>{this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_ENEMY_ATLAS_LOAD_FAIL',this.manifest?.id,e);return false});return this.ready};
+async function sliceEnemyAtlas(actor,image){
+  if(!actor.detail||typeof createImageBitmap!=='function')return image;
+  const unique=new Map(),frames=[];
+  try{
+    for(const r of actor.detail.frameRects){
+      const key=r.slice(0,4).join(',');let crop=unique.get(key);
+      if(!crop){crop=await createImageBitmap(image,r[0],r[1],r[2],r[3]);unique.set(key,crop);}
+      frames.push(crop);
+      if(actor._perfDead){new Set(frames).forEach(close);close(image);return null;}
+    }
+    // Upload only the small pose texture being sampled. A 40–54 MiB packed
+    // atlas otherwise causes large lazy source-tile uploads during attacks.
+    actor.frameImages=frames;close(image);
+    metrics.enemyPoseBytes=[...unique.values()].reduce((n,img)=>n+img.width*img.height*4,0);
+    return frames[0];
+  }catch{new Set(frames).forEach(close);return image;}
+}
+function prepareEnemyAtlas(actor){
+  if(!actor.detail||!actor.image||typeof actor.ctx?.getImageData!=='function')return;
+  const ctx=actor.ctx,start=performance.now(),seen=new Set();ctx.save();
+  try{
+    ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.globalCompositeOperation='copy';ctx.filter='none';
+    for(const [i,r] of actor.detail.frameRects.entries()){const key=r.slice(0,4).join(',');if(seen.has(key))continue;seen.add(key);const img=actor.frameImages?.[i]||actor.image;ctx.drawImage(img,actor.frameImages?0:r[0],actor.frameImages?0:r[1],r[2],r[3],r[4],r[5],r[2],r[3]);}
+    // Materialize every source tile on this actor's actual GPU context during
+    // entry, so a first hit/attack cannot cause a deferred tile upload.
+    ctx.getImageData(0,0,1,1);metrics.enemyPreparations=(metrics.enemyPreparations||0)+1;
+    metrics.enemyPreparationMs=(metrics.enemyPreparationMs||0)+performance.now()-start;
+  }finally{ctx.clearRect(0,0,actor.canvas.width,actor.canvas.height);ctx.restore();}
+}
+ep.load=function(){this.detail=window.TRIAD_ENEMY_DETAIL_DATA?.byId?.[this.manifest?.id];const src=this.detail?this.detail.atlas+'?v='+this.detail.sha256.slice(0,12):this.manifest?.atlas;if(!src)return;this._perfDead=false;this.ready=decode(src).then(async img=>{if(this._perfDead){close(img);return false}this.image=await sliceEnemyAtlas(this,img);if(this._perfDead||!this.image){close(this.image);this.image=null;return false;}if(this.detail){this.canvas.width=this.detail.width;this.canvas.height=this.detail.height;this.canvas.dataset.sourceDetail=this.detail.sourceRevision||'NATIVE_SOURCE_RESTORED';this.ctx.imageSmoothingEnabled=true;this.ctx.imageSmoothingQuality='high';prepareEnemyAtlas(this);}this.canvas.dataset.loadStatus='PASS';this.canvas.dataset.atlas=src;this.play(this.pendingState);this.draw(this.manifest.clips[this.state],0);this.raf=requestAnimationFrame(t=>this.tick(t));return true}).catch(e=>{this.canvas.dataset.loadStatus='FAIL';console.error('TRIAD_ENEMY_ATLAS_LOAD_FAIL',this.manifest?.id,e);return false});return this.ready};
 ep.play=function(state,options){const r=oldPlay.call(this,state,options);if(r!==false){this._lastState='';this._lastFrame=-1}return r};
 ep.tick=function(now){if(this._perfDead)return;if(active()){const c=this.manifest?.clips?.[this.state];if(this.image&&c){const g=this.generation,raw=Math.floor(Math.max(0,now-this.started)*c.fps/1000),ended=!c.loop&&raw>=c.frames;if(ended&&!c.holdLastFrame){if(g===this.generation)this.play('IDLE',{force:true,reason:'complete'})}else{const f=ended?c.frames-1:c.loop?raw%c.frames:Math.min(raw,c.frames-1);this.frame=f;if(this._lastState!==this.state||this._lastFrame!==f){this.draw(c,f);this._lastState=this.state;this._lastFrame=f;metrics.draws++}else metrics.skips++}}}this.raf=requestAnimationFrame(t=>this.tick(t))};
-ep.draw=function(c,f){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,old=this.ctx.globalCompositeOperation;this.canvas.dataset.currentFrame=String(f);this.ctx.globalCompositeOperation='copy';this.ctx.drawImage(this.image,f*w,c.row*h,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
-ep.destroy=function(){this._perfDead=true;if(this.raf)cancelAnimationFrame(this.raf);close(this.image);this.image=null};
+ep.draw=function(c,f){const w=this.manifest.frameWidth,h=this.manifest.frameHeight,old=this.ctx.globalCompositeOperation;this.canvas.dataset.currentFrame=String(f);this.ctx.globalCompositeOperation='copy';const index=c.row*(this.detail?.columns||6)+f,rect=this.detail?.frameRects?.[index],img=this.frameImages?.[index]||this.image;if(rect){this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);this.ctx.drawImage(img,this.frameImages?0:rect[0],this.frameImages?0:rect[1],rect[2],rect[3],rect[4],rect[5],rect[2],rect[3]);}else this.ctx.drawImage(img,f*w,c.row*h,w,h,0,0,this.canvas.width,this.canvas.height);this.ctx.globalCompositeOperation=old};
+ep.destroy=function(){this._perfDead=true;if(this.raf)cancelAnimationFrame(this.raf);new Set([this.image,...(this.frameImages||[])]).forEach(close);this.image=null;this.frameImages=null};
 const preparedImages=new WeakSet(),preparingActors=new WeakSet(),preparedCombats=new WeakSet();
+function prepareHudSymbols(){
+  const stage=document.querySelector?.('#combat .battle-stage');if(!stage?.isConnected||typeof document.createElement!=='function')return;
+  const holder=document.createElement('div'),started=performance.now();
+  holder.setAttribute('aria-hidden','true');holder.style.cssText='position:absolute;left:0;top:0;opacity:.0001;pointer-events:none';
+  // Materialize the real status-chip font fallback before the first burn,
+  // shock, mark or shield update. No game state or presentation clock changes.
+  holder.innerHTML='<div class="intent"><span class="intent-chips"><em data-tactic="burn">🔥 3</em><em data-tactic="shock">⚡ 3</em><em data-tactic="mark">🎯 3</em><em data-tactic="guard">🛡 3</em></span></div><span class="tag">🔥 3 ⚡ 3 🎯 3 🛡 3</span>';
+  try{stage.appendChild(holder);holder.getBoundingClientRect();holder.querySelectorAll('em,.tag').forEach(node=>node.getBoundingClientRect());metrics.hudSymbolPreparations=(metrics.hudSymbolPreparations||0)+1;metrics.hudSymbolPreparationMs=(metrics.hudSymbolPreparationMs||0)+performance.now()-started;}
+  finally{holder.remove();}
+}
 async function prepareHand(combat,cards){
   const current=()=>typeof run!=='undefined'&&run?.combat===combat&&run.stats.cardsPlayed===cards&&active();
   if(!current())return;
+  prepareHudSymbols();
   for(const actor of sdBattleActors.values()){
     if(!current())return;
     if(preparingActors.has(actor))continue;
     const owner=run.party.find(p=>p.characterId===actor.characterId)?.id;
     if(!owner)continue;
-    const clips=[...new Set(combat.hand.map(s=>ALL_CARDS[s.id]).filter(c=>c&&c.owner===owner).map(c=>actor.normalizeClip(combatCardAnimationState(c))).filter(clip=>clip!=='idle'))].slice(0,2);
+    // A signature may be in the draw pile rather than the opening hand. Keep
+    // the same two-clip bound while preparing selected-run clips too.
+    const selected=[...(combat.hand||[]),...(run.deck||[]),...(combat.draw||[])];
+    const clips=[...new Set(selected.map(s=>ALL_CARDS[s.id]).filter(c=>c&&c.owner===owner).map(c=>actor.normalizeClip(combatCardAnimationState(c))).filter(clip=>clip!=='idle'))].slice(0,2);
     if(!clips.length)continue;preparingActors.add(actor);
     try{await actor.ready;if(!current())return;if(actor._perfDead)continue;
       for(const clip of clips){
